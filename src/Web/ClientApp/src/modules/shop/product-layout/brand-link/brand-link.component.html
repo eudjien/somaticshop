@@ -1,0 +1,4 @@
+<a [routerLink]="['/brands', card.id]" class="brand-link">
+  <img *ngIf="card.imageUrl; else brandTitle" src="{{card.imageUrl}}" alt="{{card.title}}" class="brand-img">
+  <ng-template #brandTitle>{{card.title}}</ng-template>
+</a>

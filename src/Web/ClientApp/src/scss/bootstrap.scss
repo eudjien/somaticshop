@@ -1,0 +1,36 @@
+//xs	'screen and (max-width: 599px)'
+//sm	'screen and (min-width: 600px) and (max-width: 959px)'
+//md	'screen and (min-width: 960px) and (max-width: 1279px)'
+//lg	'screen and (min-width: 1280px) and (max-width: 1919px)'
+//xl	'screen and (min-width: 1920px) and (max-width: 5000px)'
+
+$font-family-base: inherit;
+$font-size-base: 0.875rem;
+//$small-font-size: 85.714%;
+//$font-weight-bold: 600;
+//$font-weight-bolder: 600;
+//b, strong { font-weight: $font-weight-bold !important; }
+
+//$h1-font-size: $font-size-base * 1.75;
+//$h2-font-size: $font-size-base * 1.5;
+//$h3-font-size: $font-size-base * 1.25;
+//$h4-font-size: $font-size-base * 1.12;
+//$h5-font-size: $font-size-base * 1.06;
+//$h6-font-size: $font-size-base;
+
+
+@import "~bootstrap/scss/bootstrap";
+
+//// Required
+//@import "~bootstrap/scss/functions";
+//@import "~bootstrap/scss/variables";
+//@import "~bootstrap/scss/mixins";
+//
+//// Optional
+//@import "~bootstrap/scss/reboot";
+//@import "~bootstrap/scss/type";
+//@import "~bootstrap/scss/images";
+//@import "~bootstrap/scss/code";
+//@import "~bootstrap/scss/grid";
+
+//font-size: 85.714%;

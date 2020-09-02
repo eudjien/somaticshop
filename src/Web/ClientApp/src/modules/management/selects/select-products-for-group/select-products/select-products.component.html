@@ -1,0 +1,69 @@
+<mat-list dense>
+  <mat-list-item class="h-auto">
+
+    <div class="d-flex flex-wrap w-100 align-items-center justify-content-between">
+
+      <div *ngIf="page" class="d-flex flex-nowrap w-auto align-items-center">
+
+        <ng-container *ngIf="!isAllLockedInPage; else lockedAll">
+          <mat-checkbox (change)="allCheckInPageChange($event)" [checked]="isAllSelectedInPage"
+                        [indeterminate]="someSelectedInPage"
+                        class="d-flex"></mat-checkbox>
+        </ng-container>
+
+        <ng-template #lockedAll>
+          <mat-icon [inline]="true" [matTooltip]="'Эти продукты нельзя выбрать, потому что они пренадлежат другим группам'"
+                    class="locked-icon">lock</mat-icon>
+        </ng-template>
+
+        <mat-slide-toggle (ngModelChange)="onlyUnlockedChange($event)" [(ngModel)]="onlyUnlocked" [color]="'primary'"
+                          class="mx-4">
+          Только доступные
+        </mat-slide-toggle>
+
+      </div>
+
+      <div class="d-flex align-items-center justify-content-center justify-content-md-end flex-wrap w-auto"
+           style="flex: 1 1 auto">
+
+        <div (matSortChange)="sortChange($event)" class="sort my-3" matSort>
+          <div mat-sort-header="title">Название</div>
+        </div>
+
+        <mat-paginator #paginator (page)="paginationChange($event)"
+                       [hidePageSize]="true"
+                       [pageSize]="10"
+                       [showFirstLastButtons]="true">
+        </mat-paginator>
+
+      </div>
+
+    </div>
+
+  </mat-list-item>
+</mat-list>
+<app-overlay-loader [isLoading]="isLoading" [loadingMessage]="''">
+  <mat-selection-list #selectionList (selectionChange)="selectionChange($event)" *ngIf="page"
+                      [multiple]="true">
+
+    <ng-container *ngFor="let product of page.items">
+      <mat-list-option *ngIf="!isLocked(product); else locked"
+                       [checkboxPosition]="'before'"
+                       [selected]="isSelected(product)"
+                       [value]="product">
+        {{product.title}}
+      </mat-list-option>
+      <ng-template #locked>
+        <mat-list-item [disableRipple]="true">
+          <fa-icon [icon]="lockIcon" [matTooltipPosition]="'above'"
+                   [matTooltip]="'Этот продукт нельзя выбрать, потому что он пренадлежит другой группе'"
+                   class="locked-icon"></fa-icon>
+          <div style="padding-left: 16px">
+            {{product.title}}
+          </div>
+        </mat-list-item>
+      </ng-template>
+    </ng-container>
+
+  </mat-selection-list>
+</app-overlay-loader>

@@ -1,0 +1,185 @@
+<div [formGroup]="formGroup" fxLayout="column" fxLayoutGap="16px">
+
+  <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="start stretch" fxLayoutAlign.gt-md="start center"
+       fxLayoutGap="16px">
+
+    <mat-card fxFlex="100" fxFlex.gt-md="70">
+      <mat-form-field appearance="fill" class="d-block w-100">
+        <mat-label>Название продукта</mat-label>
+        <input [formControlName]="'title'" matInput placeholder="Название" required>
+        <mat-error *ngIf="formGroup.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+    </mat-card>
+
+    <mat-card fxFlex="100" fxFlex.gt-md="auto">
+      <mat-form-field appearance="fill" class="d-block w-100">
+        <mat-label>Цена</mat-label>
+        <input [formControlName]="'price'" matInput type="number" value="0">
+        <span matSuffix>BYN</span>
+      </mat-form-field>
+    </mat-card>
+
+  </div>
+
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header class="custom-expand-header">
+      Описание
+    </mat-expansion-panel-header>
+    <app-editor #editor></app-editor>
+  </mat-expansion-panel>
+
+  <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="start" fxLayoutAlign.gt-md="start start"
+       fxLayoutGap="16px">
+    <div fxFlex="100" fxFlex.gt-md="calc(50% - 16px)" fxLayout="column" fxLayoutGap="16px">
+
+      <mat-expansion-panel [expanded]="false">
+        <mat-expansion-panel-header class="custom-expand-header">
+          <mat-panel-title>
+            Группа
+          </mat-panel-title>
+          <mat-panel-description class="expand-header-info">
+            <mat-chip-list [disabled]="!selectGroupForProduct.selected" class="ml-auto mr-3">
+              <mat-chip [disableRipple]="true" [matTooltipPosition]="'above'"
+                        [matTooltip]="'Группа'"
+                        [removable]="false"
+                        [selectable]="false"
+                        [selected]="true" class="expand-header-chip group-chip"
+                        color="primary">{{selectGroupForProduct.selected?.title || '&ndash;'}}</mat-chip>
+            </mat-chip-list>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-select-group-for-product #selectGroupForProduct></app-select-group-for-product>
+      </mat-expansion-panel>
+
+
+      <mat-expansion-panel [expanded]="false">
+        <mat-expansion-panel-header class="custom-expand-header">
+          <mat-panel-title>
+            Каталог
+          </mat-panel-title>
+          <mat-panel-description class="expand-header-info">
+            <mat-chip-list [disabled]="!selectCatalogForProduct.selected" class="ml-auto mr-3">
+              <mat-chip [disableRipple]="true" [matTooltipPosition]="'above'"
+                        [matTooltip]="'Группа'"
+                        [removable]="false"
+                        [selectable]="false"
+                        [selected]="true" class="expand-header-chip catalog-chip"
+                        color="primary">
+
+                <ng-container *ngIf="selectCatalogForProduct.selected; else emptyDash">
+
+
+                  <ol class="breadcrumb py-0 px-1 m-0" style="background: none">
+                    <li *ngFor="let parent of selectCatalogForProduct.selected.parents"
+                        class="chip-breadcrumb-item breadcrumb-item">
+                      {{parent.title}}
+                    </li>
+                    <li class="chip-breadcrumb-item breadcrumb-item active" style="color:#fff">
+                      {{selectCatalogForProduct.selected.title}}
+                    </li>
+                  </ol>
+
+                </ng-container>
+
+              </mat-chip>
+            </mat-chip-list>
+
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-select-catalog-for-product #selectCatalogForProduct></app-select-catalog-for-product>
+      </mat-expansion-panel>
+
+
+      <mat-expansion-panel [expanded]="false">
+        <mat-expansion-panel-header class="custom-expand-header">
+          <mat-panel-title class="align-items-center">
+            <span>Бренд</span>
+          </mat-panel-title>
+          <mat-panel-description>
+            <mat-chip-list [disabled]="!selectBrandForProduct.hasSelected" class="ml-auto mr-3">
+              <mat-chip [disableRipple]="true" [matTooltipPosition]="'above'"
+                        [matTooltip]="'Бренд'"
+                        [removable]="false"
+                        [selectable]="false"
+                        [selected]="true" class="expand-header-chip image-count-chip"
+                        color="primary">
+                <ng-container *ngIf="selectBrandForProduct.hasSelected; else emptyDash">
+                  {{selectBrandForProduct.selected.title}}
+                </ng-container>
+              </mat-chip>
+            </mat-chip-list>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-select-brand-for-product #selectBrandForProduct></app-select-brand-for-product>
+      </mat-expansion-panel>
+
+    </div>
+    <div fxFlex="100" fxFlex.gt-md="50" fxLayout="column" fxLayoutGap="16px">
+
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header class="custom-expand-header">
+          Краткое описание
+        </mat-expansion-panel-header>
+        <mat-form-field appearance="outline" class="w-100">
+          <textarea [formControlName]="'description'" matInput></textarea>
+        </mat-form-field>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [expanded]="false">
+        <mat-expansion-panel-header class="custom-expand-header">
+          <mat-panel-title class="align-items-center">
+            <span>Изображения</span>
+          </mat-panel-title>
+          <mat-panel-description>
+            <mat-chip-list [disabled]="uploadImage.images.length === 0" class="ml-auto mr-3">
+              <mat-chip [disableRipple]="true" [matTooltipPosition]="'above'"
+                        [matTooltip]="'Количество изображений'"
+                        [removable]="false"
+                        [selectable]="false"
+                        [selected]="true" class="expand-header-chip image-count-chip"
+                        color="primary">{{uploadImage.images.length}}</mat-chip>
+            </mat-chip-list>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-upload-image-multi #uploadImage></app-upload-image-multi>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [expanded]="false">
+        <mat-expansion-panel-header class="custom-expand-header">
+          <mat-panel-title>
+            Спецификации
+          </mat-panel-title>
+          <mat-panel-description class="expand-header-info">
+            <mat-chip-list [disabled]="selectSpecificationsForProduct.modified.length === 0"
+                           class="ml-auto mr-3">
+              <mat-chip [disableRipple]="true" [matTooltipPosition]="'above'"
+                        [matTooltip]="'Количество спецификаций'"
+                        [removable]="false"
+                        [selectable]="false"
+                        [selected]="true" class="expand-header-chip specs-chip"
+                        color="primary">
+                {{selectSpecificationsForProduct.modified.length}}
+              </mat-chip>
+            </mat-chip-list>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-select-specifications #selectSpecificationsForProduct></app-select-specifications>
+      </mat-expansion-panel>
+
+    </div>
+  </div>
+
+  <div>
+    <mat-card fxFlex="grow" fxLayout="row" fxLayoutAlign="end center">
+      <button (click)="sendClick()" [disabled]="isLoading || !formGroup.valid" class="send-btn ml-auto"
+              mat-raised-button>
+        <div class="d-flex align-items-center">
+          <span>Отправить</span>
+          <mat-icon>update</mat-icon>
+        </div>
+      </button>
+    </mat-card>
+  </div>
+</div>
+
+<ng-template #emptyDash>&ndash;</ng-template>

@@ -1,0 +1,95 @@
+$font-family: AmazonEmber;
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 100;
+  font-style: normal;
+  src: url(AmazonEmber_Th.ttf);
+}
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 100;
+  font-style: italic;
+  src: url(AmazonEmber_ThIt.ttf);
+}
+
+/* ----------- */
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 300;
+  font-style: normal;
+  src: url(AmazonEmber_Lt.ttf);
+}
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 300;
+  font-style: italic;
+  src: url(AmazonEmber_LtIt.ttf);
+}
+
+/* ----------- */
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 400;
+  font-style: normal;
+  src: url(AmazonEmber_Rg.ttf);
+}
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 400;
+  font-style: italic;
+  src: url(AmazonEmber_RgIt.ttf);
+}
+
+/* ----------- */
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 500;
+  font-style: normal;
+  src: url(AmazonEmber_Md.ttf);
+}
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 500;
+  font-style: italic;
+  src: url(AmazonEmber_MdIt.ttf);
+}
+
+/* ----------- */
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 700;
+  font-style: normal;
+  src: url(AmazonEmber_Bd.ttf);
+}
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 700;
+  font-style: italic;
+  src: url(AmazonEmber_BdIt.ttf);
+}
+
+/* ----------- */
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 900;
+  font-style: normal;
+  src: url(AmazonEmber_He.ttf);
+}
+
+@font-face {
+  font-family: $font-family;
+  font-weight: 900;
+  font-style: italic;
+  src: url(AmazonEmber_HeIt.ttf);
+}

@@ -1,0 +1,57 @@
+.brand-item {
+  font-weight: 500;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
+.custom-slider.ng5-slider .ng5-slider-pointer {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  top: -7px;
+  background-color: #ff4081;
+  z-index: 3;
+  border-radius: 50%;
+}
+
+.custom-slider.ng5-slider .ng5-slider-pointer:after {
+  content: none;
+}
+
+.custom-slider.ng5-slider .ng5-slider-bar {
+  height: 2px;
+  border-radius: 0;
+  background-color: rgba(0, 0, 0, .38);
+}
+
+.custom-slider.ng5-slider .ng5-slider-selection {
+  background: #ff4081;
+}
+
+//.custom-slider.ng5-slider.animate * {
+//  -webkit-transition: none !important;
+//  transition: none !important;
+//}
+//
+////.custom-slider.ng5-slider.animate .ng5-slider-pointer,
+////.custom-slider.ng5-slider.animate .ng5-slider-bar-wrapper,
+////.custom-slider.ng5-slider.animate .ng5-slider-bubble,
+////.custom-slider.ng5-slider.animate .ng5-slider-bubble.ng5-slider-combined,
+////.custom-select-lg.ng5-slider.animate .ng5-slider-bubble.ng5-slider-limit {
+////  -webkit-transition: none;
+////  transition: none;
+////}
+
+.custom-slider.ng5-slider .ng5-slider-bubble {
+  cursor: default;
+  bottom: 16px;
+  padding: 1px 3px;
+  color: #505050;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.catalog-list.mat-list-base .mat-list-item .mat-list-item-content, .mat-list-base .mat-list-option .mat-list-item-content {
+  font-size: 14px;
+}

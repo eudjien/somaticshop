@@ -1,0 +1,115 @@
+<ng-container *ngIf="viewModel || empty">
+
+  <div fxLayout="row" fxLayoutAlign="start center"
+       style="padding:8px 16px;background:#f5f5f5">
+
+    <button (click)="sidenav.toggle()" class="overflow-hidden" fxFlex="none" mat-icon-button>
+      <mat-icon [inline]="true" style="font-size:24px">menu</mat-icon>
+    </button>
+
+    <ol class="breadcrumb m-0" fxFlex="grow" style="background: none;font-size:13px">
+      <li class="breadcrumb-item" style="font-size: 12px;">
+          <span style="font-weight: 500;font-size: 13px;">
+            <a [routerLink]="['/catalogs']" queryParamsHandling="merge">
+                    {{'Все' | uppercase}}
+            </a>
+          </span>
+      </li>
+      <ng-container *ngIf="viewModel.parents">
+        <li *ngFor="let catalog of viewModel.parents" class="breadcrumb-item" style="font-size: 12px;">
+          <span style="font-weight: 500;font-size: 13px;">
+            <a [routerLink]="['/catalogs', catalog.id]" queryParamsHandling="merge">
+              {{catalog.title | uppercase}}
+            </a>
+          </span>
+        </li>
+      </ng-container>
+      <li *ngIf="viewModel.current" class="breadcrumb-item">
+        <span class="mb-0" style="font-weight: 500;font-size: 13px;color:#676c71">
+          {{viewModel.current.title | uppercase}}
+        </span>
+      </li>
+    </ol>
+  </div>
+
+  <mat-drawer-container style="background:#ffffff;min-height:500px">
+    <mat-drawer #sidenav mode="{{sidenavMode$ | async}}" opened style="background:#fff;width:220px;">
+      <div>
+
+        <app-overlay-loader [disableSpinner]="true" [hideContentWhenLoading]="false"
+                            [isLoading]="productsIsLoading || isLoading"
+                            [overlayStyles]="{'background-color': 'rgb(255,255,255,.4)'}">
+
+          <ng-container *ngIf="viewModel.childrens?.length">
+            <mat-nav-list class="catalog-list">
+              <a *ngFor="let child of viewModel.childrens" [routerLink]="['/catalogs', child.id]" mat-list-item
+                 queryParamsHandling="merge">
+                {{child.title}}
+              </a>
+            </mat-nav-list>
+            <mat-divider class="my-2"></mat-divider>
+          </ng-container>
+
+          <ng-container *ngIf="!empty">
+
+            <mat-selection-list #brandList (selectionChange)="brandChange($event)" class="catalog-list">
+              <h6 matSubheader>Бренды</h6>
+              <mat-list-option *ngFor="let brand of viewModel.brands" [checkboxPosition]="'before'" [value]="brand.id">
+
+                <img *ngIf="brand.imageUrl;else brandTitleTmpl" alt="{{brand.title}}" class="float-left"
+                     src="{{brand.imageUrl}}"
+                     style="max-width: 64px;max-height: 16px;">
+                <ng-template #brandTitleTmpl>
+                  <div>{{brand.title}}</div>
+                </ng-template>
+
+              </mat-list-option>
+            </mat-selection-list>
+
+            <mat-divider class="my-2"></mat-divider>
+
+            <mat-list>
+              <h6 fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px" matSubheader>
+                <span>Цена</span>
+                <span>{{currency}}</span>
+              </h6>
+
+              <mat-list-item>
+                <ng5-slider (userChange)="userPriceRangeChange($event)"
+                            [(highValue)]="priceRange.upper"
+                            [(value)]="priceRange.lower"
+                            [options]="priceRangeOptions"
+                            class="custom-slider"></ng5-slider>
+              </mat-list-item>
+            </mat-list>
+
+            <mat-divider class="my-2"></mat-divider>
+
+            <mat-selection-list #specList (selectionChange)="specificationChange($event)" class="catalog-list">
+              <ng-container *ngFor="let specs of viewModel.specifications">
+
+                <h6 matSubheader>{{specs.name}}</h6>
+
+                <mat-list-option *ngFor="let specValue of specs.values" [checkboxPosition]="'before'"
+                                 [value]="{ key: specs.name, value: specValue }">
+                  <div mat-line>{{specValue}}</div>
+                </mat-list-option>
+
+                <mat-divider class="my-2"></mat-divider>
+
+              </ng-container>
+
+            </mat-selection-list>
+          </ng-container>
+
+        </app-overlay-loader>
+      </div>
+    </mat-drawer>
+    <mat-drawer-content>
+
+      <app-catalog-product-list (loading)="productsLoadingChange($event)"
+                                [update]="catalogProductsFilter"></app-catalog-product-list>
+
+    </mat-drawer-content>
+  </mat-drawer-container>
+</ng-container>

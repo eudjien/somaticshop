@@ -1,0 +1,21 @@
+<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+  <div fxFlex="nogrow">
+    <img *ngIf="card.imageUrl" alt="{{card.title}}" src="{{card.imageUrl}}" style="width:120px">
+  </div>
+  <div fxFlex="1 1 auto">
+    <h6>
+      <a [routerLink]="['/products', card.id]" class="view-link">
+        {{card.title}}
+      </a>
+    </h6>
+    <p>
+      {{card.description | shrink: 80}}
+    </p>
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+      <app-brand-link *ngIf="card.brand" [card]="card.brand"></app-brand-link>
+      <div fxFlex="nogrow">
+        <b style="white-space: nowrap;">{{card.price}} р.</b>
+      </div>
+    </div>
+  </div>
+</div>

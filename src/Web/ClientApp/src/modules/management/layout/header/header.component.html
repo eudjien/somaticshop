@@ -1,0 +1,12 @@
+<mat-toolbar class="header" style="height:48px" fxLayout="row" fxLayoutAlign="start center"
+             fxLayoutGap="8px">
+
+  <ng-content select=".show-hide-button"></ng-content>
+
+  <div class="header-management-text">Управление</div>
+
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px" fxFlex="noshrink">
+    <app-login-menu></app-login-menu>
+  </div>
+
+</mat-toolbar>

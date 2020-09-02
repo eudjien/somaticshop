@@ -1,0 +1,63 @@
+<div>
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>Поиск</mat-label>
+    <input (ngModelChange)="searchChange($event)" [(ngModel)]="searchTitle" matInput placeholder="Поиск">
+    <mat-error></mat-error>
+  </mat-form-field>
+</div>
+
+<app-overlay-loader [isLoading]="isLoading">
+
+  <div>
+    <mat-selection-list #selectionList
+                        (selectionChange)="selectionChange($event)" [multiple]="false">
+
+      <div class="list-header" mat-subheader>
+
+        <button (click)="restoreClick()" *ngIf="canBeRestored"
+                [matTooltip]="'Вернуть в исходное состояние'"
+                class="mat-icon-button-mini list-header-btn mr-2" mat-icon-button>
+          <mat-icon>undo</mat-icon>
+        </button>
+
+        <button (click)="emptyClick()" *ngIf="hasSelected" [matTooltip]="'Без каталога'"
+                class="mat-icon-button-mini list-header-btn"
+                mat-icon-button>
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <div class="flex-fill"></div>
+
+        <div (matSortChange)="sortChange($event)" class="mx-2" matSort>
+          <div mat-sort-header="title">Название</div>
+        </div>
+
+        <mat-paginator #paginator (page)="paginationChange($event)"
+                       [hidePageSize]="true"
+                       [pageSize]="10"
+                       [showFirstLastButtons]="true">
+        </mat-paginator>
+
+      </div>
+
+      <mat-divider class="mb-2"></mat-divider>
+
+      <ng-container *ngIf="page">
+        <mat-list-option *ngFor="let catalog of page.items" [selected]="isSelected(catalog)" [value]="catalog">
+          <div mat-line>{{catalog.title}}</div>
+          <div *ngIf="catalog.parentCatalogId" mat-line>
+            <ol class="breadcrumb rounded-0 p-0 m-0" style="background: none">
+              <li *ngIf="!catalog.parents">
+                <mat-spinner [diameter]="20" [strokeWidth]="1"></mat-spinner>
+              </li>
+              <li *ngFor="let item of catalog.parents$ | async" class="breadcrumb-item text-muted">
+                {{item.title}}
+              </li>
+            </ol>
+          </div>
+        </mat-list-option>
+      </ng-container>
+    </mat-selection-list>
+  </div>
+
+</app-overlay-loader>

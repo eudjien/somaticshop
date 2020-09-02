@@ -1,0 +1,47 @@
+.entry {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+}
+
+.entry .key {
+  flex: 1 1 auto;
+  padding-right: 8px;
+  min-width: 50px;
+  max-width: 300px;
+}
+
+.entry .val {
+  flex: 2 1 auto;
+  padding: 0 8px;
+  min-width: 50px;
+}
+
+.entry .del {
+  flex: 0 0 auto;
+  padding-left: 8px;
+}
+
+.add-btn {
+  color: #696969;
+  font-size: 13px;
+}
+
+.del-btn {
+  color: #696969;
+  font-size: 13px;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.list-header .list-header-btn {
+  color: #676767;
+  font-size: 12px;
+  background: none;
+}

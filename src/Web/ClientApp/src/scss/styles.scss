@@ -1,0 +1,108 @@
+@import "material-icons";
+@import "material-theme";
+@import "bootstrap";
+
+@import "page";
+
+* {
+  outline: 0 !important;
+}
+
+html, body, .app-root {
+  height: 100% !important;
+  display: block;
+}
+
+a {
+  color: #2f5680; // #6a86a5
+}
+
+a:hover {
+  color: #6b7d90;
+}
+
+.font-weight-semibold {
+  font-weight: 500;
+}
+
+label.mat-radio-label, label.mat-checkbox-layout, label.mat-slide-toggle-label {
+  margin-bottom: 0 !important;
+}
+
+.mat-tooltip {
+  font-size: 12px !important;
+}
+
+.mat-icon-button.mat-icon-button-mini {
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  font-size: 10px;
+}
+
+.mat-icon-button.mat-icon-button-header {
+  width: 19px;
+  height: 19px;
+  line-height: 19px;
+  font-size: 19px;
+  position: relative;
+  top: -2px;
+}
+
+.mat-icon-button.mat-icon-button-header .mat-badge-content {
+  font-weight: normal !important;
+  background-color: #ff7171 !important;
+}
+
+.expand-header-chip {
+  font-size: 11px !important;
+  min-height: 24px !important;
+  padding: 7px 9px !important;
+  box-shadow: none !important;
+}
+
+
+// material helpers
+.form-field-no-hint .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+
+.form-field-no-hint .mat-hint,
+.form-field-no-hint .mat-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+.form-field-no-hint .mat-form-field-underline {
+  bottom: 0 !important;
+}
+
+.paginator-no-side-spaces .mat-paginator-range-label {
+  margin-left: 0 !important;
+}
+
+.paginator-no-side-spaces .mat-paginator-container {
+  padding: 0 !important;
+  min-height: auto !important;
+}
+
+.form-field-no-label .mat-form-field-label-wrapper {
+  display: none;
+}
+
+.form-field-no-label .mat-form-field-infix {
+  border: 0;
+  padding: 0.75em 0 0.75em 0;
+}
+
+.form-field-no-label .mat-form-field-flex {
+  padding: 0.75em !important;
+}
+
+.form-field-no-underline .mat-form-field-underline {
+  display: none;
+}
+
+
+.form-field-full-rounded .mat-form-field-flex {
+  border-radius: 4px !important;
+}

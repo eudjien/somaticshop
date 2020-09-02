@@ -1,0 +1,5 @@
+<div [@stagger]="cards" class="mb-3" fxLayout="column" fxLayoutAlign="stretch stretch" fxLayoutGap="16px">
+  <div *ngFor="let card of cards" fxFlexFill>
+    <app-product-list-item [card]="card" class="shadow-none border-bottom"></app-product-list-item>
+  </div>
+</div>

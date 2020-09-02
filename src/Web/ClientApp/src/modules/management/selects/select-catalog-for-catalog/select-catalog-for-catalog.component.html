@@ -1,0 +1,64 @@
+<div>
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>Поиск</mat-label>
+    <input (ngModelChange)="searchChange($event)" [(ngModel)]="searchTitle" matInput placeholder="Поиск">
+    <mat-error></mat-error>
+  </mat-form-field>
+</div>
+
+<div class="page">
+
+  <mat-selection-list (selectionChange)="selectionChange($event)" [multiple]="false">
+
+    <div class="page-header" mat-subheader>
+
+      <div class="page-header-actions">
+
+        <button (click)="restoreClick()" *ngIf="canBeRestored"
+                [matTooltip]="'Вернуть в исходное состояние'"
+                class="page-header-action" mat-icon-button>
+          <mat-icon>settings_backup_restore</mat-icon>
+        </button>
+
+        <button (click)="emptyClick()" *ngIf="hasSelected" [matTooltip]="'Без каталога'"
+                class="page-header-action"
+                mat-icon-button>
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="page-header-navigates">
+        <div (matSortChange)="sortChange($event)" class="page-header-navigate" matSort>
+          <div mat-sort-header="title">Название</div>
+        </div>
+
+        <mat-paginator #paginator (page)="paginationChange($event)" [hidePageSize]="true"
+                       [pageSize]="10"
+                       [showFirstLastButtons]="true"
+                       class="page-header-navigate">
+        </mat-paginator>
+      </div>
+    </div>
+
+    <mat-divider class="mb-2"></mat-divider>
+    <app-overlay-loader [isLoading]="isLoading">
+      <ng-container *ngIf="page">
+        <ng-container *ngFor="let catalog of page.items">
+          <mat-list-option *ngIf="!isSource(catalog)" [selected]="isSelected(catalog)" [value]="catalog">
+            <div class="main-line" mat-line>{{catalog.title}}</div>
+            <div *ngIf="catalog.parentCatalogId" class="info-line" mat-line>
+              <ol class="breadcrumb rounded-0 p-0 m-0" style="background: none">
+                <li *ngIf="!catalog.parents">
+                  <mat-spinner [diameter]="20" [strokeWidth]="1"></mat-spinner>
+                </li>
+                <li *ngFor="let item of catalog.parents$ | async" class="breadcrumb-item text-muted">
+                  {{item.title}}
+                </li>
+              </ol>
+            </div>
+          </mat-list-option>
+        </ng-container>
+      </ng-container>
+    </app-overlay-loader>
+  </mat-selection-list>
+
+</div>

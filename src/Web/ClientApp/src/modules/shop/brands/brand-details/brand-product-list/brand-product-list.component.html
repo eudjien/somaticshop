@@ -1,0 +1,47 @@
+<app-overlay-loader [disableSpinner]="!!page" [hideContentWhenLoading]="false" [isLoading]="isLoading"
+                    [overlayStyles]="{'background-color': 'rgb(255,255,255, .5)', 'justify-content': 'flex-start'}"
+                    class="px-4 py-3">
+
+  <div *ngIf="isEmpty" class="p-4" fxLayout="row" fxLayoutAlign="center center" style="font-size:18px">
+    В этом каталоге нет продуктов.
+  </div>
+
+  <ng-container *ngIf="page">
+
+    <div class="mb-3" fxFlexFill fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="32px">
+
+      <div (matSortChange)="sortChange($event)" [matSortDisabled]="isLoading" fxFlex="nogrow" matSort>
+        <div mat-sort-header="price">цена</div>
+      </div>
+
+      <mat-paginator (page)="paginationChange($event)" [disabled]="isLoading" [hidePageSize]="true"
+                     [length]="page.totalItems"
+                     [pageIndex]="page.pageNumber - 1" [pageSize]="10"
+                     [showFirstLastButtons]="true"
+                     class="paginator-no-side-spaces"
+                     fxFlex="nogrow"
+                     style="background: none;margin-right:-13px"></mat-paginator>
+
+    </div>
+
+    <div class="px-1" style="height: 8px;background:none; z-index: 99999;position:relative">
+      <mat-progress-bar *ngIf="isLoading;" [color]="'primary'" mode="indeterminate"
+                        style="height: 2px"></mat-progress-bar>
+    </div>
+
+    <app-product-layout [mode]="'card'" [cards]="page.items"></app-product-layout>
+
+    <div fxFlexFill fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="32px">
+
+      <mat-paginator (page)="paginationChange($event)" [disabled]="isLoading" [hidePageSize]="true"
+                     [length]="page.totalItems"
+                     [pageIndex]="page.pageNumber - 1" [pageSize]="10"
+                     [showFirstLastButtons]="true"
+                     class="paginator-no-side-spaces"
+                     fxFlex="nogrow"
+                     style="background: none;margin-right:-13px"></mat-paginator>
+
+    </div>
+  </ng-container>
+
+</app-overlay-loader>

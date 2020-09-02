@@ -1,0 +1,166 @@
+<div style="z-index: 999;position: relative;">
+  <div style="background: #2e3f50;color:#29363e">
+    <div class="container">
+      <div [ngClass.xs]="'px-3'" class="row d-block">
+
+        <div class="header-top" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+
+          <div style="position:relative">
+            <a [routerLink]="['/']" class="logo">SomaticShop</a>
+            <app-breakpoint-text class="logo-alpha-prefix"></app-breakpoint-text>
+          </div>
+
+          <app-login-menu class="ml-auto"></app-login-menu>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="background: #3a4c5f;color:#fff">
+  <div class="container">
+
+    <div class="header-bottom" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+
+      <button (click)="toggleMenu()" mat-icon-button>
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <app-basket-open-button *ngIf="activeMenuItemId !== 'search'" fxFlex="none"></app-basket-open-button>
+
+    </div>
+
+  </div>
+</div>
+
+<div style="z-index: 999;position: relative;">
+  <div style="background: #324354;color:#29363e">
+    <div class="container">
+      <div [@expandMenuAnimation]="menuAnimationState()" class="header-expand" fxLayout="column"
+           fxLayoutAlign="start stretch" fxLayoutGap="16px">
+
+        <div class="py-4" fxLayout="column" fxLayoutGap="16px">
+          <div fxLayout="row" fxLayoutAlign="start center">
+
+            <a [routerLink]="['/contacts']" class="header-expand-link">
+              Контакты
+            </a>
+            <a [routerLink]="['/delivery']" class="header-expand-link">
+              Доставка
+            </a>
+            <a [routerLink]="['/about']" class="header-expand-link">
+              О нас
+            </a>
+            <a [routerLink]="['/brands']" class="header-expand-link">
+              Бренды
+            </a>
+          </div>
+
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let catalogRoot of sliceRoots(catalogs)" class="custom-expansion-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="expand-header">{{catalogRoot.title}}</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <div fxLayout="column">
+                <div *ngFor="let childOfRoot of sliceChildsOf(catalogs, catalogRoot)"
+                     class="dd-list-group" fxFlex="noshrink">
+
+                  <div>
+                    <h6 class="dd-list-group-header">
+                      <a [routerLink]="['/catalogs', childOfRoot.id]">{{childOfRoot.title}}</a>
+                    </h6>
+                    <ul class="dd-list-group-list dd-list-grop-expand">
+                      <li *ngFor="let childOfRoot of sliceChildsOf(catalogs, childOfRoot)">
+                        <a [routerLink]="['/catalogs', childOfRoot.id]"
+                           class="dd-list-group-item">{{childOfRoot.title}}</a>
+                      </li>
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+
+            </mat-expansion-panel>
+
+          </mat-accordion>
+
+          <div #searchNavWrap
+               class="dd-search w-100" fxFlex="nogrow" fxLayout="row"
+               fxLayoutAlign="center center">
+
+            <mat-form-field appearance="fill" class="unicorn-dark-theme header-search" fxFlex="nogrow">
+              <input [(ngModel)]="searchInput" matInput placeholder="Поиск">
+
+              <button [queryParams]="{q: searchInput}" [routerLink]="['/search']" class="mr-auto" mat-icon-button
+                      matSuffix>
+                <mat-icon style="position: relative; top: 3px;">search</mat-icon>
+              </button>
+
+            </mat-form-field>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--<div style="position:absolute;width: 100%;left:0;z-index:999;">-->
+
+<!--  <div *ngIf="activeMenuItemId" [@ddAnimation]-->
+<!--       style="overflow: hidden">-->
+
+<!--    <ng-container *ngFor="let catalogRoot of sliceRoots(catalogs)">-->
+
+<!--      <div *ngIf="catalogRoot.id === activeMenuItemId" class="container">-->
+<!--        <div class="row d-block">-->
+<!--          <div #ddContainer (mouseleave)="dropDownMouseLeave($event, ddContainer, searchInputElem)"-->
+<!--               class="dropdown-content dropdown-catalogs-bg">-->
+<!--            <div [@ddSwitchContentAnimation] class="dropdown-content-inner" fxLayout="row wrap"-->
+<!--                 fxLayoutAlign="start start">-->
+
+<!--              <div *ngFor="let childOfRoot of sliceChildsOf(catalogs, catalogRoot)"-->
+<!--                   class="dd-list-group" fxFlex="noshrink">-->
+
+<!--                <div>-->
+<!--                  <h6 class="dd-list-group-header">-->
+<!--                    <a [routerLink]="['/catalogs', childOfRoot.id]">{{childOfRoot.title}}</a>-->
+<!--                  </h6>-->
+<!--                  <ul class="dd-list-group-list">-->
+<!--                    <li *ngFor="let childOfRoot of sliceChildsOf(catalogs, childOfRoot)">-->
+<!--                      <a [routerLink]="['/catalogs', childOfRoot.id]"-->
+<!--                         class="dd-list-group-item">{{childOfRoot.title}}</a>-->
+<!--                    </li>-->
+<!--                  </ul>-->
+<!--                </div>-->
+
+<!--              </div>-->
+
+
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </ng-container>-->
+
+<!--    <div *ngIf="activeMenuItemId === 'search'" class="container">-->
+<!--      <div class="row d-block">-->
+
+<!--        <div #searchElem (mouseleave)="dropDownMouseLeave($event, searchElem, searchInputElem)"-->
+<!--             class="dropdown-content-inner">-->
+<!--          <app-search-header-dropdown [search]="searchInput"-->
+<!--                                      class="d-block dropdown-search-bg"></app-search-header-dropdown>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->

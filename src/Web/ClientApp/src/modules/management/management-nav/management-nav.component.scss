@@ -1,0 +1,39 @@
+.side-nav {
+  height: 100%;
+}
+
+.side-nav .mat-expansion-panel-body {
+  padding: 0 0 16px 0 !important;
+}
+
+.side-nav .mat-list-item-content {
+  padding: 0 24px !important;
+}
+
+.side-nav .mat-list-base .mat-list-item {
+  color: #444444;
+  font-size: 13px;
+}
+
+.side-nav .mat-list-base {
+  padding-top: 0 !important;
+}
+
+.side-nav a.active {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.side-nav .nav-header {
+  padding: 16px 24px;
+}
+
+.side-nav .nav-header-title {
+  color: #303030;
+  margin: 0;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.side-nav, .side-nav .mat-expansion-panel {
+  background: none !important;
+}

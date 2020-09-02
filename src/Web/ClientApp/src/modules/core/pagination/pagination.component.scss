@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.pagination-button {
+  color: #636363;
+  .move-icon {
+    position: relative;
+    top: -1px;
+  }
+}
+
+.page-info {
+  color: #636363;
+  font-size: 13px;
+  .info {
+    padding: 0 3px;
+  }
+}

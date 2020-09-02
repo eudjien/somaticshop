@@ -1,0 +1,132 @@
+<div class="side-nav">
+  <mat-expansion-panel [expanded]="true" class="mat-elevation-z0 rounded-0">
+    <mat-expansion-panel-header class="nav-header">
+      <mat-panel-title>
+        <h6 class="nav-header-title">Брэнды</h6>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-nav-list>
+
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active'" [routerLink]="'brands/new'"
+         mat-list-item>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-icon>add</mat-icon>
+          <span>Новый бренд</span>
+        </div>
+      </a>
+
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active'" [routerLink]="'brands'" mat-list-item>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-icon>format_list_bulleted</mat-icon>
+          <span>Список</span>
+        </div>
+      </a>
+
+    </mat-nav-list>
+  </mat-expansion-panel>
+
+  <mat-divider></mat-divider>
+
+  <mat-expansion-panel [expanded]="true" class="mat-elevation-z0 rounded-0">
+    <mat-expansion-panel-header class="nav-header">
+      <mat-panel-title>
+        <h6 class="nav-header-title">Каталоги</h6>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-nav-list>
+
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active'" [routerLink]="'catalogs/new'"
+         mat-list-item>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-icon>add</mat-icon>
+          <span>Новый каталог</span>
+        </div>
+      </a>
+
+
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active'" [routerLink]="'catalogs'"
+         mat-list-item>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-icon>format_list_bulleted</mat-icon>
+          <span>Список</span>
+        </div>
+      </a>
+
+    </mat-nav-list>
+  </mat-expansion-panel>
+
+  <mat-divider></mat-divider>
+
+  <mat-expansion-panel [expanded]="true" class="mat-elevation-z0 rounded-0">
+    <mat-expansion-panel-header class="nav-header">
+      <mat-panel-title>
+        <h6 class="nav-header-title">Продукты</h6>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-nav-list>
+
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active'" [routerLink]="'products/new'"
+         mat-list-item>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-icon>add</mat-icon>
+          <span>Новый продукт</span>
+        </div>
+      </a>
+
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active'" [routerLink]="'products'"
+         mat-list-item>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-icon>format_list_bulleted</mat-icon>
+          <span>Список</span>
+        </div>
+      </a>
+
+    </mat-nav-list>
+  </mat-expansion-panel>
+
+  <mat-divider></mat-divider>
+
+  <mat-expansion-panel [expanded]="true" class="mat-elevation-z0 rounded-0">
+    <mat-expansion-panel-header class="nav-header">
+      <mat-panel-title>
+        <h6 class="nav-header-title">Группы продуктов</h6>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-nav-list>
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active'" [routerLink]="'product-groups/new'"
+         mat-list-item>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-icon>add</mat-icon>
+          <span>Новая группа</span>
+        </div>
+      </a>
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active'" [routerLink]="'product-groups'"
+         mat-list-item>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-icon>format_list_bulleted</mat-icon>
+          <span>Список</span>
+        </div>
+      </a>
+
+    </mat-nav-list>
+  </mat-expansion-panel>
+
+  <mat-divider></mat-divider>
+
+  <mat-expansion-panel [expanded]="true" class="mat-elevation-z0 rounded-0">
+    <mat-expansion-panel-header class="nav-header">
+      <mat-panel-title>
+        <h6 class="nav-header-title">Заказы</h6>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-nav-list>
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active'" [routerLink]="'orders'"
+         mat-list-item>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-icon>format_list_bulleted</mat-icon>
+          <span>Список</span>
+        </div>
+      </a>
+    </mat-nav-list>
+  </mat-expansion-panel>
+</div>

@@ -1,0 +1,66 @@
+<mat-card>
+
+  <mat-form-field appearance="fill" class="d-block w-100">
+    <mat-label>Поиск</mat-label>
+    <input (ngModelChange)="searchChange($event)" [(ngModel)]="searchTitle" matInput placeholder="Поиск">
+    <mat-error></mat-error>
+  </mat-form-field>
+
+
+  <div class="page">
+
+    <mat-list>
+
+      <div class="page-header" mat-subheader>
+        <div class="checkbox-wrapper">
+          <mat-checkbox (change)="pageSelectChange($event.checked)" *ngIf="hasPageItems()"
+                        [checked]="isAllOnPageSelected()"
+                        [indeterminate]="someOnPageSelected()">
+          </mat-checkbox>
+        </div>
+        <div *ngIf="!selection.isEmpty()" class="page-header-actions">
+
+          <button (click)="deleteClick($event)" class="page-header-action del-action"
+                  mat-icon-button>
+            <mat-icon matBadge="{{selection.selected.length}}"
+                      matBadgeOverlap="true" matBadgePosition="above"
+                      matBadgeSize="small">delete
+            </mat-icon>
+          </button>
+        </div>
+        <div class="page-header-navigates">
+
+          <div (matSortChange)="sortChange($event)" class="page-header-navigate" matSort>
+            <div mat-sort-header="title">Название</div>
+          </div>
+
+          <mat-paginator #paginator (page)="paginationChange($event)" [hidePageSize]="true"
+                         [pageSize]="10"
+                         [showFirstLastButtons]="true"
+                         class="page-header-navigate">
+          </mat-paginator>
+        </div>
+      </div>
+
+      <app-overlay-loader [isLoading]="isLoading">
+        <ng-container *ngIf="page">
+          <ng-container *ngFor="let brand of page.items">
+            <mat-list-item>
+              <div class="checkbox-wrapper-2" mat-list-avatar>
+                <mat-checkbox (change)="selectChange($event.checked, brand)" [checked]="isSelected(brand)"
+                              class="d-flex mt-1" disableRipple="true">
+                </mat-checkbox>
+              </div>
+              <div class="main-line" mat-line>
+                <a routerLink="{{brand.id}}/edit" target="_blank">
+                  {{brand.title}}
+                </a>
+              </div>
+            </mat-list-item>
+          </ng-container>
+        </ng-container>
+      </app-overlay-loader>
+    </mat-list>
+  </div>
+</mat-card>
+

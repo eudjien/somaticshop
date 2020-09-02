@@ -1,0 +1,164 @@
+<div class="p-4">
+  <div *ngIf="(orderViewModel$ | async) as orderViewModel" fxLayout="column" fxLayoutGap="32px">
+
+    <h5 class="mb-4" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+      Заказ #{{orderViewModel.id}}
+    </h5>
+
+    <div class="details">
+
+      <table class="mat-table" style="background: none">
+
+        <ng-container *ngIf="(orderViewModel.buyerViewModel$ | async) as buyerViewModel">
+          <tr class="mat-row">
+            <td class="mat-cell pr-3 py-1">
+              <span class="key">ФИО:</span>
+            </td>
+            <td class="mat-cell pl-3 py-1">
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <mat-icon [inline]=true class="x-icon">person</mat-icon>
+                <span
+                  class="value">{{buyerViewModel.lastName}} {{buyerViewModel.firstName}} {{buyerViewModel.surName}}</span>
+              </div>
+            </td>
+          </tr>
+          <tr class="mat-row">
+            <td class="mat-cell pr-3 py-1">
+              <span class="key">Номер телефона:</span>
+            </td>
+            <td class="mat-cell pl-3 py-1">
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <mat-icon [inline]=true class="x-icon">call</mat-icon>
+                <span class="value">{{buyerViewModel.phoneNumber}}</span>
+              </div>
+            </td>
+          </tr>
+          <tr class="mat-row">
+            <td class="mat-cell pr-3 py-1">
+              <span class="key">Email:</span>
+            </td>
+            <td class="mat-cell pl-3 py-1">
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <mat-icon [inline]=true class="x-icon">email</mat-icon>
+                <span class="value">{{buyerViewModel.email}}</span>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+
+        <ng-container *ngIf="(orderViewModel.addressViewModel$ | async) as addressViewModel">
+          <tr class="mat-row">
+            <td class="mat-cell pr-3 py-1">
+              <span class="key">Почтовый индекс:</span>
+            </td>
+            <td class="mat-cell pl-3 py-1">
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <mat-icon [inline]=true class="x-icon">local_post_office</mat-icon>
+                <span class="value">{{addressViewModel.postalCode}}</span>
+              </div>
+            </td>
+          </tr>
+          <tr class="mat-row">
+            <td class="mat-cell pr-3 py-1">
+              <span class="key">Адрес:</span>
+            </td>
+            <td class="mat-cell pl-3 py-1">
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <mat-icon [inline]=true class="x-icon">my_location</mat-icon>
+                <span class="value">{{addressViewModel.country}}, {{addressViewModel.addressText}}</span>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+
+        <tr class="mat-row">
+          <td class="mat-cell pr-3 py-1">
+            <span class="key">Дата заказа:</span>
+          </td>
+          <td class="mat-cell pl-3 py-1">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <mat-icon [inline]=true class="x-icon">date_range</mat-icon>
+              <span class="value">{{orderViewModel.date | date:'dd MMMM yyyy HH:mm:ss'}}</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="mat-row">
+          <td class="mat-cell pr-3 py-1">
+            <span class="key">Комментарий:</span>
+          </td>
+          <td class="mat-cell pl-3 py-1">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <mat-icon [inline]=true class="x-icon">comment</mat-icon>
+              <span class="value">{{orderViewModel.comment}}</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="mat-row">
+          <td class="mat-cell pr-3 py-1">
+            <span class="key">Статус:</span>
+          </td>
+          <td class="mat-cell pl-3 py-1">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+
+              <ng-container [ngSwitch]="orderViewModel.status">
+                <mat-icon *ngSwitchCase="0" [inline]=true class="x-icon">priority_high</mat-icon>
+                <mat-icon *ngSwitchCase="1" [inline]=true class="x-icon">query_builder</mat-icon>
+                <mat-icon *ngSwitchCase="2" [inline]=true class="x-icon">done</mat-icon>
+                <mat-icon *ngSwitchCase="3" [inline]=true class="x-icon">cancel_schedule_send</mat-icon>
+              </ng-container>
+
+              <span class="value"
+                    style="font-weight: 500">{{getStatus(orderViewModel.status)}}</span>
+            </div>
+          </td>
+        </tr>
+
+      </table>
+
+    </div>
+
+
+    <div *ngIf="(orderViewModel.orderedProductsViewModel$ | async) as orderedProductViewModels" fxLayout="column"
+         fxLayoutGap="16px">
+
+      <div class="px-3" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+        <h6 class="mb-0">Заказанные продукты</h6>
+        <span style="font-weight: 500">
+            Всего: {{totalSum(orderedProductViewModels) | currency:'BYN'}}
+          </span>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div>
+        <div *ngFor="let orderedProductViewModel of orderedProductViewModels" class="stripped-item" fxLayout="row"
+             fxLayout.lt-md="column" fxLayoutAlign="start"
+             fxLayoutAlign.lt-md="start center" fxLayoutGap="16px">
+
+          <div *ngIf="orderedProductViewModel.imageUrl$ | async as imageUrl" fxFlex="0 0 auto"
+               style="width: 100px; min-width: 50px">
+            <img alt="" class="w-100" src="{{imageUrl}}">
+          </div>
+
+          <div fxFlex="grow" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+            <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+              <a [routerLink]="['/products', orderedProductViewModel.id]" style="font-weight: 500"
+                 target="_blank">{{orderedProductViewModel.title}}</a>
+            </div>
+
+            <div>{{orderedProductViewModel.description | slice:0:120}}...</div>
+
+            <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px">
+              <div style="font-weight: 500">{{orderedProductViewModel.unitPrice | currency: 'BYN'}}</div>
+              <div>{{orderedProductViewModel.quantity}}</div>
+              <div style="font-weight: 500">{{orderedProductViewModel.totalPrice | currency: 'BYN'}}</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div>
+  <mat-list>
+    <div class="list-header" mat-subheader>
+
+      <button (click)="addClick()" mat-icon-button>
+        <mat-icon>add</mat-icon>
+      </button>
+
+      <button (click)="restoreClick()" *ngIf="canBeRestored"
+              [matTooltip]="'Вернуть в исходное состояние'"
+              class="mat-icon-button-mini list-header-btn mr-2" mat-icon-button>
+        <mat-icon>settings_backup_restore</mat-icon>
+        <mat-icon></mat-icon>
+      </button>
+
+    </div>
+    <mat-divider class="mb-3"></mat-divider>
+    <mat-list-item *ngFor="let spec of modified" class="h-auto">
+      <div class="entry">
+        <div class="key">
+          <mat-form-field appearance="legacy" class="w-100">
+            <mat-label>Ключ</mat-label>
+            <input [(ngModel)]="spec.key" matInput>
+          </mat-form-field>
+        </div>
+        <div class="val">
+          <mat-form-field appearance="legacy" class="w-100">
+            <mat-label>Значение</mat-label>
+            <input [(ngModel)]="spec.value" matInput>
+          </mat-form-field>
+        </div>
+        <div class="del">
+          <button (click)="removeClick(spec)" class="mat-icon-button-mini" mat-icon-button
+                  style="border: 1px solid #8f939d;color:#8f939d">
+            <mat-icon>trash</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</div>

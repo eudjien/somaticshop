@@ -1,0 +1,19 @@
+<div class="page-info">
+  <span class="info">{{(pageIndex * pageSize) + 1}}</span>
+  <span class="info">-</span>
+  <span class="info">{{(pageIndex * pageSize) + pageSize}}</span>
+  <span class="info">из</span>
+  <span class="info">{{totalItems}}</span>
+</div>
+<div>
+  <button class="pagination-button" mat-icon-button [disabled]="firstPageIsActive" (click)="prevClick()">
+    <mat-icon class="move-icon">chevron_left</mat-icon>
+  </button>
+  <button class="pagination-button" mat-icon-button *ngFor="let pageIndex of pages"
+          [disabled]="isActivePage(pageIndex)" (click)="numberClick(pageIndex)">
+    {{pageIndex + 1}}
+  </button>
+  <button class="pagination-button" mat-icon-button [disabled]="lastPageIsActive" (click)="nextClick()">
+    <mat-icon class="move-icon">chevron_right</mat-icon>
+  </button>
+</div>

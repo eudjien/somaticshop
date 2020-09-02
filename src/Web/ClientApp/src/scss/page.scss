@@ -1,0 +1,128 @@
+.page {
+}
+
+//.page .mat-list-item {
+//  height: auto !important;
+//}
+
+.page .mat-list-item:nth-child(even) {
+  background: #fcfcfc !important;
+}
+
+.page .info-line a {
+  color: #6c757d !important;
+  font-size: 14px;
+}
+
+//.page .mat-line {
+//  padding-top: 4px !important;
+//  padding-bottom: 4px !important;
+//  min-height: 36px !important;
+//}
+//
+//.page .main-line a {
+//  color: #454648 !important;
+//  font-size: 15px !important;
+//}
+
+//
+//.page .main-line a:hover, .page .main-line a:hover {
+//  color: #404040;
+//}
+//
+//.page .mat-line:first-child {
+//  padding-top: 12px !important;
+//}
+//
+//.page .mat-line:last-child {
+//  padding-bottom: 12px !important;
+//}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex: 1 1 auto;
+  justify-content: space-between;
+}
+
+.page-header .page-header-actions {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex: 1 1 auto;
+  margin: 0 8px;
+  padding-left: 16px;
+}
+
+.page-header .page-header-navigates {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex: 1 1 auto;
+  margin: 0 8px;
+  justify-content: flex-end;
+}
+
+.page-header .page-header-actions .page-header-action,
+.page-header .page-header-navigates .page-header-navigate {
+  margin: 0 8px;
+}
+
+.page-header .page-header-actions .page-header-action:first-child,
+.page-header .page-header-navigates .page-header-navigate:first-child,
+.page-header .page-header-actions:first-child,
+.page-header .page-header-navigates:first-child {
+  margin-left: 0 !important;
+}
+
+.page-header .page-header-actions .page-header-action:last-child,
+.page-header .page-header-navigates .page-header-navigate:last-child,
+.page-header .page-header-actions:last-child,
+.page-header .page-header-navigates:last-child {
+  margin-right: 0 !important;
+}
+
+.page-header .page-header-actions .page-header-action {
+  position: relative;
+  top: -1px;
+}
+
+.page-header .page-header-actions .page-header-action:first-child {
+  margin-left: -22px !important;
+}
+
+.checkbox-wrapper {
+  width: 24px !important;
+  border-radius: 0 !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+.checkbox-wrapper-2 {
+  width: 24px !important;
+  border-radius: 0 !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  height: 20px !important;
+}
+
+// mat overrides
+.page-header .page-header-navigates .mat-paginator-range-label {
+  margin: 0 24px 0 0 !important;
+  white-space: nowrap !important;
+}
+
+.page-header .page-header-navigates .mat-paginator-container {
+  padding: 0 !important;
+  min-height: unset !important;
+}
+
+.page-header .page-header-navigates .mat-paginator-icon {
+  width: 22px !important;
+}
+
+.page-header .page-header-actions .page-header-action.del-action .mat-badge-content {
+  font-weight: normal !important;
+  background-color: #ff7171 !important;
+}

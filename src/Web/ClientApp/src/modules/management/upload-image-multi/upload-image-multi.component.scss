@@ -1,0 +1,18 @@
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 2px 0;
+}
+
+table td, table th {
+  padding: 16px !important;
+}
+
+input[type=file] {
+  display: none;
+  visibility: collapse
+}
+
+.image {
+  width: 160px;
+}

@@ -1,0 +1,23 @@
+<mat-expansion-panel [expanded]="true" class="mat-elevation-z0 rounded-0">
+  <mat-expansion-panel-header class="p-4">
+    Продукты для группы
+  </mat-expansion-panel-header>
+  <mat-form-field appearance="outline" class="d-block w-100">
+    <mat-label>Поиск</mat-label>
+    <input (ngModelChange)="searchChange($event)" [(ngModel)]="searchTitle" matInput placeholder="Поиск">
+    <mat-error></mat-error>
+  </mat-form-field>
+  <mat-tab-group #tabs (selectedIndexChange)="tabChanged($event)" [animationDuration]="'0ms'">
+    <mat-tab label="Все">
+      <app-select-products #selects (select)="selectChange($event)"></app-select-products>
+    </mat-tab>
+    <mat-tab>
+      <ng-template matTabLabel>
+        <span [matBadgeOverlap]="false" [matBadgeSize]="'small'"
+              matBadge="{{selects.selection.selected.length}}">Выбранные</span>
+      </ng-template>
+      <app-select-to-delete-products #delSelects
+                                     (deleted)="selects.onDeleted($event)"></app-select-to-delete-products>
+    </mat-tab>
+  </mat-tab-group>
+</mat-expansion-panel>

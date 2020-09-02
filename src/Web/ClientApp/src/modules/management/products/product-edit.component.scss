@@ -1,0 +1,41 @@
+:host {
+  flex: 1 1 auto;
+}
+
+.send-btn {
+  font-size: 12px;
+  line-height: 31px;
+  padding: 0 9px;
+  color: #ffffff
+}
+
+.expand-header-chip.image-count-chip {
+  background-color: #819bba !important;
+}
+
+.expand-header-chip.specs-chip {
+  background-color: #98c1bc !important;
+}
+
+.expand-header-chip.catalog-chip {
+  background-color: #a093cd !important;
+}
+
+.expand-header-chip.group-chip {
+  background-color: #878ca5 !important;
+}
+
+.expand-header-chip.mat-chip.mat-standard-chip:not(.mat-chip-disabled):active {
+  box-shadow: none !important;
+}
+
+.expand-header-info {
+  font-size: 13px;
+  color: #404040;
+  justify-content: end;
+  justify-items: center;
+}
+
+.chip-breadcrumb-item.breadcrumb-item + .breadcrumb-item::before {
+  color: #ffffff;
+}

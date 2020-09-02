@@ -1,0 +1,124 @@
+<mat-card>
+
+  <mat-form-field appearance="fill" class="d-block w-100">
+    <mat-label>Поиск</mat-label>
+    <input (ngModelChange)="searchChange($event)" [(ngModel)]="searchId" matInput placeholder="Поиск">
+    <mat-error></mat-error>
+  </mat-form-field>
+
+  <div class="page">
+
+    <mat-list>
+
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px" mat-subheader>
+
+        <div fxFlex="initial" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+
+          <div *ngIf="changes.length">
+            <button [matMenuTriggerFor]="menu" aria-label="Menu" mat-icon-button>
+              <mat-icon>more_vert</mat-icon>
+              <span matBadge="{{changes.length}}" matBadgeSize="small"></span>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button (click)="applyChanges()" mat-menu-item>
+                <mat-icon>published_with_changes</mat-icon>
+                <span>Применить изменения</span>
+              </button>
+            </mat-menu>
+          </div>
+
+        </div>
+
+        <div fxFlex="initial" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px">
+          <div (matSortChange)="sortChange($event)" class="page-header-navigate" matSort>
+            <div mat-sort-header="id">Id</div>
+          </div>
+
+          <mat-paginator #paginator (page)="paginationChange($event)" [hidePageSize]="true"
+                         [pageSize]="10"
+                         [showFirstLastButtons]="true"
+                         class="paginator-no-side-spaces">
+          </mat-paginator>
+        </div>
+
+      </div>
+
+      <mat-divider class="mb-2"></mat-divider>
+
+      <app-overlay-loader [hideContentWhenLoading]="false" [isLoading]="isLoading"
+                          [overlayStyles]="{'background-color': 'rgb(255,255,255, .7)'}">
+        <ng-container *ngIf="page">
+          <ng-container *ngFor="let order of page.items">
+
+
+            <mat-expansion-panel class="mat-elevation-z0 w-100" style="background:none">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+                    <span>#{{order.id}}</span>
+                    <span>{{order.date | date:'dd MMMM yyyy HH:mm:ss'}}</span>
+                  </div>
+                </mat-panel-title>
+                <mat-panel-description>
+                    <span class="ml-auto" fxLayout="row" fxLayoutAlign="start cetner">
+                      {{getStatus(order.status)}}
+                      <span *ngIf="isChanged(order)" fxLayout="row" fxLayoutAlign="start cetner">
+                        <mat-icon [inline]="true">keyboard_arrow_right</mat-icon>
+                        <span>{{getStatus(changedItem(order).status)}}</span>
+                      </span>
+                    </span>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+
+              <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between">
+
+                <div fxFlex="noshrink" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="8px">
+
+                  <div *ngIf="order.buyer.lastName || order.buyer.firstName || order.buyer.surName"
+                       fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                    <mat-icon [inline]="true">person</mat-icon>
+                    <span *ngIf="order.buyer.lastName">{{order.buyer.lastName}}</span>
+                    <span *ngIf="order.buyer.firstName">{{order.buyer.firstName}}</span>
+                    <span *ngIf="order.buyer.surName">{{order.buyer.surName}}</span>
+                  </div>
+
+                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                    <mat-icon [inline]="true">location_on</mat-icon>
+                    <span>{{order.address.country}}, {{order.address.addressText}}
+                      , {{order.address.postalCode}}</span>
+                  </div>
+
+                  <div *ngIf="order.buyer.email" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                    <mat-icon [inline]="true">email</mat-icon>
+                    <span>{{order.buyer.email}}</span>
+                  </div>
+
+                  <div *ngIf="order.buyer.phoneNumber" fxLayout="row" fxLayoutAlign="start center"
+                       fxLayoutGap="8px">
+                    <mat-icon [inline]="true">phone</mat-icon>
+                    <span>{{order.buyer.phoneNumber}}</span>
+                  </div>
+                </div>
+
+                <div fxFlex="grow" fxLayout="column" fxLayoutAlign="start end" fxLayoutGap="8px"
+                     style="font-size:12px">
+
+                  <mat-form-field appearance="fill"
+                                  class="order-status form-field-no-hint">
+                    <mat-select (selectionChange)="selectChange($event.value, order)" [value]="order.status">
+                      <mat-option *ngFor="let status of statuses"
+                                  [value]="status">{{getStatus(status)}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+              </div>
+            </mat-expansion-panel>
+            <mat-divider></mat-divider>
+          </ng-container>
+        </ng-container>
+      </app-overlay-loader>
+    </mat-list>
+  </div>
+</mat-card>

@@ -1,0 +1,44 @@
+<table [dataSource]="dataSource" class="w-100" mat-table>
+  <ng-container matColumnDef="data">
+    <th *matHeaderCellDef mat-header-cell>
+      <div *ngIf="images.length == 0; else del">
+        <button (click)="addClick(input)" [matTooltipPosition]="'above'" class="mat-elevation-z3" mat-mini-fab
+                matTooltip="Добавить"
+                style="background-color: #5f80a7">
+          <mat-icon>add</mat-icon>
+        </button>
+        <input #input (change)="onFileSelect($event)" accept="image/*" name="file" type="file">
+      </div>
+      <ng-template #del>
+        <button (click)="onDeleteClick()" [matTooltipPosition]="'above'" class="mat-elevation-z3" mat-mini-fab
+                matTooltip="Удалить"
+                style="background-color: #b67a81">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </ng-template>
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <mat-spinner *ngIf="!element.data" [diameter]="30" [strokeWidth]="1"></mat-spinner>
+      <img *ngIf="element.data" alt="" class="image mat-elevation-z3" src="{{element.data}}">
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="fileName">
+    <th *matHeaderCellDef mat-header-cell>FileName</th>
+    <td *matCellDef="let element" mat-cell> {{element.file.name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="contentType">
+    <th *matHeaderCellDef mat-header-cell>ContentType</th>
+    <td *matCellDef="let element" mat-cell> {{element.file.type}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="size">
+    <th *matHeaderCellDef mat-header-cell>Size</th>
+    <td *matCellDef="let element" mat-cell> {{element.file.size}} </td>
+  </ng-container>
+
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedColumns;" mat-row>
+  </tr>
+</table>

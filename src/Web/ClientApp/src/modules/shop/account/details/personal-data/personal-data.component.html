@@ -1,0 +1,43 @@
+<div class="p-4">
+
+  <div *ngIf="(user$ | async) as user" class="user-info w-100" fxLayout="row wrap" fxLayoutAlign="start stretch">
+
+    <div class="pb-3" fxFlex="160px" fxLayout="row" fxLayoutAlign="start center">Имя пользователя:</div>
+    <div class="pb-3" fxFlex="calc(100% - 160px)" fxLayout="row"
+         fxLayoutAlign="start center">{{user.userName}}</div>
+
+    <mat-divider fxFlexFill></mat-divider>
+
+    <div class="py-3" fxFlex="160px" fxLayout="row" fxLayoutAlign="start center">Имя:</div>
+    <div class="py-3" fxFlex="calc(100% - 160px)" fxLayout="row"
+         fxLayoutAlign="start center">{{user.firstName}}</div>
+
+    <mat-divider fxFlexFill></mat-divider>
+
+    <div class="py-3" fxFlex="160px" fxLayout="row" fxLayoutAlign="start center">Фамилия:</div>
+    <div class="py-3" fxFlex="calc(100% - 160px)" fxLayout="row"
+         fxLayoutAlign="start center">{{user.lastName}}</div>
+
+    <mat-divider fxFlexFill></mat-divider>
+
+    <div class="py-3" fxFlex="160px" fxLayout="row" fxLayoutAlign="start center">Отчество:</div>
+    <div class="py-3" fxFlex="calc(100% - 160px)" fxLayout="row"
+         fxLayoutAlign="start center">{{user.surName}}</div>
+
+    <mat-divider fxFlexFill></mat-divider>
+
+    <div class="py-3" fxFlex="160px" fxLayout="row" fxLayoutAlign="start center">Email:</div>
+    <div class="py-3" fxFlex="calc(100% - 160px)" fxLayout="row"
+         fxLayoutAlign="start center">{{user.email}}</div>
+
+    <mat-divider fxFlexFill></mat-divider>
+
+    <div class="py-3" fxFlex="160px" fxLayout="row" fxLayoutAlign="start center">Номер телефона:</div>
+    <div class="py-3" fxFlex="calc(100% - 160px)" fxLayout="row"
+         fxLayoutAlign="start center">{{user.phoneNumber}}</div>
+
+  </div>
+
+  <app-overlay-loader *ngIf="!(user$ | async)" isLoading="true"></app-overlay-loader>
+
+</div>

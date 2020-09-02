@@ -1,0 +1,90 @@
+<mat-card [ngClass.lt-sm]="'card-full-screen'"
+          class="card mat-elevation-z24">
+
+  <mat-card-header class="mb-3">
+    <mat-icon [inline]="true" class="avatar" mat-card-avatar>
+      person_add
+    </mat-icon>
+    <mat-card-title>Регистрация</mat-card-title>
+    <mat-card-subtitle>
+      Создать новый аккаунт
+      <small>
+        или <a [routerLink]="['/signIn']" style="color:#0277bd;text-decoration:underline">
+        войти
+      </a>
+      </small>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <app-overlay-loader [isLoading]="isLoading" [loadingMessage]="loadingMessage">
+
+      <form (ngSubmit)="onSubmit(registerForm.value)" [formGroup]="registerForm" class="mb-4">
+
+        <mat-form-field appearance="legacy" class="d-block w-100 mb-3">
+          <mat-label>Имя пользователя</mat-label>
+          <input formControlName="username" id="username" matInput placeholder="Ваш логин">
+          <mat-error *ngIf="registerForm.get('username').hasError('required')">
+            Это поле обязательное для заполнения
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="legacy" class="d-block w-100 mb-3">
+          <mat-label>Имя</mat-label>
+          <input formControlName="firstName" id="firstName" matInput placeholder="Вася">
+          <mat-error *ngIf="registerForm.get('firstName').hasError('required')">
+            Это поле обязательное для заполнения
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="legacy" class="d-block w-100 mb-3">
+          <mat-label>Фамилия</mat-label>
+          <input formControlName="lastName" id="lastName" matInput placeholder="Пупкин">
+          <mat-error *ngIf="registerForm.get('lastName').hasError('required')">
+            Это поле обязательное для заполнения
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="legacy" class="d-block w-100 mb-3">
+          <mat-label>Email</mat-label>
+          <input formControlName="email" id="email" matInput placeholder="vasyapupkin@gmail.com">
+          <mat-error *ngIf="registerForm.get('email').hasError('email')">
+            Пожалуйста введите правильный email
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('email').hasError('required')">
+            Это поле обязательное для заполнения
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="legacy" class="d-block w-100 mb-3">
+          <mat-label>Пароль</mat-label>
+          <input formControlName="password" id="password" matInput placeholder="Ваш пароль" type="password">
+          <mat-error *ngIf="registerForm.get('password').hasError('required')">
+            Это поле обязательное для заполнения
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="legacy" class="d-block w-100 mb-3">
+          <mat-label>Еще раз пароль</mat-label>
+          <input formControlName="passwordConfirm" id="passwordConfirm" matInput placeholder="Повторите пароль"
+                 type="password">
+          <mat-error *ngIf="registerForm.get('passwordConfirm').hasError('required')">
+            Это поле обязательное для заполнения
+          </mat-error>
+        </mat-form-field>
+
+        <div class="mb-4" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px"
+             style="font-size:13px">
+          <a href="#">
+            <span>&nbsp;{{'Восстановить аккаунт' | lowercase}}</span>
+          </a>
+        </div>
+
+        <button [disabled]="isLoading" class="d-block w-100" color="primary" mat-flat-button type="submit">
+          Регистрация
+        </button>
+
+      </form>
+    </app-overlay-loader>
+  </mat-card-content>
+</mat-card>

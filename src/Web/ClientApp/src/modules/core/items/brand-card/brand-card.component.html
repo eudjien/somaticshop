@@ -1,0 +1,5 @@
+<a [routerLink]="['/brands', brand.id]" class="link">
+  <img *ngIf="brand.imageUrl;else brandTitle" alt="{{brand.title}}"
+       src="{{brand.imageUrl}}">
+  <ng-template #brandTitle>{{brand.title}}</ng-template>
+</a>
