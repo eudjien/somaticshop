@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -51,38 +52,38 @@ namespace Web.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get(
-           [FromQuery] int? page = null,
-           [FromQuery(Name = "search")] ProductSearchModel search = null,
-           [FromQuery(Name = "sort")] SortModel sort = null,
-           [FromQuery(Name = "spec")] List<string[]> specs = null,
-           [FromQuery] int pageSize = 10)
+           [FromQuery(Name = "pageIndex")] int? pageIndex = null,
+           [FromQuery(Name = "search")] ProductSearch search = null,
+           [FromQuery(Name = "sort")] ProductSort? sort = null,
+           [FromQuery(Name = "pageSize")] int pageSize = 10)
         {
 
             var spec = new ProductFilterSpec();
 
-            if (!sort.IsNullOrEmpty())
+            if (sort != null)
             {
-
-                foreach (var item in sort)
+                switch (sort)
                 {
-                    if (Enum.TryParse<OrderBy>(item.Value, true, out var order))
-                    {
-                        if (item.Key.Equals(nameof(Product.Title), StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (order == OrderBy.ASC) { spec.Query.OrderBy(a => a.Title); }
-                            else if (order == OrderBy.DESC) { spec.Query.OrderByDescending(a => a.Title); }
-                        }
-                        if (item.Key.Equals(nameof(Product.Price), StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (order == OrderBy.ASC) { spec.Query.OrderBy(a => a.Price); }
-                            else if (order == OrderBy.DESC) { spec.Query.OrderByDescending(a => a.Price); }
-                        }
-                        if (item.Key.Equals(nameof(Product.Date), StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (order == OrderBy.ASC) { spec.Query.OrderBy(a => a.Date); }
-                            else if (order == OrderBy.DESC) { spec.Query.OrderByDescending(a => a.Date); }
-                        }
-                    }
+                    case ProductSort.PriceAsc:
+                        spec.Query.OrderBy(a => a.Price);
+                        break;
+                    case ProductSort.PriceDesc:
+                        spec.Query.OrderByDescending(a => a.Price);
+                        break;
+                    case ProductSort.DateAsc:
+                        spec.Query.OrderBy(a => a.Date);
+                        break;
+                    case ProductSort.DateDesc:
+                        spec.Query.OrderByDescending(a => a.Date);
+                        break;
+                    case ProductSort.OrdersAsc:
+                        spec.Query.OrderBy(a => a.OrderProducts.Count);
+                        break;
+                    case ProductSort.OrdersDesc:
+                        spec.Query.OrderByDescending(a => a.OrderProducts.Count);
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -90,7 +91,7 @@ namespace Web.Controllers
 
             if (!search.Titles.IsNullOrEmpty())
             {
-                lambdaCombiner.Add(new ProductByTitleContainsSpec(search.Titles).WhereExpressions.First());
+                lambdaCombiner.Add(new ProductByNameContainsSpec(search.Titles).WhereExpressions.First());
             }
 
             if (!search.Ids.IsNullOrEmpty())
@@ -113,10 +114,9 @@ namespace Web.Controllers
                 lambdaCombiner.Add(new ProductByBrandIdSpec(search.BrandIds).WhereExpressions.First());
             }
 
-            if (!specs.IsNullOrEmpty())
+            if (!search.Specifications.IsNullOrEmpty())
             {
-                lambdaCombiner.Add(new ProductBySpecsSpec(
-                    specs.Select(a => new KeyValuePair<string, string>(a[0], a[1])).ToArray()).WhereExpressions.First());
+                lambdaCombiner.Add(new ProductBySpecIdAndValueSpec(search.Specifications.ToArray()).WhereExpressions.First());
             }
 
             var lambda = lambdaCombiner.Combine(ExpressionType.AndAlso);
@@ -126,30 +126,30 @@ namespace Web.Controllers
                 spec.Query.Where(lambda);
             }
 
-            if (page.HasValue)
+            if (pageIndex.HasValue)
             {
-                spec.Query.Paginate((page.Value - 1) * pageSize, pageSize);
+                spec.Query.Paginate(pageIndex.Value * pageSize, pageSize);
 
                 var totalCount = 0;
 
                 if (lambda is null)
                 {
-                    totalCount = await _unitOfWork.ProductRepository.GetAllCountAsync();
+                    totalCount = await _unitOfWork.ProductRepository.CountAsync();
                 }
                 else
                 {
                     var noPagingSpec = new ProductFilterSpec();
                     noPagingSpec.Query.Where(lambda);
-                    totalCount = await _unitOfWork.ProductRepository.GetBySpecCountAsync(noPagingSpec);
+                    totalCount = await _unitOfWork.ProductRepository.CountAsync(noPagingSpec);
                 }
 
-                var items = _mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.ProductRepository.GetBySpecAsync(spec));
-                var paginatedList = new Page<ProductDto>(items, totalCount, page.Value, pageSize);
+                var items = _mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.ProductRepository.ListAsync(spec));
+                var paginatedList = new Page<ProductDto>(items, totalCount, pageIndex.Value, pageSize);
 
                 return Ok(paginatedList);
             }
 
-            return Ok(_mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.ProductRepository.GetBySpecAsync(spec)));
+            return Ok(_mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.ProductRepository.ListAsync(spec)));
         }
 
         [HttpGet("{productId}")]
@@ -174,12 +174,12 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(
             [FromForm(Name = "product")] ProductDto productDto,
-            [FromForm(Name = "specification")] ProductSpecDto[] specs = null)
+            [FromForm(Name = "specification")] KeyValuePair<string, string>[] specifications = null)
         {
             try
             {
                 var fileDatas = _mapper.Map<IEnumerable<FileData>>(FormFileImages);
-                await _productService.CreateProductAsync(productDto, fileDatas, specs);
+                await _productService.CreateProductAsync(productDto, fileDatas, specifications);
                 return CreatedAtAction(nameof(GetById), new { productId = productDto.Id }, productDto);
             }
             catch (Exception ex)
@@ -192,12 +192,12 @@ namespace Web.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(
             [FromForm(Name = "product")] ProductDto productDto,
-            [FromForm(Name = "specification")] ProductSpecDto[] specs = null)
+            [FromForm(Name = "specification")] KeyValuePair<string, string>[] specifications = null)
         {
             try
             {
                 var fileDatas = _mapper.Map<IEnumerable<FileData>>(FormFileImages);
-                await _productService.UpdateProductAsync(productDto, fileDatas, specs);
+                await _productService.UpdateProductAsync(productDto, fileDatas, specifications);
                 return Ok();
             }
             catch (NotFoundException ex1)

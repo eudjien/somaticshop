@@ -67,7 +67,7 @@ namespace Web.Controllers
         [HttpGet("{orderId}/products")]
         public async Task<IEnumerable<OrderProductDto>> GetOrderProducts(int orderId)
         {
-            var orderProducts = await _orderProductRepository.GetBySpecAsync(
+            var orderProducts = await _orderProductRepository.ListAsync(
                 new OrderProductsByOrderIdSpec(orderId));
             return _mapper.Map<IEnumerable<OrderProductDto>>(orderProducts);
         }
@@ -146,23 +146,23 @@ namespace Web.Controllers
                 spec.Query.Where(lambda);
             }
 
-            var items = _mapper.Map<IEnumerable<OrderDto>>(await _unitOfWork.OrderRepository.GetBySpecAsync(spec));
+            var items = _mapper.Map<IEnumerable<OrderDto>>(await _unitOfWork.OrderRepository.ListAsync(spec));
 
             if (page.HasValue)
             {
-                spec.Query.Paginate((page.Value - 1) * pageSize, pageSize);
+                spec.Query.Paginate((page.Value) * pageSize, pageSize);
 
                 var totalCount = 0;
 
                 if (lambda is null)
                 {
-                    totalCount = await _unitOfWork.OrderRepository.GetAllCountAsync();
+                    totalCount = await _unitOfWork.OrderRepository.CountAsync();
                 }
                 else
                 {
                     var noPagingSpec = new OrderFilterSpec();
                     spec.Query.Where(lambda);
-                    totalCount = await _unitOfWork.OrderRepository.GetBySpecCountAsync(noPagingSpec);
+                    totalCount = await _unitOfWork.OrderRepository.CountAsync(noPagingSpec);
                 }
 
                 var paginatedList = new Page<OrderDto>(items, totalCount, page.Value, pageSize);

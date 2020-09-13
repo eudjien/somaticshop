@@ -1,6 +1,5 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthorizeService} from '../../../../api-authorization/authorize.service';
-import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 

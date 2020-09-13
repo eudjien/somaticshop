@@ -1,21 +1,16 @@
-<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-  <div fxFlex="nogrow">
-    <img *ngIf="card.imageUrl" alt="{{card.title}}" src="{{card.imageUrl}}" style="width:120px">
-  </div>
-  <div fxFlex="1 1 auto">
-    <h6>
-      <a [routerLink]="['/products', card.id]" class="view-link">
-        {{card.title}}
-      </a>
-    </h6>
-    <p>
-      {{card.description | shrink: 80}}
-    </p>
-    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
-      <app-brand-link *ngIf="card.brand" [card]="card.brand"></app-brand-link>
-      <div fxFlex="nogrow">
-        <b style="white-space: nowrap;">{{card.price}} р.</b>
-      </div>
-    </div>
+<img *ngIf="card.imageUrl" alt="{{card.name}}" class="image" src="{{card.imageUrl}}">
+
+<div class="content">
+  <h6 class="content-header">
+    <a [routerLink]="['/products', card.id]" class="details-link">
+      {{card.name}}
+    </a>
+  </h6>
+  <p class="content-body">
+    {{card.description | shrink: 80}}
+  </p>
+  <div class="content-footer">
+    <app-brand-link *ngIf="card.brand" [card]="card.brand" class="brand-link"></app-brand-link>
+    <span class="price">{{card.price | currency: currency}}</span>
   </div>
 </div>

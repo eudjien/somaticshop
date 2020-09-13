@@ -39,7 +39,7 @@
     <app-overlay-loader [isLoading]="isLoading">
       <ng-container *ngIf="page">
         <mat-list-option *ngFor="let brand of page.items" [selected]="isSelected(brand)" [value]="brand">
-          {{brand.title}}
+          {{brand.name}}
         </mat-list-option>
       </ng-container>
     </app-overlay-loader>

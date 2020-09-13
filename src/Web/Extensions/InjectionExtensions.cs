@@ -47,6 +47,7 @@ namespace Web.Extensions
             services.AddScoped<IBasketProductRepository, EfBasketProductRepository>();
             services.AddScoped<IProductRepository, EfProductRepository>();
             services.AddScoped<IProductSpecRepository, EfProductSpecRepository>();
+            services.AddScoped<IProductSpecKeyRepository, EfProductSpecKeyRepository>();
             services.AddScoped<IProductGroupRepository, EfProductGroupRepository>();
             services.AddScoped<IBuyerRepository, EfBuyerRepository>();
             services.AddScoped<IBrandRepository, EfBrandRepository>();

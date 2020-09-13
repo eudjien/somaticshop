@@ -44,7 +44,7 @@
                [class.dropdown-catalogs-bg]="navItemIsActive(catalogRoot.id)"
                [routerLink]="['/catalogs', catalogRoot.id]"
                class="dd-link" fxFlex>
-              {{catalogRoot.title}}
+              {{catalogRoot.name}}
             </a>
           </div>
 
@@ -97,12 +97,12 @@
 
                 <div>
                   <h6 class="dd-list-group-header">
-                    <a [routerLink]="['/catalogs', childOfRoot.id]">{{childOfRoot.title}}</a>
+                    <a [routerLink]="['/catalogs', childOfRoot.id]">{{childOfRoot.name}}</a>
                   </h6>
                   <ul class="dd-list-group-list">
                     <li *ngFor="let childOfRoot of sliceChildsOf(catalogs, childOfRoot)">
                       <a [routerLink]="['/catalogs', childOfRoot.id]"
-                         class="dd-list-group-item">{{childOfRoot.title}}</a>
+                         class="dd-list-group-item">{{childOfRoot.name}}</a>
                     </li>
                   </ul>
                 </div>
@@ -120,9 +120,9 @@
   <div [hidden]="!searchIsActive" class="container">
     <div class="row d-block">
 
-        <app-search-header-dropdown [search]="searchInput"
-                                    class="d-block dropdown-search-bg"
-                                    style="max-height: 500px; overflow: auto"></app-search-header-dropdown>
+      <app-search-header-dropdown [search]="searchInput"
+                                  class="d-block dropdown-search-bg"
+                                  style="max-height: 500px; overflow: auto"></app-search-header-dropdown>
 
     </div>
   </div>

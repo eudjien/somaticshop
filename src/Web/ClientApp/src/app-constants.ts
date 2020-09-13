@@ -1,7 +1,7 @@
 import {DeliveryStatus} from './models/order/Order';
 
 export class AppConstants {
-  public static readonly CURRENCY = 'BYN';
+  public static readonly CURRENCY: string = 'BYN';
   public static readonly BASKET_COOKIE_NAME = 'USER_BASKET';
 
   public static GetOrderStatus(status: DeliveryStatus): string {

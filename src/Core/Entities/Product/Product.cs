@@ -6,7 +6,7 @@ namespace Core.Entities
     public class Product
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
         public string Content { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
@@ -19,10 +19,11 @@ namespace Core.Entities
         public ProductGroup Group { get; set; }
         public ICollection<ProductSpec> Specifications { get; set; }
         public ICollection<ProductImage> Images { get; set; }
+        public ICollection<OrderProduct> OrderProducts { get; set; }
         public Product() { }
-        public Product(string title, string content, string description, decimal price, DateTimeOffset date, int? catalogId, int? brandId, int? groupId)
+        public Product(string name, string content, string description, decimal price, DateTimeOffset date, int? catalogId, int? brandId, int? groupId)
         {
-            Title = title;
+            Name = name;
             Content = content;
             Description = description;
             Price = price;

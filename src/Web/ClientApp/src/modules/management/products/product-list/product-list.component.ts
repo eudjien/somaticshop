@@ -13,7 +13,7 @@ import {ProductWithCatalogs} from '../../../../models/product/ProductWithCatalog
 import {debounceTime, map} from 'rxjs/operators';
 import {CatalogService} from '../../../../services/catalog.service';
 import {Subject} from 'rxjs';
-import {ProductSearchModel} from '../../../../models/search/ProductSearchModel';
+import {ProductSearch} from '../../../../models/search/ProductSearch';
 
 @Component({
   selector: 'app-catalog-product-list',
@@ -44,7 +44,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     public _snackBar: MatSnackBar) {
     this.searchSubject.subscribe(value => {
       this.searchTitle = value;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     });
   }
 
@@ -63,7 +63,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   sortChange(sort: Sort) {
     if (sort.active === 'title') {
       this.sortTitle = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
@@ -77,7 +77,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   openDeleteDialog(): void {
     const isOne = this.selection.selected.length === 1;
     const dialogRef = this._dialog.open(DeleteCommonModalComponent, {
-      data: `Удалить ${isOne ? `каталог '${this.selection.selected[0].title}'` : `каталоги (${this.selection.selected.length})`}?`
+      data: `Удалить ${isOne ? `каталог '${this.selection.selected[0].name}'` : `каталоги (${this.selection.selected.length})`}?`
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
@@ -92,7 +92,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     this._productService.deleteProducts(ids).subscribe(() => {
       this.showDeleteSuccessSnackbar();
       this.selection.clear();
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }).add(() => this.isLoading = false);
   }
 
@@ -138,24 +138,24 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   private loadPage(page: number): void {
     this.isLoading = true;
 
-    const searchModel = new ProductSearchModel();
+    const searchModel = new ProductSearch();
     searchModel.titles = this.searchTitle ? [this.searchTitle] : null;
 
     this._productService.getProductsPage(
       page,
-      this.sortTitle ? new Map<string, string>([['title', this.sortTitle]]) : null,
-      searchModel)
+      searchModel,
+      this.sortTitle ? new Map<string, string>([['title', this.sortTitle]]) : null)
       .pipe(map(productPage => {
         const items = productPage.items
           .map(p => {
             const productWithCatalogs =
-              new ProductWithCatalogs(p.id, p.title, p.content, p.description, p.price, p.catalogId, p.brandId, p.groupId);
+              new ProductWithCatalogs(p.id, p.name, p.content, p.description, p.price, p.catalogId, p.brandId, p.groupId);
             productWithCatalogs.catalogs$ = this._catalogService.parentsFor(p.catalogId, true)
               .pipe(map(a => (productWithCatalogs.catalogs = a.reverse())));
             return productWithCatalogs;
           });
         return new Page(items,
-          productPage.pageNumber,
+          productPage.pageIndex,
           productPage.totalPages,
           productPage.totalItems,
           productPage.hasPreviousPage,
@@ -169,6 +169,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
   private initPaginator(page: Page<any>): void {
     this.paginator.length = page.totalItems;
-    this.paginator.pageIndex = page.pageNumber - 1;
+    this.paginator.pageIndex = page.pageIndex - 1;
   }
 }

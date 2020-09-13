@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {ProductService} from '../../../../../services/product.service';
-import {ProductSearchModel} from '../../../../../models/search/ProductSearchModel';
+import {ProductSearch} from '../../../../../models/search/ProductSearch';
 import {Subject, zip} from 'rxjs';
 import {Page} from '../../../../../models/Page';
 import {debounceTime, defaultIfEmpty, mapTo, mergeAll, switchMap, tap} from 'rxjs/operators';
@@ -41,7 +41,7 @@ export class SearchHeaderDropdownComponent implements OnInit {
   ngOnInit(): void {
     this.subj.subscribe(searchValue => {
       this.searchValue = searchValue;
-      this.loadPage(this.page?.pageNumber ?? 1, searchValue);
+      this.loadPage(this.page?.pageIndex ?? 1, searchValue);
     });
   }
 
@@ -49,14 +49,14 @@ export class SearchHeaderDropdownComponent implements OnInit {
     this.loadPage(pageEvent.pageIndex + 1, this.searchValue);
   }
 
-  private loadPage(pageNumber: number = 1, searchInput: string): void {
+  private loadPage(pageIndex: number = 1, searchInput: string): void {
     this.isLoading = true;
 
-    const sModel = new ProductSearchModel();
+    const sModel = new ProductSearch();
     sModel.titles = [searchInput];
 
     const res = this._productService.getProductsPage(
-      pageNumber ?? 1, null, sModel)
+      pageIndex ?? 1, sModel)
       .pipe(defaultIfEmpty(null), switchMap(page => {
 
           const items = page.items.map(item => new ProductCard(item.id, item.title, item.description, item.price,
@@ -75,7 +75,7 @@ export class SearchHeaderDropdownComponent implements OnInit {
               })))).pipe(defaultIfEmpty([]));
 
           return zip(obs1, obs2).pipe(mergeAll(), mapTo(new Page<ProductCard>(items,
-            page.pageNumber, page.totalPages, page.totalItems, page.hasPreviousPage, page.hasNextPage)));
+            page.pageIndex, page.totalPages, page.totalItems, page.hasPreviousPage, page.hasNextPage)));
         })
       );
     res.subscribe(page => {

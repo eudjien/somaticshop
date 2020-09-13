@@ -55,7 +55,7 @@ namespace Web.Controllers
             if (page.HasValue)
             {
                 var spec = new BrandFilterSpec();
-                spec.Query.Paginate((page.Value - 1) * pageSize, pageSize);
+                spec.Query.Paginate((page.Value) * pageSize, pageSize);
 
                 if (sortTitle != null)
                 {
@@ -66,22 +66,22 @@ namespace Web.Controllers
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {
-                    spec.Query.Where(brand => brand.Title.Contains(search));
+                    spec.Query.Where(brand => brand.Name.Contains(search));
                 }
 
-                var items = _mapper.Map<IEnumerable<BrandDto>>(await _unitOfWork.BrandRepository.GetBySpecAsync(spec));
+                var items = _mapper.Map<IEnumerable<BrandDto>>(await _unitOfWork.BrandRepository.ListAsync(spec));
 
                 var totalCount = 0;
 
                 if (spec.WhereExpressions.IsNullOrEmpty())
                 {
-                    totalCount = await _unitOfWork.BrandRepository.GetAllCountAsync();
+                    totalCount = await _unitOfWork.BrandRepository.CountAsync();
                 }
                 else
                 {
                     var noPagingSpec = new BrandFilterSpec();
-                    noPagingSpec.Query.Where(brand => brand.Title.Contains(search));
-                    totalCount = await _unitOfWork.BrandRepository.GetBySpecCountAsync(noPagingSpec);
+                    noPagingSpec.Query.Where(brand => brand.Name.Contains(search));
+                    totalCount = await _unitOfWork.BrandRepository.CountAsync(noPagingSpec);
                 }
 
                 var paginatedList = new Page<BrandDto>(items, totalCount, page.Value, pageSize);
@@ -89,7 +89,7 @@ namespace Web.Controllers
                 return Ok(paginatedList);
             }
 
-            return Ok(_mapper.Map<IEnumerable<BrandDto>>(await _unitOfWork.BrandRepository.GetAllAsync()));
+            return Ok(_mapper.Map<IEnumerable<BrandDto>>(await _unitOfWork.BrandRepository.ListAsync()));
         }
 
         [HttpGet("{brandId}")]

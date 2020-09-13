@@ -11,6 +11,12 @@ namespace Infrastructure.Data.EntityFramework.Context
         public AppDbContext() { }
 
         public AppDbContext(
+            DbContextOptions<AppDbContext> options)
+            : base(options)
+        { 
+        }
+
+        public AppDbContext(
             DbContextOptions<AppDbContext> options,
             IOptions<OperationalStoreOptions> operationalStoreOptions)
             : base(options, operationalStoreOptions)
@@ -27,6 +33,8 @@ namespace Infrastructure.Data.EntityFramework.Context
             b.ApplyConfiguration(new ProductConfiguration());
             b.ApplyConfiguration(new ProductGroupConfiguration());
             b.ApplyConfiguration(new ProductSpecConfiguration());
+            b.ApplyConfiguration(new ProductSpecNameConfiguration());
+
             b.ApplyConfiguration(new ProductImageConfiguration());
 
             b.ApplyConfiguration(new BrandConfiguration());
@@ -49,6 +57,7 @@ namespace Infrastructure.Data.EntityFramework.Context
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductGroup> ProductGroups { get; set; }
         public DbSet<ProductSpec> ProductSpecs { get; set; }
+        public DbSet<ProductSpecName> ProductSpecKeys { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
         public DbSet<Basket> Baskets { get; set; }

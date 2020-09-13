@@ -43,7 +43,7 @@ export class UserBasketComponent implements OnInit {
   createBasketProductViewModel(basketProduct: BasketProductViewModel, product: Product): BasketProductViewModel {
     return new BasketProductViewModel(
       product.id,
-      product.title,
+      product.name,
       this._productService.getProductOverviewImageUrl(product.id),
       basketProduct.quantity,
       product.price,

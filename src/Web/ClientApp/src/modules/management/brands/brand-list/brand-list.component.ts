@@ -40,7 +40,7 @@ export class BrandListComponent implements OnInit, AfterViewInit {
     public _snackBar: MatSnackBar) {
     this.searchSubject.subscribe(value => {
       this.searchTitle = value;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     });
   }
 
@@ -62,7 +62,7 @@ export class BrandListComponent implements OnInit, AfterViewInit {
   sortChange(sort: Sort) {
     if (sort.active === 'title') {
       this.sortTitle = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
@@ -73,7 +73,7 @@ export class BrandListComponent implements OnInit, AfterViewInit {
   openDeleteDialog(): void {
     const isOne = this.selection.selected.length === 1;
     const dialogRef = this._dialog.open(DeleteCommonModalComponent, {
-      data: `Удалить ${isOne ? `бренд '${this.selection.selected[0].title}'` : `бренды (${this.selection.selected.length})`}?`
+      data: `Удалить ${isOne ? `бренд '${this.selection.selected[0].name}'` : `бренды (${this.selection.selected.length})`}?`
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
@@ -88,7 +88,7 @@ export class BrandListComponent implements OnInit, AfterViewInit {
     this._brandService.deleteBrands(ids).subscribe(() => {
       this.showDeleteSuccessSnackbar();
       this.selection.clear();
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }).add(() => this.isLoading = false);
   }
 
@@ -143,6 +143,6 @@ export class BrandListComponent implements OnInit, AfterViewInit {
 
   private initPaginator(page: Page<any>): void {
     this.paginator.length = page.totalItems;
-    this.paginator.pageIndex = page.pageNumber - 1;
+    this.paginator.pageIndex = page.pageIndex - 1;
   }
 }

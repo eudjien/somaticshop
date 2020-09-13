@@ -66,7 +66,7 @@ export class SelectCatalogForCatalogComponent implements OnInit, AfterViewInit {
 
           this._selected = new CatalogWithParents(
             parentCatalog.id,
-            parentCatalog.title,
+            parentCatalog.name,
             parentCatalog.parentCatalogId);
 
           this._selected.parents$ = this._catalogService.parentsFor(this._selected.id)
@@ -105,13 +105,13 @@ export class SelectCatalogForCatalogComponent implements OnInit, AfterViewInit {
   sortChange(sort: Sort) {
     if (sort.active === 'title') {
       this.sortTitle = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
   searchChange($event: string) {
     this.searchTitle = $event;
-    this.loadPage(this.page.pageNumber);
+    this.loadPage(this.page.pageIndex);
   }
 
   selectionChange($event: MatSelectionListChange) {
@@ -123,7 +123,7 @@ export class SelectCatalogForCatalogComponent implements OnInit, AfterViewInit {
     this._catalogService.getCatalogsPage(page, this.sortTitle, this.searchTitle)
       .pipe(map(a => {
         const catalogWithParents = a.items.map(cat => {
-          const items = new CatalogWithParents(cat.id, cat.title, cat.parentCatalogId);
+          const items = new CatalogWithParents(cat.id, cat.name, cat.parentCatalogId);
           if (cat.parentCatalogId) {
             items.parents$ = this._catalogService.parentsFor(items.id)
               .pipe(
@@ -132,12 +132,12 @@ export class SelectCatalogForCatalogComponent implements OnInit, AfterViewInit {
           }
           return items;
         });
-        return new Page(catalogWithParents, a.pageNumber, a.totalPages, a.totalItems, a.hasPreviousPage, a.hasNextPage);
+        return new Page(catalogWithParents, a.pageIndex, a.totalPages, a.totalItems, a.hasPreviousPage, a.hasNextPage);
       }))
       .subscribe((pageWithParents: Page<CatalogWithParents>) => {
         this.page = pageWithParents;
         this.paginator.length = pageWithParents.totalItems;
-        this.paginator.pageIndex = pageWithParents.pageNumber - 1;
+        this.paginator.pageIndex = pageWithParents.pageIndex - 1;
       }).add(() => this.isLoading = false);
   }
 }

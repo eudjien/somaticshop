@@ -6,7 +6,6 @@ import {Page} from '../models/Page';
 import {ICatalogImage} from '../interfaces/ICatalogImage';
 import {map} from 'rxjs/operators';
 import {serialize} from 'object-to-formdata';
-import {Product} from '../models/product/Product';
 import {PriceRange} from '../models/PriceRange';
 import {Brand} from '../models/Brand';
 
@@ -25,7 +24,7 @@ export class CatalogService {
   }
 
   public childsFor(catalogId: number | null | undefined, depth: number | null | undefined = null): Observable<Catalog[]> {
-    const params = new HttpParams().set('depth', String(depth));
+    const params = new HttpParams().set('depth', depth ? String(depth) : '');
     return this.httpClient
       .get<Catalog[]>(`${this.baseUrl}api/catalogs/${catalogId ? catalogId + '/' : ''}childs`, {params: params});
   }
@@ -42,40 +41,6 @@ export class CatalogService {
     return this.httpClient.get<Page<Catalog>>(`${this.baseUrl}api/catalogs`, {params: params});
   }
 
-  public getCatalogProductsPage(
-    catalogId: number | null | undefined,
-    page: number,
-    priceRange?: PriceRange,
-    brandIds?: number[],
-    sort?: Map<string, string>,
-    specs?: Map<string, string[]>): Observable<Page<Product>> {
-
-    let params = new HttpParams();
-    params = params.set('page', String(page));
-
-    sort?.forEach((value, key) => params = params.append(`sort.${key}`, value));
-    brandIds?.forEach(bId => params = params.append(`brand`, String(bId)));
-
-    if (specs) {
-      let i = 0;
-      specs.forEach((values, key) => {
-        values?.forEach((value, idx) => {
-          params = params.append(`spec[${i + idx}].name`, key);
-          params = params.append(`spec[${i + idx}].value`, value);
-        });
-        i += values.length;
-      });
-    }
-
-    if (priceRange) {
-      params = params.append(`price.from`, String(priceRange.from));
-      params = params.append(`price.to`, String(priceRange.to));
-    }
-
-    return this.httpClient
-      .get<Page<Product>>(`${this.baseUrl}api/catalogs/${catalogId ? catalogId + '/' : ''}products`, {params: params});
-  }
-
   public brandsFor(catalogId: number | null | undefined): Observable<Brand[]> {
     return this.httpClient.get<Brand[]>(`${this.baseUrl}api/catalogs/${catalogId ? catalogId + '/' : ''}brands`);
   }
@@ -84,9 +49,10 @@ export class CatalogService {
     return this.httpClient.get<PriceRange>(`${this.baseUrl}api/catalogs/${catalogId ? catalogId + '/' : ''}priceRange`);
   }
 
-  public specificationsFor(catalogId: number | null | undefined): Observable<{ name: string, values: string[] }[]> {
+  public specificationsFor(catalogId: number | null | undefined): Observable<{ id: number, key: string, values: string[] }[]> {
     return this.httpClient
-      .get<{ name: string, values: string[] }[]>(`${this.baseUrl}api/catalogs/${catalogId ? catalogId + '/' : ''}specifications`);
+      .get<{ id: number, key: string, values: string[] }[]>
+      (`${this.baseUrl}api/catalogs/${catalogId ? catalogId + '/' : ''}specifications`);
   }
 
   public hasProducts(catalogId: number | null | undefined): Observable<boolean> {

@@ -7,7 +7,7 @@
       <div *ngIf="page.totalItems > 0" class="py-4 px-5" fxLayout="row" fxLayoutAlign="end center">
         <mat-paginator (page)="paginationChange($event)" [disabled]="isLoading" [hidePageSize]="true"
                        [length]="page.totalItems"
-                       [pageIndex]="page.pageNumber - 1" [pageSize]="10"
+                       [pageIndex]="page.pageIndex - 1" [pageSize]="10"
                        [showFirstLastButtons]="true"
                        class="custom-paginator paginator-no-side-spaces"
                        fxFlex="nogrow"
@@ -21,7 +21,7 @@
 
           <div fxFlex="nogrow">
 
-            <img *ngIf="product.imageUrl" alt="{{product.title}}" src="{{product.imageUrl}}"
+            <img *ngIf="product.imageUrl" alt="{{product.name}}" src="{{product.imageUrl}}"
                  style="max-height:80px; max-width:80px; display: block; border: 5px solid #ffffff; background-color: #ffffff;">
 
           </div>
@@ -29,7 +29,7 @@
           <div fxFlex="noshrink" fxLayout="column" fxLayoutGap="8px">
 
             <a [routerLink]="['/products', product.id]" class="link">
-              {{product.title}}
+              {{product.name}}
             </a>
 
             <p class="description">
@@ -41,10 +41,10 @@
                 <a [routerLink]="['/brands', product.brand.id]" class="brand" matTooltip="Бренд продукта"
                    matTooltipPosition="above"
                    target="_blank">
-                  <img *ngIf="product.brand.imageUrl;else brandTitle" alt="{{product.brand.title}}"
+                  <img *ngIf="product.brand.imageUrl;else brandTitle" alt="{{product.brand.name}}"
                        src="{{product.brand.imageUrl}}"
                        style="max-height: 25px; max-width: 50px">
-                  <ng-template #brandTitle>{{product.brand.title}}</ng-template>
+                  <ng-template #brandTitle>{{product.brand.name}}</ng-template>
                 </a>
               </div>
               <div fxFlex="nogrow">

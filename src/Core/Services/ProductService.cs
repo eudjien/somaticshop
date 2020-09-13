@@ -5,6 +5,7 @@ using Core.Entities;
 using Core.Exceptions;
 using Core.Interfaces;
 using Core.Specifications.ProductSpecs;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -28,8 +29,9 @@ namespace Core.Services
         public async Task CreateProductAsync(
             ProductDto productDto,
             IEnumerable<FileData> imageDatas = null,
-            IEnumerable<ProductSpecDto> productSpecDtos = null)
+            IEnumerable<KeyValuePair<string, string>> specifications = null)
         {
+
             if (imageDatas != null)
             {
                 ThrowIfImageIsNotValid(imageDatas.Select(a => a.Stream).ToArray());
@@ -49,12 +51,8 @@ namespace Core.Services
                 }
             }
 
-            if (productSpecDtos != null && productSpecDtos.Any())
-            {
-                var newProductSpecs = Mapper.Map<IEnumerable<ProductSpec>>(productSpecDtos);
-                product.Specifications = newProductSpecs.ToList();
-            }
-
+            product.Specifications = await CreateSpecificationsAsync(specifications);
+          
             UnitOfWork.ProductRepository.Add(product);
             await UnitOfWork.SaveChangesAsync();
             productDto.Id = product.Id;
@@ -63,7 +61,7 @@ namespace Core.Services
         public async Task UpdateProductAsync(
             ProductDto productDto,
             IEnumerable<FileData> imageDatas = null,
-            IEnumerable<ProductSpecDto> productSpecDtos = null)
+            IEnumerable<KeyValuePair<string, string>> specifications = null)
         {
             var existProduct = await GetProductWithAllIncludesAsync(productDto.Id);
             if (existProduct is null)
@@ -102,7 +100,7 @@ namespace Core.Services
                 existProduct.Images = null;
             }
 
-            existProduct.Specifications = Mapper.Map<IEnumerable<ProductSpec>>(productSpecDtos).ToList();
+            existProduct.Specifications = await CreateSpecificationsAsync(specifications);
 
             Mapper.Map(productDto, existProduct);
             UnitOfWork.ProductRepository.Update(existProduct);
@@ -146,7 +144,7 @@ namespace Core.Services
             var spec = new ProductImagesSpec(productId);
 
             var productImages =
-                await UnitOfWork.ProductImageRepository.GetBySpecAsync(spec);
+                await UnitOfWork.ProductImageRepository.ListAsync(spec);
 
             return Mapper.Map<IEnumerable<FileDto>>(productImages.Select(a => a.File));
         }
@@ -247,6 +245,41 @@ namespace Core.Services
         {
             var spec = new ProductGroupWithProductsSpec(groupId);
             return await UnitOfWork.ProductGroupRepository.FindOneAsync(spec);
+        }
+
+        private async Task<List<ProductSpec>> CreateSpecificationsAsync(IEnumerable<KeyValuePair<string, string>> specifications)
+        {
+            var list = new List<ProductSpec>();
+
+            if (specifications != null && specifications.Any())
+            {
+                foreach (var specification in specifications)
+                {
+                    var existSpecKey = await UnitOfWork.ProductSpecKeyRepository.FindOneAsync(null);
+
+                    if (existSpecKey != null)
+                    {
+                        list.Add(new ProductSpec
+                        {
+                            Value = specification.Value,
+                            ProductSpecNameId = existSpecKey.Id
+                        });
+                    }
+                    else
+                    {
+                        list.Add(new ProductSpec
+                        {
+                            Value = specification.Value,
+                            ProductSpecName = new ProductSpecName()
+                            {
+                                Name = specification.Key
+                            }
+                        });
+                    }
+                }
+            }
+
+            return Mapper.Map<List<ProductSpec>>(list);
         }
     }
 }

@@ -44,14 +44,14 @@
       <ng-container *ngIf="page">
         <ng-container *ngFor="let catalog of page.items">
           <mat-list-option *ngIf="!isSource(catalog)" [selected]="isSelected(catalog)" [value]="catalog">
-            <div class="main-line" mat-line>{{catalog.title}}</div>
+            <div class="main-line" mat-line>{{catalog.name}}</div>
             <div *ngIf="catalog.parentCatalogId" class="info-line" mat-line>
               <ol class="breadcrumb rounded-0 p-0 m-0" style="background: none">
                 <li *ngIf="!catalog.parents">
                   <mat-spinner [diameter]="20" [strokeWidth]="1"></mat-spinner>
                 </li>
                 <li *ngFor="let item of catalog.parents$ | async" class="breadcrumb-item text-muted">
-                  {{item.title}}
+                  {{item.name}}
                 </li>
               </ol>
             </div>

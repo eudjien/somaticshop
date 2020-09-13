@@ -41,7 +41,7 @@ export class ProductGroupListComponent implements OnInit, AfterViewInit {
     private _snackBar: MatSnackBar) {
     this.searchSubject.subscribe(value => {
       this.searchTitle = value;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     });
   }
 
@@ -64,7 +64,7 @@ export class ProductGroupListComponent implements OnInit, AfterViewInit {
   sortChange(sort: Sort) {
     if (sort.active === 'title') {
       this.sortTitle = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
@@ -78,7 +78,7 @@ export class ProductGroupListComponent implements OnInit, AfterViewInit {
   openDeleteDialog(): void {
     const isOne = this.selection.selected.length === 1;
     const dialogRef = this._dialog.open(DeleteCommonModalComponent, {
-      data: `Удалить ${isOne ? `каталог '${this.selection.selected[0].title}'` : `каталоги (${this.selection.selected.length})`}?`
+      data: `Удалить ${isOne ? `каталог '${this.selection.selected[0].name}'` : `каталоги (${this.selection.selected.length})`}?`
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
@@ -93,7 +93,7 @@ export class ProductGroupListComponent implements OnInit, AfterViewInit {
     this._productService.deleteProductGroups(ids).subscribe(() => {
       this.showDeleteSuccessSnackbar();
       this.selection.clear();
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }).add(() => this.isLoading = false);
   }
 
@@ -137,12 +137,12 @@ export class ProductGroupListComponent implements OnInit, AfterViewInit {
     this._productService.getProductGroupsPage(page, this.sortTitle, this.searchTitle)
       .pipe(map(groupPage => {
         const groupWithProducts = groupPage.items.map(group => {
-          const item = new GroupWithProducts(group.id, group.title);
+          const item = new GroupWithProducts(group.id, group.name);
           item.products$ = this._productService.getGroupProducts(item.id);
           return item;
         });
         return new Page(
-          groupWithProducts, groupPage.pageNumber,
+          groupWithProducts, groupPage.pageIndex,
           groupPage.totalPages, groupPage.totalItems,
           groupPage.hasPreviousPage, groupPage.hasNextPage);
       }))
@@ -154,6 +154,6 @@ export class ProductGroupListComponent implements OnInit, AfterViewInit {
 
   private initPaginator(page: Page<any>): void {
     this.paginator.length = page.totalItems;
-    this.paginator.pageIndex = page.pageNumber - 1;
+    this.paginator.pageIndex = page.pageIndex - 1;
   }
 }

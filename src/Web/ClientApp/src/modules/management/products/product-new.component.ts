@@ -22,7 +22,7 @@ export class ProductNewComponent implements OnInit, AfterViewInit {
   isLoading = false;
 
   formGroup = new FormGroup({
-    title: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required]),
     description: new FormControl(''),
     price: new FormControl('', [Validators.required, Validators.min(0)]),
   });
@@ -64,7 +64,7 @@ export class ProductNewComponent implements OnInit, AfterViewInit {
   sendClick() {
     const product: Product = {
       id: 0,
-      title: this.formGroup.get('title').value,
+      name: this.formGroup.get('title').value,
       content: this.editor.stringify(),
       description: this.formGroup.get('description').value,
       price: this.formGroup.get('price').value,

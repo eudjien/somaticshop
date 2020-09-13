@@ -43,6 +43,9 @@ namespace Infrastructure.Configuration.Automapper
             CreateMap<ProductSpecDto, ProductSpec>();
             CreateMap<ProductSpec, ProductSpecDto>();
 
+            CreateMap<ProductSpecNameDto, ProductSpecName>();
+            CreateMap<ProductSpecName, ProductSpecNameDto>();
+
             CreateMap<FileDto, File>();
             CreateMap<File, FileDto>();
 

@@ -1,7 +1,7 @@
 export class BrandCard {
   constructor(
     public id?: number,
-    public title?: string,
+    public name?: string,
     public content?: string,
     public imageUrl?: string) {
   }

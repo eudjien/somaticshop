@@ -3,12 +3,12 @@
     <div *ngFor="let vm of viewModels;let i = index" [ngClass]="{'active': i == 0}" class="carousel-item">
 
       <a [routerLink]="['/products', vm.id]" class="w-100" fxLayout="row" fxLayoutAlign="center center">
-        <img alt="{{vm.title}}" src="{{vm.imageUrl}}" style="height: 194px">
+        <img alt="{{vm.name}}" src="{{vm.imageUrl}}" style="height: 194px">
       </a>
 
       <div class="carousel-caption d-none d-md-block px-4">
 
-        <h5 style="font-size: 16px; color: #404040">{{vm.title}}</h5>
+        <h5 style="font-size: 16px; color: #404040">{{vm.name}}</h5>
         <p class="description text-muted">{{vm.description}}</p>
 
       </div>

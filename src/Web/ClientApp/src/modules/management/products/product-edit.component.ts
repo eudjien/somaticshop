@@ -29,7 +29,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
   id: number = +this._route.snapshot.paramMap.get('id');
 
   formGroup = new FormGroup({
-    title: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required]),
     description: new FormControl(''),
     price: new FormControl('', [Validators.required, Validators.min(0)])
   });
@@ -74,7 +74,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
   sendClick() {
     const product: Product = {
       id: this.id,
-      title: this.formGroup.get('title').value,
+      name: this.formGroup.get('name').value,
       content: this.editor.stringify(),
       description: this.formGroup.get('description').value,
       price: this.formGroup.get('price').value,
@@ -96,7 +96,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
       this.editor.parse(product.content);
 
       this.formGroup.setValue({
-        title: product.title,
+        name: product.name,
         description: product.description,
         price: product.price,
       });

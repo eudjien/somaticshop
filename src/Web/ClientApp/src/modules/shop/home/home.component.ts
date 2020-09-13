@@ -7,6 +7,7 @@ import {Catalog} from '../../../models/catalog/Catalog';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
 import {Title} from '@angular/platform-browser';
 import {AppHelpers} from '../../../AppHelpers';
+import {ActiveBreadcrumbItem, BreadcrumbItem} from '../shop-core/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-home',
@@ -42,6 +43,12 @@ export class HomeComponent implements OnInit {
     private _mediaObserver: MediaObserver) {
     _titleService.setTitle('SomaticShop - Главная');
     this.catalogs = _route.snapshot.data.navData as Catalog[];
+  }
+
+  get breadcrumbs(): BreadcrumbItem[] {
+    return [
+      new ActiveBreadcrumbItem('Главная')
+    ];
   }
 
   ngOnInit(): void {

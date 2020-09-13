@@ -47,6 +47,16 @@ namespace Web.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        [HttpGet("test/{brandName}")]
+        public async Task<IActionResult> Test(string brandName)
+        {
+            var spec = new PopularProductsSpec();
+
+            var products = await _unitOfWork.ProductRepository.ListAsync(spec);
+
+            return Ok(products.Select(a => new { a.Name, a.OrderProducts.Count }));
+        }
+
         [HttpGet("{catalogId}")]
         public async Task<ActionResult<CatalogDto>> GetById(int catalogId)
         {
@@ -54,17 +64,15 @@ namespace Web.Controllers
             return _mapper.Map<CatalogDto>(catalog);
         }
 
-        [HttpGet("{catalogId?}/products")]
+        [HttpGet("{catalogId}/products")]
         public async Task<IActionResult> CatalogProducts(
-           [FromRoute] int? catalogId,
+           [FromRoute] int catalogId,
            [FromQuery] int? page = null,
-           [FromQuery(Name = "price")] PriceRangeModel priceRange = null,
-           [FromQuery(Name = "brand")] int[] brandIds = null,
+           [FromQuery(Name = "search")] ProductSearch search = null,
            [FromQuery(Name = "sort")] SortModel sort = null,
-           [FromQuery(Name = "spec")] List<SpecificationModel> specs = null,
            [FromQuery] int pageSize = 10)
         {
-
+   
             var catalogs = await GetChildsWithSelfRecursive(catalogId);
             if (catalogs.IsNullOrEmpty())
             {
@@ -79,10 +87,10 @@ namespace Web.Controllers
                 {
                     if (Enum.TryParse<OrderBy>(item.Value, true, out var order))
                     {
-                        if (item.Key.Equals(nameof(Product.Title), StringComparison.OrdinalIgnoreCase))
+                        if (item.Key.Equals(nameof(Product.Name), StringComparison.OrdinalIgnoreCase))
                         {
-                            if (order == OrderBy.ASC) { spec.Query.OrderBy(a => a.Title); }
-                            else if (order == OrderBy.DESC) { spec.Query.OrderByDescending(a => a.Title); }
+                            if (order == OrderBy.ASC) { spec.Query.OrderBy(a => a.Name); }
+                            else if (order == OrderBy.DESC) { spec.Query.OrderByDescending(a => a.Name); }
                         }
                         if (item.Key.Equals(nameof(Product.Price), StringComparison.OrdinalIgnoreCase))
                         {
@@ -103,20 +111,20 @@ namespace Web.Controllers
             var spec1 = new ProductByCatalogIdSpec(catalogs.Select(a => a.Id).ToArray());
             lambdaCombiner.Add(spec1.WhereExpressions.First());
 
-            if (!brandIds.IsNullOrEmpty())
+            if (!search.BrandIds.IsNullOrEmpty())
             {
-                var spec2 = new ProductByBrandIdSpec(brandIds);
+                var spec2 = new ProductByBrandIdSpec(search.BrandIds);
                 lambdaCombiner.Add(spec2.WhereExpressions.First());
             }
 
-            if (priceRange != null && (priceRange.From.HasValue || priceRange.To.HasValue))
+            if (search.PriceRange != null && (search.PriceRange.From.HasValue || search.PriceRange.To.HasValue))
             {
-                lambdaCombiner.Add(new ProductByPriceRangeSpec(priceRange.From, priceRange.To).WhereExpressions.First());
+                lambdaCombiner.Add(new ProductByPriceRangeSpec(search.PriceRange.From, search.PriceRange.To).WhereExpressions.First());
             }
 
-            if (!specs.IsNullOrEmpty())
+            if (!search.Specifications.IsNullOrEmpty())
             {
-                lambdaCombiner.Add(new ProductBySpecsSpec(specs.Select(a => new KeyValuePair<string, string>(a.Name, a.Value)).ToArray()).WhereExpressions.First());
+                lambdaCombiner.Add(new ProductBySpecIdAndValueSpec(search.Specifications.ToArray()).WhereExpressions.First());
             }
 
             var lambda = lambdaCombiner.Combine(ExpressionType.AndAlso);
@@ -128,38 +136,29 @@ namespace Web.Controllers
 
             if (page.HasValue)
             {
-                spec.Query.Paginate((page.Value - 1) * pageSize, pageSize);
+                spec.Query.Paginate((page.Value) * pageSize, pageSize);
 
                 var totalCount = 0;
 
-                if (spec.WhereExpressions.IsNullOrEmpty())
+                if (lambda is null)
                 {
-                    totalCount = await _unitOfWork.ProductRepository.GetAllCountAsync();
+                    totalCount = await _unitOfWork.ProductRepository.CountAsync();
                 }
                 else
                 {
                     var noPagingSpec = new ProductFilterSpec();
-                    spec.Query.Where(lambda);
-                    totalCount = await _unitOfWork.ProductRepository.GetBySpecCountAsync(noPagingSpec);
+                    noPagingSpec.Query.Where(lambda);
+                    totalCount = await _unitOfWork.ProductRepository.CountAsync(noPagingSpec);
                 }
 
-                var items = _mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.ProductRepository.GetBySpecAsync(spec));
+                var items = _mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.ProductRepository.ListAsync(spec));
                 var paginatedList = new Page<ProductDto>(items, totalCount, page.Value, pageSize);
 
                 return Ok(paginatedList);
             }
 
-            return Ok(_mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.ProductRepository.GetBySpecAsync(spec)));
+            return Ok(_mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.ProductRepository.ListAsync(spec)));
         }
-
-        [HttpGet("products")]
-        public async Task<IActionResult> CatalogProducts(
-           [FromQuery] int? page = null,
-           [FromQuery(Name = "price")] PriceRangeModel priceRange = null,
-           [FromQuery(Name = "brand")] int[] brandIds = null,
-           [FromQuery(Name = "sort")] SortModel sort = null,
-           [FromQuery(Name = "spec")] List<SpecificationModel> specs = null,
-           [FromQuery] int pageSize = 10) => await CatalogProducts(null, page, priceRange, brandIds, sort, specs, pageSize);
 
         [HttpGet("{catalogId?}/brands")]
         public async Task<ActionResult<IEnumerable<BrandDto>>> CatalogBrands([FromRoute] int? catalogId)
@@ -171,7 +170,7 @@ namespace Web.Controllers
             }
 
             var spec = new BrandsByCatalogIdSpec(catalogs.Select(c => c?.Id).ToArray());
-            return Ok(_mapper.Map<IEnumerable<BrandDto>>(await _unitOfWork.BrandRepository.GetBySpecAsync(spec)));
+            return Ok(_mapper.Map<IEnumerable<BrandDto>>(await _unitOfWork.BrandRepository.ListAsync(spec)));
         }
 
         [HttpGet("brands")]
@@ -187,7 +186,7 @@ namespace Web.Controllers
                 return NoContent();
             }
 
-            var products = await _unitOfWork.ProductRepository.GetBySpecAsync(
+            var products = await _unitOfWork.ProductRepository.ListAsync(
                 new ProductByCatalogIdSpec(catalogs.Select(a => a.Id).ToArray()));
 
             if (products.IsNullOrEmpty())
@@ -215,12 +214,16 @@ namespace Web.Controllers
             }
 
             var spec = new ProductSpecsByCatalogIdSpec(catalogs.Select(a => a.Id).ToArray());
+            spec.Query.Include(nameof(ProductSpec.ProductSpecName));
 
-            var specifications = await _unitOfWork.ProductSpecRepository.GetBySpecAsync(spec);
+            var specifications = await _unitOfWork.ProductSpecRepository.ListAsync(spec);
 
-            var specDtos = _mapper.Map<IEnumerable<ProductSpecDto>>(specifications);
-
-            return Ok(specDtos.GroupBy(a => a.Key).Select(a => new { Name = a.Key, Values = a.Select(v => v.Value).Distinct() }));
+            return Ok(specifications.GroupBy(a => (a.ProductSpecName.Id, a.ProductSpecName.Name))
+                .Select(a => new { 
+                    Id = a.Key.Id, 
+                    Key = a.Key.Name, 
+                    Values = a.ToList()
+                    .Select(b => b.Value).Distinct() }));
         }
 
         [HttpGet("specifications")]
@@ -255,24 +258,24 @@ namespace Web.Controllers
             if (page.HasValue)
             {
                 var spec = new CatalogFilterSpec();
-                spec.Query.Paginate((page.Value - 1) * pageSize, pageSize);
+                spec.Query.Paginate((page.Value) * pageSize, pageSize);
 
                 if (sortTitle != null)
                 {
                     var orderBy = sortTitle.Equals("desc", StringComparison.OrdinalIgnoreCase) ? OrderBy.DESC : OrderBy.ASC;
-                    if (orderBy == OrderBy.ASC) { spec.Query.OrderBy(a => a.Title); }
-                    else if (orderBy == OrderBy.DESC) { spec.Query.OrderByDescending(a => a.Title); }
+                    if (orderBy == OrderBy.ASC) { spec.Query.OrderBy(a => a.Name); }
+                    else if (orderBy == OrderBy.DESC) { spec.Query.OrderByDescending(a => a.Name); }
                 }
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {
-                    spec.Query.Where(catalog => catalog.Title.Contains(search));
+                    spec.Query.Where(catalog => catalog.Name.Contains(search));
                 }
 
-                var items = _mapper.Map<IEnumerable<CatalogDto>>(await _unitOfWork.CatalogRepository.GetBySpecAsync(spec));
+                var items = _mapper.Map<IEnumerable<CatalogDto>>(await _unitOfWork.CatalogRepository.ListAsync(spec));
 
                 var totalCount = string.IsNullOrWhiteSpace(search)
-                  ? await _unitOfWork.CatalogRepository.GetAllCountAsync()
+                  ? await _unitOfWork.CatalogRepository.CountAsync()
                   : items.Count();
 
                 var paginatedList = new Page<CatalogDto>(items, totalCount, page.Value, pageSize);
@@ -281,7 +284,7 @@ namespace Web.Controllers
             }
 
             return Ok(_mapper.Map<IEnumerable<CatalogDto>>(
-                await _unitOfWork.CatalogRepository.GetBySpecAsync(new CatalogOnlyRootsSpec())));
+                await _unitOfWork.CatalogRepository.ListAsync(new CatalogOnlyRootsSpec())));
         }
 
         [HttpGet("{catalogId}/parents")]

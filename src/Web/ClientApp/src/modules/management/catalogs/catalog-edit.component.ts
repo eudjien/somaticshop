@@ -20,7 +20,7 @@ export class CatalogEditComponent implements OnInit, AfterViewInit {
   isLoading = false;
 
   id: number = +this._route.snapshot.paramMap.get('id');
-  title = new FormControl('', [Validators.required]);
+  name = new FormControl('', [Validators.required]);
 
   @ViewChild('uploadImage')
   uploadImage: UploadImageSingleComponent;
@@ -45,7 +45,7 @@ export class CatalogEditComponent implements OnInit, AfterViewInit {
   sendClick() {
     const catalog: Catalog = {
       id: this.id,
-      title: this.title.value,
+      name: this.name.value,
       parentCatalogId: this.selectCatalogForCatalog.selected?.id
     };
     this.updateData(catalog, this.uploadImage.images.map(a => a.file)[0]);
@@ -65,7 +65,7 @@ export class CatalogEditComponent implements OnInit, AfterViewInit {
     this.isLoading = true;
     this._catalogService.catalogById(id)
       .subscribe((catalog: Catalog) => {
-        this.title.setValue(catalog.title);
+        this.name.setValue(catalog.name);
         this.loadCatalogImage();
         if (catalog.parentCatalogId) {
           this.selectCatalogForCatalog.catalog = catalog;

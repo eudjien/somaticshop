@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {ActiveBreadcrumbItem, BreadcrumbItem, LinkBreadcrumbItem} from '../../shop-core/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-update-account',
@@ -14,5 +15,12 @@ export class AccountUpdateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  get breadcrumbs(): BreadcrumbItem[] {
+    return [
+      new LinkBreadcrumbItem('/', 'Профиль'),
+      new ActiveBreadcrumbItem('Редактировать')
+    ];
   }
 }

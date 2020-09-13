@@ -145,7 +145,7 @@
           <div fxFlex="grow" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
             <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
               <a [routerLink]="['/products', orderedProductViewModel.id]" style="font-weight: 500"
-                 target="_blank">{{orderedProductViewModel.title}}</a>
+                 target="_blank">{{orderedProductViewModel.name}}</a>
             </div>
 
             <div>{{orderedProductViewModel.description | slice:0:120}}...</div>

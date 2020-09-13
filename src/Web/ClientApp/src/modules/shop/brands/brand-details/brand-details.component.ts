@@ -40,7 +40,7 @@ export class BrandDetailsComponent implements OnInit {
   private load(brandId: number): void {
     const brandWithImageObs = this._brandService.getBrandById(brandId)
       .pipe(switchMap(brand => this._brandService.getBrandImageUrl(brandId)
-        .pipe(map(imageUrl => new BrandDetailsViewModel(brand.id, brand.title, brand.content, imageUrl)))));
+        .pipe(map(imageUrl => new BrandDetailsViewModel(brand.id, brand.name, brand.content, imageUrl)))));
 
     brandWithImageObs.subscribe(viewModel => {
       this.viewModel = viewModel;

@@ -17,11 +17,11 @@
     </li>
     <li *ngIf="viewModel" class="breadcrumb-item">
       <span class="mb-0" style="font-weight: 500;font-size: 13px;color:#676c71">
-          {{viewModel.title | uppercase}}
+          {{viewModel.name | uppercase}}
         </span>
     </li>
   </ol>
-  <img *ngIf="viewModel?.imageUrl" alt="{{viewModel.title}}" class="brand-logo"
+  <img *ngIf="viewModel?.imageUrl" alt="{{viewModel.name}}" class="brand-logo"
        src="{{viewModel.imageUrl}}">
 </div>
 

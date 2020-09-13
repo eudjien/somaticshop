@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthorizeService} from '../../../../api-authorization/authorize.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {map} from 'rxjs/operators';

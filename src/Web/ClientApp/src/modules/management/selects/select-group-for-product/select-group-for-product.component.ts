@@ -86,13 +86,13 @@ export class SelectGroupForProductComponent implements OnInit, AfterViewInit {
   sortChange(sort: Sort) {
     if (sort.active === 'title') {
       this.sortTitle = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
   searchChange($event: string) {
     this.searchTitle = $event;
-    this.loadPage(this.page.pageNumber);
+    this.loadPage(this.page.pageIndex);
   }
 
   selectionChange($event: MatSelectionListChange) {
@@ -118,6 +118,6 @@ export class SelectGroupForProductComponent implements OnInit, AfterViewInit {
 
   private initPaginator(page: Page<any>): void {
     this.paginator.length = page.totalItems;
-    this.paginator.pageIndex = page.pageNumber - 1;
+    this.paginator.pageIndex = page.pageIndex - 1;
   }
 }

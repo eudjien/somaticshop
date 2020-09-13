@@ -62,7 +62,7 @@
             <mat-expansion-panel *ngFor="let catalogRoot of sliceRoots(catalogs)" class="custom-expansion-panel">
               <mat-expansion-panel-header>
                 <mat-panel-title>
-                  <span class="expand-header">{{catalogRoot.title}}</span>
+                  <span class="expand-header">{{catalogRoot.name}}</span>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -72,12 +72,12 @@
 
                   <div>
                     <h6 class="dd-list-group-header">
-                      <a [routerLink]="['/catalogs', childOfRoot.id]">{{childOfRoot.title}}</a>
+                      <a [routerLink]="['/catalogs', childOfRoot.id]">{{childOfRoot.name}}</a>
                     </h6>
                     <ul class="dd-list-group-list dd-list-grop-expand">
                       <li *ngFor="let childOfRoot of sliceChildsOf(catalogs, childOfRoot)">
                         <a [routerLink]="['/catalogs', childOfRoot.id]"
-                           class="dd-list-group-item">{{childOfRoot.title}}</a>
+                           class="dd-list-group-item">{{childOfRoot.name}}</a>
                       </li>
                     </ul>
                   </div>

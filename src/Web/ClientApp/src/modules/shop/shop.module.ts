@@ -5,15 +5,10 @@ import {HeaderComponent} from './layout/header/header.component';
 import {HomeComponent} from './home/home.component';
 
 import {LayoutComponent} from './layout/layout.component';
-import {AccountComponent} from './account/account.component';
 import {SnackbarMessageComponent} from './snackbar-message/snackbar-message.component';
 import {ProductDetailsComponent} from './details/product-details/product-details.component';
 import {CatalogsComponent} from './catalogs/catalogs.component';
 import {BrandDetailsComponent} from './brands/brand-details/brand-details.component';
-import {CatalogProductListComponent} from './catalogs/catalog-product-list/catalog-product-list.component';
-import {AccountModule} from './account/account.module';
-import {AppCoreModule} from '../core/app-core.module';
-import {AuthorizeGuard} from '../api-authorization/authorize.guard';
 import {BasketModule} from './user-basket/basket.module';
 import {FooterComponent} from './layout/footer/footer.component';
 import {UserBasketComponent} from './user-basket/user-basket.component';
@@ -31,13 +26,15 @@ import {HeaderType1Component} from './layout/header/header-type1/header-type1.co
 import {BreakpointTextComponent} from './layout/header/breakpoint-text/breakpoint-text.component';
 import {HeaderType2Component} from './layout/header/header-type2/header-type2.component';
 import {SearchComponent} from './search/search.component';
-import {HomeNewestProductsResolver} from './home/home-newest-products-resolver';
+import {HomeNewestProductsResolver} from './home-newest-products-resolver';
 import {HomePopularProductsComponent} from './home/home-popular-products/home-pupular-products.component';
 import {NavigationResolver} from './layout/NavigationResolver';
 import {ApiAuthorizationModule} from '../api-authorization/api-authorization.module';
 import {LoginMenuComponent} from './layout/header/login-menu/login-menu.component';
-import { ProductCardsLayoutComponent } from './product-layout/product-cards-layout/product-cards-layout.component';
 import {ProductLayoutModule} from './product-layout/product-layout.module';
+import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
+import {ShopCoreModule} from './shop-core/shop-core.module';
+import {CatalogResolver} from './catalog-resolver';
 
 @NgModule({
   declarations: [
@@ -51,7 +48,6 @@ import {ProductLayoutModule} from './product-layout/product-layout.module';
     ProductDetailsComponent,
     CatalogsComponent,
     BrandDetailsComponent,
-    CatalogProductListComponent,
     BrandsComponent,
     HomeNewestProductsComponent,
     HomePopularProductsComponent,
@@ -64,10 +60,10 @@ import {ProductLayoutModule} from './product-layout/product-layout.module';
     HeaderType2Component,
     BreakpointTextComponent,
     SearchComponent,
-    LoginMenuComponent
+    LoginMenuComponent,
   ],
   imports: [
-    AppCoreModule,
+    ShopCoreModule,
     BasketModule,
     RouterModule.forChild([
       {
@@ -78,9 +74,7 @@ import {ProductLayoutModule} from './product-layout/product-layout.module';
           {
             path: '',
             component: HomeComponent,
-            resolve: {
-              newestProducts: HomeNewestProductsResolver
-            }
+            resolve: {newestProducts: HomeNewestProductsResolver}
           },
           {
             path: '~',
@@ -116,14 +110,14 @@ import {ProductLayoutModule} from './product-layout/product-layout.module';
             component: BrandsComponent,
           },
           {
-            path: 'catalogs/:id',
-            component: CatalogsComponent,
-            data: {reuse: true}
-          },
-          {
             path: 'catalogs',
             component: CatalogsComponent,
-            data: {reuse: true}
+            resolve: {resolveResult: CatalogResolver},
+          },
+          {
+            path: 'catalogs/:id',
+            component: CatalogsComponent,
+            resolve: {resolveResult: CatalogResolver},
           },
           {
             path: 'products/:id',
@@ -142,6 +136,7 @@ import {ProductLayoutModule} from './product-layout/product-layout.module';
     ProductLayoutModule,
     Ng5SliderModule,
     ApiAuthorizationModule,
+    CKEditorModule,
   ],
   entryComponents: [SnackbarMessageComponent],
 })

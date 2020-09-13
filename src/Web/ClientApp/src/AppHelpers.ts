@@ -1,7 +1,5 @@
 export class AppHelpers {
-
-  public static closestEdge(mouse, elem): 'left' | 'right' | 'top' | 'bottom' {
-
+  public static closestEdge(mouse: MouseEvent, elem: HTMLElement): 'left' | 'right' | 'top' | 'bottom' {
     const elemBounding = elem.getBoundingClientRect();
 
     const elementLeftEdge = elemBounding.left;
@@ -30,5 +28,13 @@ export class AppHelpers {
         return 'bottom';
     }
   }
-
+  // public static isScrolledIntoView(elem: HTMLElement): boolean {
+  //   const docViewTop = $(window).scrollTop();
+  //   const docViewBottom = docViewTop + $(window).height();
+  //
+  //   const elemTop = $(elem).offset().top;
+  //   const elemBottom = elemTop + $(elem).height();
+  //
+  //   return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+  // }
 }

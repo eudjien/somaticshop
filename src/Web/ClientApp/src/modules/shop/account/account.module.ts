@@ -12,6 +12,7 @@ import {AccountUpdatePersonalDataComponent} from './edit/account-update-personal
 import {OrderDetailsComponent} from './details/order-details/order-details.component';
 import {RouterModule} from '@angular/router';
 import {AuthorizeGuard} from '../../api-authorization/authorize.guard';
+import {ShopCoreModule} from '../shop-core/shop-core.module';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,8 @@ import {AuthorizeGuard} from '../../api-authorization/authorize.guard';
     OrderDetailsComponent,
   ],
   imports: [
+    AppCoreModule,
+    ShopCoreModule,
     RouterModule.forChild([
       {
         path: '',
@@ -68,7 +71,6 @@ import {AuthorizeGuard} from '../../api-authorization/authorize.guard';
         ]
       }
     ]),
-    AppCoreModule,
   ],
   exports: [
     AccountComponent,

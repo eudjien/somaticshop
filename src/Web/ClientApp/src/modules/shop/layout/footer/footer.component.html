@@ -56,8 +56,8 @@
 
       <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="16px">
 
-        <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="start start" fxLayoutAlign.gt-sm="start center"
-             class="links" [ngClass.lt-md]="'links-vertical'">
+        <div [ngClass.lt-md]="'links-vertical'" class="links" fxLayout="column" fxLayout.gt-sm="row"
+             fxLayoutAlign="start start" fxLayoutAlign.gt-sm="start center">
           <a [routerLink]="['/contacts']" class="link">
             Контакты
           </a>

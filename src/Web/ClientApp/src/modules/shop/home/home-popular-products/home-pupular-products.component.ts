@@ -6,6 +6,8 @@ import {ProductCard} from '../../../../viewModels/ProductCard';
 import {BrandService} from '../../../../services/brand.service';
 import {BrandCard} from '../../../../viewModels/BrandCard';
 import {AppConstants} from '../../../../app-constants';
+import {Page} from '../../../../models/Page';
+import {ProductSort} from '../../../../models/ProductSort';
 
 @Component({
   selector: 'app-home-popular-products',
@@ -16,7 +18,7 @@ export class HomePopularProductsComponent implements OnInit {
 
   isLoading = false;
 
-  cards: ProductCard[];
+  page: Page<ProductCard>;
 
   constructor(private _productService: ProductService,
               private _brandService: BrandService) {
@@ -28,20 +30,33 @@ export class HomePopularProductsComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this._productService.getProductsPage(
-      1,
-      new Map<string, string>().set('date', 'desc'),
-      null,
-      null,
-      10
-    ).pipe(switchMap(pg =>
+    this._productService.getProductsPage(0, null, ProductSort.OrdersDesc, 10).pipe(switchMap(pg =>
+
       zip(...pg.items.map(p =>
         zip(this._productService.getProductOverviewImageUrl(p.id),
           zip(this._brandService.getBrandById(p.brandId), this._brandService.getBrandImageUrl(p.brandId))
-            .pipe(map(([b, biUrl]) => new BrandCard(b.id, b.title, b.content, biUrl))))
-          .pipe(map(([pImg, brand]) => new ProductCard(p.id, p.title, p.description, p.price, brand, pImg)))))))
-      .subscribe(viewModels => {
-        this.cards = viewModels;
+            .pipe(map(([b, biUrl]) => new BrandCard(b.id, b.name, b.content, biUrl)))
+        ).pipe(map(([pImg, brand]) => new ProductCard(p.id, p.name, p.description, p.price, brand, pImg))))
+      ).pipe(map(cards => new Page(cards, pg.pageIndex, pg.totalPages, pg.totalItems, pg.hasPreviousPage, pg.hasNextPage)))))
+      .subscribe(page => {
+        this.page = page;
       }).add(() => this.isLoading = false);
+
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

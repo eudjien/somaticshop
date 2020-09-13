@@ -28,7 +28,6 @@ export class BasketAddButtonComponent implements OnInit {
       this.initQuantity(basketProduct);
       this.isLoading = false;
     }).add(() => {
-      console.log('add');
       this.isLoading = false;
     });
   }

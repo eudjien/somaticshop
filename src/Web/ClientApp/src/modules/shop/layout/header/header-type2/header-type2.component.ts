@@ -90,11 +90,9 @@ export class HeaderType2Component implements OnInit {
     if (this.closestEdge(event, element) !== 'bottom') {
       this.resetNavDropdown(searchInputElem);
     }
-    console.log('mouseLeave');
   }
 
   searchFocusIn($event: any): void {
-    console.log('focus');
     this.activeMenuItemId = 'search';
   }
 

@@ -7,10 +7,11 @@ import {ProductService} from '../../../services/product.service';
 import {BrandService} from '../../../services/brand.service';
 import {AppConstants} from '../../../app-constants';
 import {PageEvent} from '@angular/material/paginator';
-import {ProductSearchModel} from '../../../models/search/ProductSearchModel';
+import {ProductSearch} from '../../../models/search/ProductSearch';
 import {BrandDetailsViewModel} from '../../../viewModels/BrandDetailsViewModel';
 import {ActivatedRoute, Router} from '@angular/router';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
+import {ActiveBreadcrumbItem, BreadcrumbItem, LinkBreadcrumbItem} from '../shop-core/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-search',
@@ -46,6 +47,12 @@ export class SearchComponent implements OnInit {
     private _brandService: BrandService) {
   }
 
+  get breadcrumbs(): BreadcrumbItem[] {
+    return [
+      new ActiveBreadcrumbItem('Результаты поиска')
+    ];
+  }
+
   get currency(): string {
     return AppConstants.CURRENCY;
   }
@@ -53,7 +60,7 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
     this._route.queryParams.subscribe(params => {
       this.searchValue = params['q'] || '';
-      this.loadPage(this.page?.pageNumber ?? 1, this.searchValue);
+      this.loadPage(this.page?.pageIndex ?? 1, this.searchValue);
     });
   }
 
@@ -61,14 +68,14 @@ export class SearchComponent implements OnInit {
     this.loadPage(pageEvent.pageIndex + 1, this.searchValue);
   }
 
-  private loadPage(pageNumber: number = 1, searchInput: string): void {
+  private loadPage(pageIndex: number = 1, searchInput: string): void {
     this.isLoading = true;
 
-    const sModel = new ProductSearchModel();
+    const sModel = new ProductSearch();
     sModel.titles = [searchInput];
 
     const res = this._productService.getProductsPage(
-      pageNumber ?? 1, null, sModel)
+      pageIndex ?? 1, sModel)
       .pipe(defaultIfEmpty(null), switchMap(page => {
 
           const items = page.items.map(item => new ProductCard(item.id, item.title, item.description, item.price,
@@ -87,7 +94,7 @@ export class SearchComponent implements OnInit {
               })))).pipe(defaultIfEmpty([]));
 
           return zip(obs1, obs2).pipe(mergeAll(), mapTo(new Page<ProductCard>(items,
-            page.pageNumber, page.totalPages, page.totalItems, page.hasPreviousPage, page.hasNextPage)));
+            page.pageIndex, page.totalPages, page.totalItems, page.hasPreviousPage, page.hasNextPage)));
         })
       );
     res.subscribe(page => {

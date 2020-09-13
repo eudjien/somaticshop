@@ -9,7 +9,7 @@ import {ProductService} from '../../../../../services/product.service';
 import {Sort} from '@angular/material/sort';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {ProductGroup} from '../../../../../models/product/ProductGroup';
-import {ProductSearchModel} from '../../../../../models/search/ProductSearchModel';
+import {ProductSearch} from '../../../../../models/search/ProductSearch';
 
 @Component({
   selector: 'app-select-products',
@@ -71,7 +71,7 @@ export class SelectProductsComponent implements OnInit, AfterViewInit {
   init(productGroup?: ProductGroup): void {
     if (productGroup) {
 
-      const searchModel = new ProductSearchModel();
+      const searchModel = new ProductSearch();
       searchModel.groupIds = [productGroup.id];
 
       this._productService.getProducts(searchModel)
@@ -90,7 +90,7 @@ export class SelectProductsComponent implements OnInit, AfterViewInit {
   sortChange(sort: Sort): void {
     if (sort.active === 'title') {
       this.sortTitle = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
@@ -122,7 +122,7 @@ export class SelectProductsComponent implements OnInit, AfterViewInit {
   loadPage(page: number): void {
     this.isLoading = true;
 
-    const searchModel = new ProductSearchModel();
+    const searchModel = new ProductSearch();
     searchModel.titles = this.searchTitle ? [this.searchTitle] : null;
     searchModel.groupIds = this.onlyUnlocked ? (this.productGroup ? [this.productGroup.id, null] : [null]) : null;
 
@@ -174,12 +174,12 @@ export class SelectProductsComponent implements OnInit, AfterViewInit {
 
   onlyUnlockedChange($event: boolean) {
     this.onlyUnlocked = $event;
-    this.loadPage(this.page.pageNumber);
+    this.loadPage(this.page.pageIndex);
   }
 
   private initPaginator(page: Page<any>): void {
     this.paginator.length = page.totalItems;
-    this.paginator.pageIndex = page.pageNumber - 1;
+    this.paginator.pageIndex = page.pageIndex - 1;
     this.paginator.disabled = false;
   }
 }

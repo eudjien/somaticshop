@@ -21,6 +21,11 @@ namespace Infrastructure.Data.EntityFramework.Context
         }
 
         public AppApiAuthorizationDbContext(
+           DbContextOptions options) : base(options)
+        {
+        }
+
+        public AppApiAuthorizationDbContext(
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions)
             : base(options)

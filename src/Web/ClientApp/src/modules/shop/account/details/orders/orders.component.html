@@ -20,7 +20,7 @@
 
         <mat-paginator (page)="paginationChange($event)" [disabled]="isLoading" [hidePageSize]="true"
                        [length]="page.totalItems"
-                       [pageIndex]="page.pageNumber - 1" [pageSize]="10"
+                       [pageIndex]="page.pageIndex - 1" [pageSize]="10"
                        [showFirstLastButtons]="true"
                        class="paginator-no-side-spaces"
                        fxFlex="nogrow"

@@ -8,20 +8,15 @@
 
   <ng-container *ngIf="page">
 
-    <div class="mb-3" fxFlexFill fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="32px">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+      <app-layout-sort-header (sortChange)="sortChange($event)"
+                              fxFlex="nogrow"></app-layout-sort-header>
 
-      <div (matSortChange)="sortChange($event)" [matSortDisabled]="isLoading" fxFlex="nogrow" matSort>
-        <div mat-sort-header="price">цена</div>
-      </div>
-
-      <mat-paginator (page)="paginationChange($event)" [disabled]="isLoading" [hidePageSize]="true"
-                     [length]="page.totalItems"
-                     [pageIndex]="page.pageNumber - 1" [pageSize]="10"
-                     [showFirstLastButtons]="true"
-                     class="paginator-no-side-spaces"
-                     fxFlex="nogrow"
-                     style="background: none;margin-right:-13px"></mat-paginator>
-
+      <app-pagination (pageIndexChange)="pageChange($event)"
+                      [pageIndex]="page.pageIndex - 1"
+                      [pageSize]="10"
+                      [totalItems]="page.totalItems"
+                      fxFlex="nogrow"></app-pagination>
     </div>
 
     <div class="px-1" style="height: 8px;background:none; z-index: 99999;position:relative">
@@ -29,19 +24,8 @@
                         style="height: 2px"></mat-progress-bar>
     </div>
 
-    <app-product-layout [mode]="'card'" [cards]="page.items"></app-product-layout>
+    <app-product-layout [cardSize]="5" [items]="page.items" [layoutMode]="'card'"></app-product-layout>
 
-    <div fxFlexFill fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="32px">
-
-      <mat-paginator (page)="paginationChange($event)" [disabled]="isLoading" [hidePageSize]="true"
-                     [length]="page.totalItems"
-                     [pageIndex]="page.pageNumber - 1" [pageSize]="10"
-                     [showFirstLastButtons]="true"
-                     class="paginator-no-side-spaces"
-                     fxFlex="nogrow"
-                     style="background: none;margin-right:-13px"></mat-paginator>
-
-    </div>
   </ng-container>
 
 </app-overlay-loader>

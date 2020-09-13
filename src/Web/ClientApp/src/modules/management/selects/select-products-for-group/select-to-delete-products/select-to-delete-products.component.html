@@ -45,7 +45,7 @@
       <mat-list-option *ngFor="let product of page.items" [checkboxPosition]="'before'"
                        [selected]="isSelected(product)"
                        [value]="product">
-        {{product.title}}
+        {{product.name}}
       </mat-list-option>
     </mat-selection-list>
   </app-overlay-loader>

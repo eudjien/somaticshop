@@ -47,7 +47,7 @@ export class SelectSpecificationsComponent implements OnInit {
   }
 
   get canBeRestored(): boolean {
-    return this.hasSource && this._source.some(a => a.key !== a.key || a.value !== a.value);
+    return this.hasSource && this._source.some(a => a.productSpecNameId !== a.productSpecNameId || a.value !== a.value);
   }
 
   ngOnInit(): void {
@@ -55,7 +55,7 @@ export class SelectSpecificationsComponent implements OnInit {
 
   isModified(spec: ProductSpec): boolean {
     const sourceItem = this._source.find(a => a.id === spec.id);
-    return sourceItem.key !== spec.key || sourceItem.value !== spec.value;
+    return sourceItem.productSpecNameId !== spec.productSpecNameId || sourceItem.value !== spec.value;
   }
 
   addClick() {

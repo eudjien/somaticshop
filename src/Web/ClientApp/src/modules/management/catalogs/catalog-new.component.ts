@@ -16,7 +16,7 @@ export class CatalogNewComponent implements OnInit {
 
   isLoading = false;
 
-  title = new FormControl('', [Validators.required]);
+  name = new FormControl('', [Validators.required]);
 
   @ViewChild('uploadImage')
   uploadImage: UploadImageSingleComponent;
@@ -35,7 +35,7 @@ export class CatalogNewComponent implements OnInit {
   sendClick() {
     const catalog: Catalog = {
       id: 0,
-      title: this.title.value,
+      name: this.name.value,
       parentCatalogId: this.selectCatalogForCatalog.selected?.id
     };
     this.sendData(catalog, this.uploadImage.images.map(a => a.file)[0]);

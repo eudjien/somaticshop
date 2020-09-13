@@ -7,8 +7,8 @@
           <mat-card>
             <mat-form-field appearance="fill" class="d-block w-100">
               <mat-label>Название группы</mat-label>
-              <input [formControl]="title" matInput placeholder="Название" required>
-              <mat-error *ngIf="title.invalid">Это поле обязательно для заполнения</mat-error>
+              <input [formControl]="name" matInput placeholder="Название" required>
+              <mat-error *ngIf="name.invalid">Это поле обязательно для заполнения</mat-error>
             </mat-form-field>
           </mat-card>
         </div>
@@ -27,7 +27,7 @@
        style="bottom:0; z-index: 999; background-color: #637290;">
     <div class="col">
       <div class="d-flex w-100 px-4 py-2">
-        <button (click)="sendClick()" [disabled]="isLoading || !title.valid" class="send-btn ml-auto" mat-button>
+        <button (click)="sendClick()" [disabled]="isLoading || !name.valid" class="send-btn ml-auto" mat-button>
           <div class="d-flex align-items-center">
             <span>Обновить</span>
             <mat-icon>update</mat-icon>

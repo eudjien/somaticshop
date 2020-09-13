@@ -1,137 +1,73 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  ViewEncapsulation
-} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ProductService} from '../../../services/product.service';
 import {CatalogService} from '../../../services/catalog.service';
-import {ActivatedRoute, ActivatedRouteSnapshot, DetachedRouteHandle, Params, Router, RouteReuseStrategy} from '@angular/router';
+import {ActivatedRoute, NavigationExtras, Params, Router} from '@angular/router';
 import {BrandService} from '../../../services/brand.service';
-import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
-import {Catalog} from '../../../models/catalog/Catalog';
-import {EMPTY, iif, of, Subject, Subscription, zip} from 'rxjs';
-import {debounceTime, defaultIfEmpty, map, mergeAll, switchMap, switchMapTo, take, tap} from 'rxjs/operators';
+import {Subject, Subscription, zip} from 'rxjs';
+import {debounceTime, defaultIfEmpty, map, mapTo, mergeAll, switchMap, tap} from 'rxjs/operators';
 import {MediaObserver} from '@angular/flex-layout';
-import {MatSelectionList, MatSelectionListChange} from '@angular/material/list';
-import {CatalogProductListComponent} from './catalog-product-list/catalog-product-list.component';
+import {MatSelectionListChange} from '@angular/material/list';
 import {AppConstants} from '../../../app-constants';
 import {PriceRange} from '../../../models/PriceRange';
 import {Location} from '@angular/common';
 import {ChangeContext, Options} from 'ng5-slider';
-import {CatalogProductsFilter} from './CatalogProductsFilter';
-import {SelectionModel} from '@angular/cdk/collections';
-
-class CatalogViewModel {
-  constructor(
-    public parents?: Catalog[],
-    public current?: Catalog,
-    public childrens?: Catalog[],
-    public specifications?: { name: string, values: string[] }[],
-    public priceRange?: PriceRange,
-    public brands?: BrandWithImage[]) {
-  }
-}
-
-class BrandWithImage {
-  constructor(
-    public id?: number,
-    public title?: string,
-    public content?: string,
-    public imageUrl?: string) {
-  }
-}
-
-class CatalogRouteReuseStrategy extends RouteReuseStrategy {
-  public shouldDetach(route: ActivatedRouteSnapshot): boolean {
-    return false;
-  }
-
-  public store(route: ActivatedRouteSnapshot, detachedTree: DetachedRouteHandle): void {
-  }
-
-  public shouldAttach(route: ActivatedRouteSnapshot): boolean {
-    return false;
-  }
-
-  public retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
-    return null;
-  }
-
-  public shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
-    return (future.routeConfig === curr.routeConfig) || future.data.reuse;
-  }
-}
+import {VIEW_CARD_MODE, VIEW_LIST_MODE} from '../product-layout/product-layout-header/layout-mode-header/layout-mode-header.component';
+import {ActiveBreadcrumbItem, BreadcrumbItem, LinkBreadcrumbItem} from '../shop-core/breadcrumbs/breadcrumbs.component';
+import {CatalogResolveResult} from '../catalog-resolver';
+import {BrandCard} from '../../../viewModels/BrandCard';
+import {Page} from '../../../models/Page';
+import {ProductCard} from '../../../viewModels/ProductCard';
+import {BrandDetailsViewModel} from '../../../viewModels/BrandDetailsViewModel';
+import {ProductSearch} from '../../../models/search/ProductSearch';
+import {ProductSort} from '../../../models/ProductSort';
+import {Catalog} from '../../../models/catalog/Catalog';
+import {MatDrawer} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-catalog',
   templateUrl: './catalogs.component.html',
   styleUrls: ['./catalogs.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  animations: [
-    trigger('stagger', [
-      transition('* => *', [
-        query(':enter', [
-            style({
-              opacity: 0,
-              transform: 'scale(0.9)',
-            }),
-            stagger(100, [animate('300ms', style({opacity: 1, transform: 'none'}))])
-          ], {optional: true}
-        )
-      ])
-    ]),
-  ]
 })
-export class CatalogsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CatalogsComponent implements OnInit, OnDestroy {
 
-  updateSubject: Subject<CatalogProductsFilter> = new Subject<CatalogProductsFilter>()
-    .pipe(debounceTime(1000)) as Subject<CatalogProductsFilter>;
+  readonly PAGE_NUMBER_QUERY = 'page';
+  readonly PAGE_SIZE_QUERY = 'pageSize';
+  readonly SORT_QUERY = 'sort';
+  readonly BRAND_QUERY = 'brand';
+  readonly SPECIFICATION_QUERY = 's';
 
-  catalogProductsFilter: CatalogProductsFilter;
+  page: Page<ProductCard>;
+  layoutMode: 'list' | 'card' = VIEW_CARD_MODE;
 
-  isLoading = false;
+  pageIndex = 0;
+  pageSize = 10;
+  sort: ProductSort = ProductSort.DateDesc;
+
+  sorts: ProductSort[] = [ProductSort.DateDesc, ProductSort.PriceAsc, ProductSort.PriceDesc, ProductSort.OrdersDesc];
+
+  cardSize = 4;
+
+  @ViewChild('sideNav')
+  sideNav: MatDrawer;
+
+  updatePageSubject: Subject<ProductSearch> = new Subject<ProductSearch>()
+    .pipe(debounceTime(1020)) as Subject<ProductSearch>;
+
   productsIsLoading = false;
 
-  @Input()
-  empty = false;
-
-  viewModel: CatalogViewModel;
+  data: CatalogResolveResult;
 
   sidenavMode$ = this._mediaObserver.asObservable()
     .pipe(map(c => c[2].mqAlias === 'lt-lg' ? 'over' : 'side'));
 
-  @ViewChild('catalogProductList')
-  catalogProductList: CatalogProductListComponent;
-  @ViewChildren('catalogProductList')
-  catalogProductListQuery: QueryList<CatalogProductListComponent>;
-
-  @ViewChild('specList')
-  specSelectionList: MatSelectionList;
-  @ViewChildren('specList')
-  specSelectionListQuery: QueryList<MatSelectionList>;
-
-  @ViewChild('brandList')
-  brandList: MatSelectionList;
-  @ViewChildren('brandList')
-  brandListQuery: QueryList<MatSelectionList>;
+  selectedBrands: BrandCard[] = [];
+  selectedSpecifications: { id: number; key: string; value: string }[] = [];
 
   priceRange = {lower: null, upper: null};
   priceRangeOptions: Options;
-  selectedSpecifications: SelectionModel<{ key: string; value: string }>
-    = new SelectionModel<{ key: string; value: string }>(true, []);
-  private paramsSubscription: Subscription;
 
-  // ----
   private queryParamsSubscription: Subscription;
-
-  // ----
 
   constructor(
     private _route: ActivatedRoute,
@@ -141,140 +77,117 @@ export class CatalogsComponent implements OnInit, OnDestroy, AfterViewInit {
     private _brandService: BrandService,
     private _catalogService: CatalogService,
     private _mediaObserver: MediaObserver,
-    private _cdRef: ChangeDetectorRef) {
-    _router.routeReuseStrategy = new CatalogRouteReuseStrategy();
+    private changeDetectorRef: ChangeDetectorRef) {
+    this._router.routeReuseStrategy.shouldReuseRoute =
+      (a, c) => a.params.id === c.params.id;
+
+    this.data = this._route.snapshot.data.resolveResult as CatalogResolveResult;
+
+    this.updatePageSubject.subscribe(nextSearch => {
+      this.loadPage(this.pageIndex, this.pageSize, nextSearch);
+    });
+
+    this.queryParamsSubscription = this._route.queryParams.subscribe((params) => {
+
+      if (this.data) {
+
+        this.initAllFromQuery();
+        const search = this.createSearch();
+
+        const debounce = _router.getCurrentNavigation().extras.state?.debounce ?? false;
+
+        if (this.page && debounce) {
+          this.updatePageSubject.next(search);
+        } else {
+          this.loadPage(this.pageIndex, this.pageSize, search);
+        }
+
+      }
+    });
+  }
+
+  get breadcrumbs(): BreadcrumbItem[] {
+    const breadcrumbs: BreadcrumbItem[] = [];
+    if (this.data) {
+      if (this.data.currentCatalog) {
+        breadcrumbs.push(new LinkBreadcrumbItem('/catalogs', 'Все'));
+        if (this.data.parentCatalogs) {
+          breadcrumbs.push(...this.data.parentCatalogs.map(p => new LinkBreadcrumbItem(`/catalogs/${p.id}`, p.name)));
+        }
+        breadcrumbs.push(new ActiveBreadcrumbItem(this.data.currentCatalog.name));
+      } else {
+        breadcrumbs.push(new ActiveBreadcrumbItem('Все'));
+      }
+    }
+    return breadcrumbs;
+  }
+
+  private loadPage(pageIndex = 0, pageSize = 10, search: ProductSearch): void {
+
+    this.productsIsLoading = true;
+
+    const res = this._productService.getProductsPage(pageIndex, search, this.sort, pageSize)
+      .pipe(switchMap(page => {
+
+          const items = page.items.map(item => new ProductCard(item.id, item.name, item.description, item.price,
+            new BrandDetailsViewModel(item.brandId)));
+
+          const obs1 = zip(...items.map(product => {
+            return this._productService.getProductOverviewImageUrl(product.id)
+              .pipe(tap(imageUrl => product.imageUrl = imageUrl));
+          })).pipe(defaultIfEmpty([]));
+
+          const obs2 = zip(...items.map(product =>
+            zip(this._brandService.getBrandById(product.brand.id), this._brandService.getBrandImageUrl(product.brand.id))
+              .pipe(tap(([brand, imageUrl]) => {
+                product.brand = brand;
+                product.brand.imageUrl = imageUrl;
+              })))).pipe(defaultIfEmpty([]));
+
+          return zip(obs1, obs2).pipe(mergeAll(), mapTo(new Page<ProductCard>(items,
+            page.pageIndex, page.totalPages, page.totalItems, page.hasPreviousPage, page.hasNextPage)));
+        })
+      );
+    res.subscribe(page => {
+      this.page = page;
+    }, err => {
+
+    }).add(() => this.productsIsLoading = false);
+  }
+
+  get firstChilds(): Catalog[] {
+    return this.data.childCatalogs.filter(a => a.parentCatalogId === (this.data.currentCatalog?.id ?? null));
+  }
+
+  get layoutClass(): string {
+    switch (this.layoutMode) {
+      case VIEW_CARD_MODE:
+        return 'drawer-container-card';
+      case VIEW_LIST_MODE:
+        return 'drawer-container-list';
+      default:
+        return 'drawer-container-list';
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.queryParamsSubscription.unsubscribe();
+  }
+
+  layoutModeChange(mode: 'card' | 'list') {
+    this.layoutMode = mode;
   }
 
   get currency(): string {
     return AppConstants.CURRENCY;
   }
 
-  ngAfterViewInit(): void {
-  }
-
   ngOnInit(): void {
-
-    this.updateSubject.subscribe(filter => {
-      this.catalogProductsFilter = filter;
-    });
-
-    this.queryParamsSubscription = this._route.queryParams.subscribe((params) => {
-
-      if (this.viewModel) {
-
-        const brandIds = this.createBrandIdsFromParams();
-        const specifications = this.createSpecificationsFromParams();
-        const priceRange = new PriceRange(this.priceRange.lower, this.priceRange.upper);
-
-        const filter = new CatalogProductsFilter(this.viewModel.current?.id, priceRange, brandIds, specifications);
-
-        this.updateSubject.next(filter);
-      }
-    });
-
-    this.paramsSubscription = this._route.params.subscribe(params => {
-      this.isLoading = true;
-      console.log('params update');
-
-      const id = params['id'] ? +params['id'] : null;
-
-      zip(
-        id ? this._catalogService.catalogById(id) : of(<Catalog>null),
-        id ? this._catalogService.parentsFor(id, false).pipe(map(ps => ps.reverse()), defaultIfEmpty(<Catalog[]>null)) : of(<Catalog[]>null),
-        this._catalogService.childsFor(id, 1).pipe(defaultIfEmpty(<Catalog[]>null))
-      )
-        .pipe(switchMap(([current, parents, childs]) =>
-          this._catalogService.hasProducts(id).pipe(switchMap(notEmpty => iif(() => notEmpty, zip(
-            of(current),
-            of(parents),
-            of(childs),
-            this._catalogService.specificationsFor(current?.id),
-            this._catalogService.priceRangeFor(current?.id),
-            this._catalogService.brandsFor(current?.id).pipe(map(bs =>
-              zip(...bs.map(b => this._brandService.getBrandImageUrl(b.id)
-                .pipe(defaultIfEmpty(''), map(bi => new BrandWithImage(b.id, b.title, b.content, bi)))))), mergeAll()),
-          ), of(true).pipe(tap((empty) => {
-            this.viewModel = new CatalogViewModel(parents, current, childs);
-            this.catalogProductsFilter = null;
-            console.log('EMPTY!!!!');
-            this.empty = empty;
-          }), switchMapTo(EMPTY)))))))
-        .subscribe(([current, parents, childs, specifications, priceRange, brandsWithImages]) => {
-          this.empty = false;
-          this.viewModel = new CatalogViewModel(parents, current, childs, specifications, priceRange, brandsWithImages);
-
-          this.initBrand();
-          this.initSpecificationsList();
-          this.initPriceRangeSlider();
-
-          this.catalogProductsFilter = new CatalogProductsFilter(
-            current?.id,
-            new PriceRange(this.priceRange.lower, this.priceRange.upper),
-            this.createBrandIdsFromParams(),
-            this.createSpecificationsFromParams());
-          this._cdRef.detectChanges();
-        }).add(() => this.isLoading = false);
-    });
-  }
-
-  ngOnDestroy(): void {
-    console.log('destroy');
-    this.paramsSubscription.unsubscribe();
-    this.queryParamsSubscription.unsubscribe();
-  }
-
-  userPriceRangeChange($event: ChangeContext) {
-    const prefix = 'price.';
-    const fromPrefix = 'from';
-    const toPrefix = 'to';
-    let params = this.updateParamValue(prefix + fromPrefix, String($event.value), this._router.routerState.snapshot.root.queryParams);
-    params = this.updateParamValue(prefix + toPrefix, String($event.highValue), params);
-
-    this.navigate(params);
-  }
-
-  specificationChange($event: MatSelectionListChange) {
-    const selected = $event.option.selected;
-    const item = <{ key: string; value: string }>$event.option.value;
-
-    if (selected) {
-      this.selectedSpecifications.select(item);
-    } else {
-      this.selectedSpecifications.deselect(item);
-    }
-
-    const key = 'spec.' + item.key;
-
-    let params: Params;
-    if (selected) {
-      params = this.appendParam(key, item.value, this._router.routerState.snapshot.root.queryParams);
-    } else {
-      params = this.deleteParam(key, item.value, this._router.routerState.snapshot.root.queryParams);
-    }
-
-    this.navigate(params);
-  }
-
-  brandChange($event: MatSelectionListChange) {
-    const selected = $event.option.selected;
-
-    const key = 'brand';
-    const value = String($event.option.value);
-
-    let params: Params;
-    if (selected) {
-      params = this.appendParam(key, value, this._router.routerState.snapshot.root.queryParams);
-    } else {
-      params = this.deleteParam(key, value, this._router.routerState.snapshot.root.queryParams);
-    }
-
-    this.navigate(params);
   }
 
   productsLoadingChange(loading: boolean) {
-
     this.productsIsLoading = loading;
-    this._cdRef.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 
   private updateParamValue(name: string, value: string, _params: Params): Params {
@@ -326,128 +239,238 @@ export class CatalogsComponent implements OnInit, OnDestroy, AfterViewInit {
     return Object.keys(params).length !== 0 ? params : undefined;
   }
 
-  private navigate(params: Params): void {
+  private navigate(params: Params, debounce = true): void {
     this._router.navigate(
       ['.'],
-      {
+      <NavigationExtras>{
         relativeTo: this._route,
         queryParamsHandling: params ? 'merge' : undefined,
-        queryParams: params
+        queryParams: params,
+        state: {debounce: debounce}
       });
   }
 
-  private createSpecificationsFromParams(): Map<string, string[]> {
-    const prefix = 'spec.';
-    const params = this._router.routerState.snapshot.root.queryParams;
-    const specs = new Map<string, string[]>();
+  private createSearch(): ProductSearch {
+    const priceRange = new PriceRange(this.priceRange.lower, this.priceRange.upper);
+    const selectedBrandIds = this.selectedBrands.map(a => a.id);
+    const selectedSpecificationIdValues = this.selectedSpecifications.map(a => ({nameId: a.id, value: a.value}));
+    const search = new ProductSearch();
+    search.catalogIds = (this.data.childCatalogs || []).concat(this.data.currentCatalog)?.map(a => a?.id).filter(a => !!a);
+    search.priceRange = priceRange;
+    search.brandIds = selectedBrandIds;
+    search.specifications = selectedSpecificationIdValues;
+    return search;
+  }
 
-    const specifications = this.viewModel.specifications;
+  private initAllFromQuery() {
+    this.initPageIndexFromQuery();
+    this.initPageSizeFromQuery();
+    this.initSortFromQuery();
+    this.initBrandsFromQuery();
+    this.initSpecificationsFromQuery();
+    this.initPriceRangeSliderFromQuery();
+  }
 
-    Object.keys(params).filter(k => k.startsWith(prefix) && params[k])
-      .forEach(k => {
-        const paramName = k.slice(prefix.length);
+  private initPriceRangeSliderFromQuery() {
+    if (this.data.priceRange) {
+      const priceParams = this.priceParams;
 
-        if (Array.isArray(params[k])) {
-          const paramValues = (params[k] as string[])
-            .filter(pVal => specifications.some(s => s.name === paramName && s.values.some(sVal => sVal === pVal)));
-          if (paramValues?.length > 0) {
-            specs.set(paramName, paramValues);
-          }
+      if (!priceParams.from || priceParams.from < this.data.priceRange.from) {
+        this.priceRange.lower = this.data.priceRange.from;
+      } else {
+        this.priceRange.lower = priceParams.from;
+      }
+      if (!priceParams.to || priceParams.to > this.data.priceRange.to) {
+        this.priceRange.upper = this.data.priceRange.to;
+      } else {
+        this.priceRange.upper = priceParams.to;
+      }
+
+      this.priceRangeOptions = <Options>{
+        floor: this.data.priceRange.from,
+        ceil: this.data.priceRange.to,
+        step: 1,
+        animate: false,
+        noSwitching: true
+      };
+    }
+  }
+
+  private initBrandsFromQuery() {
+    this.selectedBrands = [];
+    const brandParams = this.brandParams;
+    this.data.brands?.forEach(brand => {
+      if (brandParams.some(brandName => brandName === brand.name)) {
+        this.selectedBrands.push(brand);
+      } else {
+        this.selectedBrands = this.selectedBrands.filter(a => a.id !== brand.id);
+      }
+    });
+  }
+
+  private initSpecificationsFromQuery() {
+    this.selectedSpecifications = [];
+    const specificationParams = this.specificationParams;
+    this.data.specifications?.forEach(specification => {
+      specification.values.forEach(specificationValue => {
+        if (specificationParams.some(a => a.key === specification.key && a.value === specificationValue)) {
+          this.selectedSpecifications.push({id: specification.id, key: specification.key, value: specificationValue});
         } else {
-          if (specifications.some(s => s.name === paramName && s.values.some(sVal => sVal === params[k]))) {
-            specs.set(paramName, [params[k]]);
-          }
+          this.selectedSpecifications =
+            this.selectedSpecifications.filter(a => !(a.id === specification.id && a.value === specificationValue));
         }
       });
-    return specs;
-  }
-
-  private createBrandIdsFromParams(): number[] {
-    const name = 'brand';
-    const params = this._router.routerState.snapshot.root.queryParams;
-    const brandIds: number[] = [];
-    Object.keys(params).filter(k => k === name && params[k]).forEach(k => {
-      if (Array.isArray(params[k])) {
-        brandIds.push(...params[k]);
-      } else {
-        brandIds.push(params[k]);
-      }
     });
-    return brandIds;
   }
 
-  private initPriceRangeSlider() {
-
-    const prefix = 'price.';
-    const toPrefix = 'to';
-    const fromPrefix = 'from';
-
-    const params = this._router.routerState.snapshot.root.queryParams;
-    const fromVal = params[prefix + fromPrefix];
-    const toVal = params[prefix + toPrefix];
-
-    this.priceRangeOptions = {
-      floor: this.viewModel.priceRange.from,
-      ceil: this.viewModel.priceRange.to,
-      step: 0.1
-    };
-
-    if (isNaN(fromVal) || fromVal < this.viewModel.priceRange.from) {
-      this.priceRange.lower = this.viewModel.priceRange.from;
-    } else {
-      this.priceRange.lower = fromVal;
-    }
-    if (isNaN(toVal) || toVal > this.viewModel.priceRange.to) {
-      this.priceRange.upper = this.viewModel.priceRange.to;
-    } else {
-      this.priceRange.upper = toVal;
-    }
+  private initPageIndexFromQuery() {
+    this.pageIndex = this.pageIndexParams;
   }
 
-  private initBrand() {
+  private initPageSizeFromQuery() {
+    this.pageSize = this.pageSizeParams;
+  }
 
-    const name = 'brand';
+  private initSortFromQuery() {
+    this.sort = this.sortParams;
+  }
 
-    const params = this._router.routerState.snapshot.root.queryParams;
-    const value = params[name];
+  brandIsSelected(brand: BrandCard) {
+    return this.selectedBrands?.some(a => a.id === brand.id);
+  }
 
-    this.brandListQuery.changes.pipe(take(1)).subscribe(() => {
-      if (Array.isArray(value)) {
-        const vArr = value as string[];
-        vArr.forEach(v => {
-          const option = this.brandList.options.find(o => String(o.value) === v);
-          if (option) {
-            option.selected = true;
-          }
-        });
-      } else {
-        console.log(value);
-        const v = value as string;
-        this.brandList.options.forEach(a => {
-          console.log(a.value);
-        });
-        const option = this.brandList.options.find(o => String(o.value) === v);
-        if (option) {
-          option.selected = true;
+  specificationIsSelected(spec: { id: number, value: string }) {
+    return this.selectedSpecifications?.some(a => a.id === spec.id && a.value === spec.value);
+  }
+
+  private get priceParams(): PriceRange {
+    const paramNameFrom = 'priceFrom';
+    const paramNameTo = 'priceTo';
+
+    const from = this._route.snapshot.queryParamMap.get(paramNameFrom);
+    const to = this._route.snapshot.queryParamMap.get(paramNameTo);
+
+    return new PriceRange(
+      Number.isNaN(from) ? null : Number(from),
+      Number.isNaN(to) ? null : Number(to),
+    );
+  }
+
+  private get brandParams(): string[] {
+    return this._route.snapshot.queryParamMap.getAll(this.BRAND_QUERY);
+  }
+
+  private get pageIndexParams(): number {
+    const value = Number.parseInt(this._route.snapshot.queryParamMap.get(this.PAGE_NUMBER_QUERY), 10);
+    if (!Number.isNaN(value) && value > 0) {
+      return value - 1;
+    }
+    return 0;
+  }
+
+  private get pageSizeParams(): number {
+    const value = Number.parseInt(this._route.snapshot.queryParamMap.get(this.PAGE_SIZE_QUERY), 10);
+    if (!Number.isNaN(value) && value > 0) {
+      return value;
+    }
+    return 10;
+  }
+
+  private get sortParams(): ProductSort {
+    let value = this._route.snapshot.queryParamMap.get(this.SORT_QUERY);
+    if (value?.length > 0) {
+      value = value[0].toUpperCase() + value.slice(1);
+    }
+
+    const sort: ProductSort = ProductSort[value];
+
+    if (!sort || !this.sorts.includes(sort)) {
+      return ProductSort.DateDesc;
+    }
+
+    return sort;
+  }
+
+  private get specificationParams(): any[] {
+    return this._route.snapshot.queryParamMap.getAll(this.SPECIFICATION_QUERY)
+      .map(a => {
+        try {
+          const obj = JSON.parse(a);
+          const key = Object.keys(obj)[0];
+          const value = obj[key];
+          return {key: key, value: value};
+        } catch (err) {
+          return null;
         }
-      }
-    });
+      }).filter(a => !!a);
   }
 
-  private initSpecificationsList() {
-    const prefix = 'spec.';
-    const params = this._router.routerState.snapshot.root.queryParams;
-    this.specSelectionListQuery.changes.pipe(take(1)).subscribe(() => {
-      this.specSelectionList.options.forEach(option => {
-        const listValue = (<{ key: string, value: string }>option.value);
-        Object.keys(params).filter(k => k === (prefix + listValue.key) && params[k])
-          .forEach(k => {
-            if ((Array.isArray(params[k]) && (params[k] as string[]).some(a => a === listValue.value))
-              || (params[k] === listValue.value)) {
-              option.selected = true;
-            }
-          });
-      });
-    });
+  sideNavOpenStart() {
+    this.cardSize = 4;
+  }
+
+  sideNavClosed() {
+    this.cardSize = 5;
+  }
+
+  toggleSideNav() {
+    this.sideNav.opened = !this.sideNav.opened;
+  }
+
+  priceRangeChange($event: ChangeContext) {
+    const fromPrefix = 'priceFrom';
+    const toPrefix = 'priceTo';
+
+    let params = this.updateParamValue(fromPrefix, String($event.value), this._route.snapshot.queryParams);
+    params = this.updateParamValue(toPrefix, String($event.highValue), params);
+
+    this.navigate(params);
+  }
+
+  specificationChange($event: MatSelectionListChange) {
+    const selected = $event.option.selected;
+    const spec = <{ id: number; key: string; value: string }>$event.option.value;
+
+    const jsonString = JSON.stringify({[spec.key]: spec.value});
+
+    let params: Params;
+    if (selected) {
+      params = this.appendParam(this.SPECIFICATION_QUERY, jsonString, this._route.snapshot.queryParams);
+    } else {
+      params = this.deleteParam(this.SPECIFICATION_QUERY, jsonString, this._route.snapshot.queryParams);
+    }
+
+    this.navigate(params);
+  }
+
+  brandChange($event: MatSelectionListChange) {
+    const selected = $event.option.selected;
+    const brand = <BrandCard>$event.option.value;
+
+    let params: Params;
+    if (selected) {
+      params = this.appendParam(this.BRAND_QUERY, String(brand.name), this._route.snapshot.queryParams);
+    } else {
+      params = this.deleteParam(this.BRAND_QUERY, String(brand.name), this._route.snapshot.queryParams);
+    }
+
+    this.navigate(params);
+  }
+
+  pageChange(pageIndex: number) {
+    const params = this.updateParamValue(this.PAGE_NUMBER_QUERY, String(pageIndex + 1), this._route.snapshot.queryParams);
+    this.navigate(params, false);
+  }
+
+  sortChange(sort: ProductSort) {
+    let sortString = ProductSort[sort];
+    sortString = sortString[0].toLowerCase() + sortString.slice(1);
+    const params = this.updateParamValue(this.SORT_QUERY, sortString, this._route.snapshot.queryParams);
+    this.navigate(params, false);
+  }
+
+  pageSizeChange(pageSize: number) {
+    const params = this.updateParamValue(this.PAGE_SIZE_QUERY, String(pageSize), this._route.snapshot.queryParams);
+    this.navigate(params, false);
   }
 }

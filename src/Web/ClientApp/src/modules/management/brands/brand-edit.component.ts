@@ -20,7 +20,7 @@ export class BrandEditComponent implements OnInit, AfterViewInit {
   isLoading = false;
 
   id: number = +this._route.snapshot.paramMap.get('id');
-  title = new FormControl('', [Validators.required]);
+  name = new FormControl('', [Validators.required]);
 
   @ViewChild('editor')
   editor: EditorComponent;
@@ -45,7 +45,7 @@ export class BrandEditComponent implements OnInit, AfterViewInit {
   sendClick() {
     const brand: Brand = {
       id: this.id,
-      title: this.title.value,
+      name: this.name.value,
       content: this.editor.stringify()
     };
     this.updateRequest(brand, this.uploadImage.images.map(a => a.file)[0]);
@@ -63,7 +63,7 @@ export class BrandEditComponent implements OnInit, AfterViewInit {
   private load() {
     this.isLoading = true;
     this._brandService.getBrandById(this.id).subscribe(async (brand: Brand) => {
-      this.title.setValue(brand.title);
+      this.name.setValue(brand.name);
       this.editor.parse(brand.content);
       this.getBrandImage();
     }, error => {

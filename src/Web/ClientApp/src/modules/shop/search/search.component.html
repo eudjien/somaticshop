@@ -1,21 +1,6 @@
-<div fxLayout="row" fxLayoutAlign="start center"
-     style="padding:8px 16px;background:#f5f5f5">
-
-  <ol class="breadcrumb m-0" fxFlex="grow" style="background: none;font-size:13px">
-    <li class="breadcrumb-item" style="font-size: 12px;">
-          <span style="font-weight: 500;font-size: 13px;">
-            <a [routerLink]="['/']" queryParamsHandling="merge">
-                    {{'Главная' | uppercase}}
-            </a>
-          </span>
-    </li>
-    <li class="breadcrumb-item">
-        <span class="mb-0" style="font-weight: 500;font-size: 13px;color:#676c71">
-          {{'Результаты поиска' | uppercase}}
-        </span>
-    </li>
-  </ol>
-</div>
+<app-container-toolbar>
+  <app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+</app-container-toolbar>
 
 <ng-container *ngIf="searchValue?.length > 0">
   <app-overlay-loader [isLoading]="isLoading" style="max-height: calc(100% - 212px);">
@@ -26,21 +11,15 @@
       <div *ngIf="page.totalItems > 0" class="py-4 px-5" fxLayout="row" fxLayoutAlign="end center">
         <mat-paginator (page)="paginationChange($event)" [disabled]="isLoading" [hidePageSize]="true"
                        [length]="page.totalItems"
-                       [pageIndex]="page.pageNumber - 1" [pageSize]="10"
+                       [pageIndex]="page.pageIndex - 1" [pageSize]="10"
                        [showFirstLastButtons]="true"
                        class="custom-paginator paginator-no-side-spaces"
                        fxFlex="nogrow"
                        style="background: none;margin-right:-13px"></mat-paginator>
       </div>
 
-      <div class="header-search">
-        <div [@stagger]="page" class="mb-3" fxLayout="column" fxLayoutAlign="stretch stretch" fxLayoutGap="16px">
-          <div *ngFor="let product of page.items" fxFlexFill>
-            <app-product-card [product]="product" class="shadow-none border-bottom"></app-product-card>
-          </div>
-        </div>
-      </div>
+      <app-product-layout [cardSize]="5" [items]="page.items" [layoutMode]="'card'"></app-product-layout>
+
     </ng-container>
   </app-overlay-loader>
 </ng-container>
-

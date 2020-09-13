@@ -4,22 +4,30 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Repositories
 {
-    public interface IRepository<TEntity>
-    {
-        Task<TEntity> FindByIdAsync(params object[] keyValues);
-        Task<TEntity> FindOneAsync(ISpecification<TEntity> spec);
-        Task<TEntity> FindFirstAsync(ISpecification<TEntity> spec);
-        Task<IEnumerable<TEntity>> GetAllAsync();
-        Task<IEnumerable<TEntity>> GetBySpecAsync(ISpecification<TEntity> spec);
-        Task<int> GetAllCountAsync();
-        Task<int> GetBySpecCountAsync(ISpecification<TEntity> spec);
+    //interface IInterface<T> : IRepositoryBase<T>
+    //{
 
-        void Add(TEntity entity);
-        void AddRange(IEnumerable<TEntity> entities);
-        void Update(TEntity entity);
-        void UpdateRange(IEnumerable<TEntity> entities);
-        void Remove(TEntity entity);
-        void RemoveRange(IEnumerable<TEntity> entities);
+    //}
+
+    public interface IRepository<T> where T: class
+    {
+        Task<T> FindByIdAsync(params object[] keyValues);
+        Task<T> FindOneAsync(ISpecification<T> specification);
+        Task<T> FindFirstAsync(ISpecification<T> specification);
+
+        Task<IEnumerable<T>> ListAsync();
+        Task<IEnumerable<T>> ListAsync(ISpecification<T> specification);
+        Task<IEnumerable<TResult>> ListAsync<TResult>(ISpecification<T, TResult> specification);
+
+        Task<int> CountAsync();
+        Task<int> CountAsync(ISpecification<T> specification);
+
+        void Add(T entity);
+        void AddRange(IEnumerable<T> entities);
+        void Update(T entity);
+        void UpdateRange(IEnumerable<T> entities);
+        void Remove(T entity);
+        void RemoveRange(IEnumerable<T> entities);
         public Task<int> SaveChangesAsync();
     }
 }

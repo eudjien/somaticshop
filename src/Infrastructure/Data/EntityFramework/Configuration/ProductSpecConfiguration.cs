@@ -12,9 +12,6 @@ namespace Infrastructure.Data.EntityFramework.Configuration
 
             builder.HasKey(a => a.Id);
 
-            builder.Property(a => a.Key)
-                .IsRequired();
-
             builder.Property(a => a.Value)
                 .IsRequired(false);
 

@@ -33,8 +33,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {Ng5SliderModule} from 'ng5-slider';
 import {ApiAuthorizationModule} from '../api-authorization/api-authorization.module';
 import {CommonModule} from '@angular/common';
-import { LoginMenuComponent } from './layout/header/login-menu/login-menu.component';
-import { HeaderComponent } from './layout/header/header.component';
+import {LoginMenuComponent} from './layout/header/login-menu/login-menu.component';
+import {HeaderComponent} from './layout/header/header.component';
 
 const routes: Routes = [
   {

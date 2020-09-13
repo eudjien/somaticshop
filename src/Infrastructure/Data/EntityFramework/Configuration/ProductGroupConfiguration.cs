@@ -12,10 +12,10 @@ namespace Infrastructure.Data.EntityFramework.Configuration
 
             builder.HasKey(a => a.Id);
 
-            builder.Property(a => a.Title)
+            builder.Property(a => a.Name)
                 .IsRequired();
 
-            builder.HasIndex(a => a.Title)
+            builder.HasIndex(a => a.Name)
                 .IsUnique(true);
 
             builder.HasMany(a => a.Products)

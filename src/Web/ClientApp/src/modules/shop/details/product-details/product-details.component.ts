@@ -9,7 +9,7 @@ import {ProductSpec} from '../../../../models/product/ProductSpec';
 import {BrandService} from '../../../../services/brand.service';
 import {CatalogService} from '../../../../services/catalog.service';
 import {ProductDetailsViewModel} from '../../../../viewModels/ProductDetailsViewModel';
-import {CatalogViewModel} from '../../../../viewModels/CatalogViewModel';
+import {CatalogCard} from '../../../../viewModels/CatalogCard';
 import {ProductCard} from '../../../../viewModels/ProductCard';
 import {QuillDeltaToHtmlConverter} from 'quill-delta-to-html';
 import {zip} from 'rxjs';
@@ -119,7 +119,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
         }
 
         if (catalogs) {
-          viewModel.catalogs = catalogs.map(a => new CatalogViewModel(a.id, a.title)).reverse();
+          viewModel.catalogs = catalogs.map(a => new CatalogCard(a.id, a.name)).reverse();
           viewModel.catalogs.forEach(catalog => {
             this._catalogService.getCatalogImageUrl(catalog.id)
               .subscribe(catalogImageUrl => {
@@ -130,7 +130,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
 
         if (productsInGroup && productsInGroup.length) {
           viewModel.productsInGroup = productsInGroup.map(groupProduct =>
-            new ProductCard(groupProduct.id, groupProduct.title, groupProduct.description, groupProduct.price));
+            new ProductCard(groupProduct.id, groupProduct.name, groupProduct.description, groupProduct.price));
           this.selectedProduct = viewModel.productsInGroup.find(a => this.compareProduct(a, product));
           viewModel.productsInGroup.forEach(productInGroup => {
             this._productService.getProductOverviewImageUrl(productInGroup.id)

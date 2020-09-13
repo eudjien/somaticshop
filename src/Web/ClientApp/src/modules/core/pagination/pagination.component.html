@@ -1,19 +1,23 @@
-<div class="page-info">
-  <span class="info">{{(pageIndex * pageSize) + 1}}</span>
-  <span class="info">-</span>
-  <span class="info">{{(pageIndex * pageSize) + pageSize}}</span>
-  <span class="info">из</span>
-  <span class="info">{{totalItems}}</span>
-</div>
-<div>
-  <button class="pagination-button" mat-icon-button [disabled]="firstPageIsActive" (click)="prevClick()">
-    <mat-icon class="move-icon">chevron_left</mat-icon>
+<mat-form-field appearance="legacy" class="page-size-select">
+  <mat-select [(value)]="pageSize" (valueChange)="pageSizeChangeEvent($event)">
+    <mat-option *ngFor="let ps of pageSizes" [value]="ps">{{ps}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<div class="pagination-controls">
+  <button (click)="firstClick()" [disableRipple]="true" [disabled]="firstPageIsActive" class="pagination-button"
+          mat-icon-button>
+    <mat-icon>first_page</mat-icon>
   </button>
-  <button class="pagination-button" mat-icon-button *ngFor="let pageIndex of pages"
-          [disabled]="isActivePage(pageIndex)" (click)="numberClick(pageIndex)">
-    {{pageIndex + 1}}
+  <button (click)="prevClick()" [disableRipple]="true" [disabled]="firstPageIsActive" class="pagination-button"
+          mat-icon-button>
+    <mat-icon>chevron_left</mat-icon>
   </button>
-  <button class="pagination-button" mat-icon-button [disabled]="lastPageIsActive" (click)="nextClick()">
-    <mat-icon class="move-icon">chevron_right</mat-icon>
+  <button (click)="nextClick()" [disableRipple]="true" [disabled]="lastPageIsActive" class="pagination-button"
+          mat-icon-button>
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+  <button (click)="lastClick()" [disableRipple]="true" [disabled]="lastPageIsActive" class="pagination-button"
+          mat-icon-button>
+    <mat-icon>last_page</mat-icon>
   </button>
 </div>

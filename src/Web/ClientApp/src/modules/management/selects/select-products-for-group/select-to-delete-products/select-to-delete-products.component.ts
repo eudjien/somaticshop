@@ -51,32 +51,32 @@ export class SelectToDeleteProductsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
   }
 
-  createPage(products: Product[], pageNumber: number, pageSize: number = 10): Page<Product> {
+  createPage(products: Product[], pageIndex: number, pageSize: number = 10): Page<Product> {
     const totalPages = Math.trunc(Math.ceil(products.length / pageSize));
-    const skip = (pageNumber - 1) * pageSize;
+    const skip = (pageIndex - 1) * pageSize;
     const take = skip + pageSize;
     return {
-      hasNextPage: pageNumber < totalPages,
-      hasPreviousPage: pageNumber > 1,
+      hasNextPage: pageIndex < totalPages,
+      hasPreviousPage: pageIndex > 1,
       items: products.slice(skip, take),
-      pageNumber: pageNumber,
+      pageIndex: pageIndex,
       totalItems: products.length,
       totalPages: Math.trunc(Math.ceil(products.length / pageSize)),
     };
   }
 
-  loadPage(pageNumber: number = 1): void {
+  loadPage(pageIndex: number = 1): void {
     if (this.products.length > 0) {
       let products = this.products;
       if (this.searchTitle) {
-        products = products.filter(a => a.title.toLocaleLowerCase()
+        products = products.filter(a => a.name.toLocaleLowerCase()
           .includes(this.searchTitle.toLocaleLowerCase()));
       }
       if (this.sortTitle) {
         products = products.sort((a, b) =>
-          this.sortTitle === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title));
+          this.sortTitle === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
       }
-      this.page = this.createPage(products, pageNumber);
+      this.page = this.createPage(products, pageIndex);
       this.initPaginator(this.page);
     } else {
       this.page = null;
@@ -86,7 +86,7 @@ export class SelectToDeleteProductsComponent implements OnInit, AfterViewInit {
   sortChange(sort: Sort) {
     if (sort.active === 'title') {
       this.sortTitle = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
@@ -138,7 +138,7 @@ export class SelectToDeleteProductsComponent implements OnInit, AfterViewInit {
 
   private initPaginator(page: Page<any>) {
     this.paginator.length = page.totalItems;
-    this.paginator.pageIndex = page.pageNumber - 1;
+    this.paginator.pageIndex = page.pageIndex - 1;
     this.paginator.disabled = false;
   }
 

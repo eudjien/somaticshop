@@ -55,7 +55,7 @@
               </div>
               <div class="main-line" mat-line>
                 <a routerLink="{{product.id}}/edit" target="_blank">
-                  {{product.title}}
+                  {{product.name}}
                 </a>
               </div>
               <div class="info-line" mat-line>
@@ -66,7 +66,7 @@
                   </li>
                   <li *ngFor="let catalog of product.catalogs$ | async" class="breadcrumb-item text-muted">
                     <a routerLink="{{catalog.id}}/edit" target="_blank">
-                      {{catalog.title}}
+                      {{catalog.name}}
                     </a>
                   </li>
                 </ol>

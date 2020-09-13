@@ -40,7 +40,7 @@
     <app-overlay-loader [isLoading]="isLoading">
       <ng-container *ngIf="page">
         <mat-list-option *ngFor="let group of page.items" [selected]="isSelected(group)" [value]="group">
-          {{group.title}}
+          {{group.name}}
         </mat-list-option>
       </ng-container>
     </app-overlay-loader>

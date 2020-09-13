@@ -1,5 +1,6 @@
-import {Component, HostBinding, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ProductCard} from '../../../../../viewModels/ProductCard';
+import {AppConstants} from '../../../../../app-constants';
 
 @Component({
   selector: 'app-product-list-item',
@@ -8,16 +9,16 @@ import {ProductCard} from '../../../../../viewModels/ProductCard';
 })
 export class ProductListItemComponent implements OnInit {
 
-  @HostBinding('class.mat-elevation-z1')
-  matElevation = true;
-
   @Input()
   card: ProductCard;
 
   constructor() {
   }
 
-  ngOnInit(): void {
+  get currency(): string {
+    return AppConstants.CURRENCY;
   }
 
+  ngOnInit(): void {
+  }
 }

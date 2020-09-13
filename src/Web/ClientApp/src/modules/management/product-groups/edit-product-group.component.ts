@@ -6,7 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {SelectProductsForGroupComponent} from '../selects/select-products-for-group/select-products-for-group.component';
 import {Page} from '../../../models/Page';
-import {ProductSearchModel} from '../../../models/search/ProductSearchModel';
+import {ProductSearch} from '../../../models/search/ProductSearch';
 
 @Component({
   selector: 'app-edit-product-group',
@@ -23,7 +23,7 @@ export class EditProductGroupComponent implements OnInit, AfterViewInit {
   id: number = +this._route.snapshot.paramMap.get('id');
   page: Page<ProductGroup>;
 
-  title = new FormControl('', [Validators.required]);
+  name = new FormControl('', [Validators.required]);
 
   constructor(
     private _productService: ProductService,
@@ -42,7 +42,7 @@ export class EditProductGroupComponent implements OnInit, AfterViewInit {
   sendClick() {
     const productGroup: ProductGroup = {
       id: this.id,
-      title: this.title.value,
+      name: this.name.value,
     };
     const productIds = this.listSelectProducts.selectedItems.map(p => p.id);
     this.updateReq(productGroup, productIds);
@@ -53,9 +53,9 @@ export class EditProductGroupComponent implements OnInit, AfterViewInit {
     this._productService.getProductGroupById(id)
       .subscribe((productGroup: ProductGroup) => {
 
-        this.title.setValue(productGroup.title);
+        this.name.setValue(productGroup.name);
 
-        const searchModel = new ProductSearchModel();
+        const searchModel = new ProductSearch();
         searchModel.groupIds = [productGroup.id];
 
         this._productService.getProducts(searchModel)

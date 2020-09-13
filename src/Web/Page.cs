@@ -7,7 +7,7 @@ namespace Web
     {
         public IEnumerable<T> Items { get; set; }
 
-        public int PageNumber { get; private set; }
+        public int PageIndex { get; private set; }
         public int TotalPages { get; private set; }
         public int TotalItems { get; private set; }
 
@@ -16,15 +16,15 @@ namespace Web
             Items = new List<T>();
         }
 
-        public Page(IEnumerable<T> items, int totalItems, int pageNumber, int pageSize)
+        public Page(IEnumerable<T> items, int totalItems, int pageIndex, int pageSize)
         {
-            PageNumber = pageNumber;
+            PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             Items = items;
             TotalItems = totalItems;
         }
 
-        public bool HasPreviousPage => PageNumber > 1;
-        public bool HasNextPage => PageNumber < TotalPages;
+        public bool HasPreviousPage => PageIndex > 0;
+        public bool HasNextPage => (PageIndex + 1) < TotalPages;
     }
 }

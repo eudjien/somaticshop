@@ -24,6 +24,7 @@ namespace Infrastructure.Data.EntityFramework
             ProductRepository = new EfProductRepository(_dbContext);
             ProductGroupRepository = new EfProductGroupRepository(_dbContext);
             ProductSpecRepository = new EfProductSpecRepository(_dbContext);
+            ProductSpecKeyRepository = new EfProductSpecKeyRepository(_dbContext);
             BrandRepository = new EfBrandRepository(_dbContext);
             OrderRepository = new EfOrderRepository(_dbContext);
             OrderProductRepository = new EfOrderProductRepository(_dbContext);

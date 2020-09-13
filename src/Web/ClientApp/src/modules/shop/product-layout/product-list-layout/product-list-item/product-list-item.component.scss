@@ -1,42 +1,60 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
   padding: 24px;
   background-color: #ffffff;
 }
 
-a.view-link {
-  font-size: 14px;
-  color: #2f5680;
-  font-weight: 500;
-}
-
-a:hover.view-link {
-  font-size: 14px;
-  color: #2f5680;
-  font-weight: 500;
-  text-decoration: underline;
-}
-
-.brand {
-  height: 10px;
-  line-height: 10px;
+.image {
   display: block;
+  flex: 0 1 auto;
+  margin-right: 32px;
+  max-width: 120px;
+  max-height: 120px;
 }
 
-.brand a.brand-link {
-  font-weight: 500;
-  font-size: 13px;
-  color: #424242;
-  display: inline-block;
-  height: 100%;
-}
+.content {
+  flex: 1 1 auto;
 
-.brand a.brand-link img {
-  float: left;
-  display: block;
-  height: 100%;
-}
+  .content-header {
+    margin: 0 0 16px 0;
 
-.catalog-link {
-  font-size: 12px;
+    a.details-link {
+      font-size: 14px;
+      color: #2f5680;
+      font-weight: 500;
+    }
+
+    a:hover.details-link {
+      font-size: 14px;
+      color: #2f5680;
+      font-weight: 500;
+      text-decoration: underline;
+    }
+  }
+
+  .content-body {
+    margin: 0 0 16px 0;
+  }
+
+  .content-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    .brand-link {
+      white-space: nowrap;
+      flex: 1 0 auto;
+    }
+
+    .price {
+      white-space: nowrap;
+      font-weight: 500;
+      flex: 0 0 0;
+      margin-left: auto;
+    }
+  }
 }

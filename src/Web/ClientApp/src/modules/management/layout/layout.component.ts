@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {AuthorizeService} from '../../api-authorization/authorize.service';
 import {AccountService} from '../../../services/account.service';
 import {map, tap} from 'rxjs/operators';
@@ -16,7 +16,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   @ViewChild('sideNav')
   sideNav: MatSidenav;
 
-  user$ = this._authorizeService.getUser().pipe(tap(u => console.log(u)));
+  user$ = this._authorizeService.getUser();
 
   sidenavMode$ = this._mediaObserver.asObservable()
     .pipe(map(c => c[2].mqAlias === 'lt-lg' ? 'over' : 'side'));
@@ -32,7 +32,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    from(this._authorizeService.signIn(null)).subscribe(a => console.log(a));
+    from(this._authorizeService.signIn(null)).subscribe(a => {});
   }
 
   ngAfterViewInit(): void {

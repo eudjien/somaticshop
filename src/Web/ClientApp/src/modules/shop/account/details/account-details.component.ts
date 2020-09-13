@@ -4,6 +4,7 @@ import {AuthorizeService} from '../../../api-authorization/authorize.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {ActiveBreadcrumbItem, BreadcrumbItem, LinkBreadcrumbItem} from '../../shop-core/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-account-details',
@@ -23,6 +24,12 @@ export class AccountDetailsComponent implements OnInit {
     private _httpClient: HttpClient,
     private _snackBar: MatSnackBar,
     @Inject('BASE_URL') private baseUrl: string) {
+  }
+
+  get breadcrumbs(): BreadcrumbItem[] {
+    return [
+      new ActiveBreadcrumbItem('Профиль')
+    ];
   }
 
   ngOnInit() {

@@ -11,6 +11,7 @@ import {debounceTime, mapTo, mergeMap, tap} from 'rxjs/operators';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {Sort} from '@angular/material/sort';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
+import {ActiveBreadcrumbItem, BreadcrumbItem, LinkBreadcrumbItem} from '../shop-core/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-brands',
@@ -55,6 +56,13 @@ export class BrandsComponent implements OnInit {
     });
   }
 
+  get breadcrumbs(): BreadcrumbItem[] {
+    return [
+      new LinkBreadcrumbItem('/', 'Главная'),
+      new ActiveBreadcrumbItem('Бренды')
+    ];
+  }
+
   ngOnInit(): void {
     this.loadPage();
   }
@@ -66,7 +74,7 @@ export class BrandsComponent implements OnInit {
   sortChange(sort: Sort) {
     if (sort.active === 'title') {
       this.sortTitle = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
@@ -74,23 +82,23 @@ export class BrandsComponent implements OnInit {
     this.loadPage(pageEvent.pageIndex + 1);
   }
 
-  private loadPage(pageNumber: number = 1): void {
+  private loadPage(pageIndex: number = 1): void {
 
     this.isLoading = true;
     const res = this._brandService.getBrandsPage(
-      pageNumber,
+      pageIndex,
       this.sortTitle ? this.sortTitle : null,
       this.searchTitle ? this.searchTitle : null)
       .pipe(
         mergeMap(page => {
-          const items = page.items.map(item => new BrandCard(item.id, item.title, item.content));
+          const items = page.items.map(item => new BrandCard(item.id, item.name, item.content));
 
           const obs1 = zip(...items.map(brand =>
             this._brandService.getBrandImageUrl(brand.id)
               .pipe(tap((imageUrl) => brand.imageUrl = imageUrl))));
 
           return obs1.pipe(mapTo(new Page<BrandCard>(items,
-            page.pageNumber, page.totalPages, page.totalItems, page.hasPreviousPage, page.hasNextPage)));
+            page.pageIndex, page.totalPages, page.totalItems, page.hasPreviousPage, page.hasNextPage)));
         })
       );
     res.subscribe(page => {

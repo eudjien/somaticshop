@@ -39,7 +39,7 @@ class OrderedProductViewModel {
 
   constructor(
     public id?: number,
-    public title?: string,
+    public name?: string,
     public description?: string,
     public unitPrice?: number,
     public quantity?: number,
@@ -94,7 +94,7 @@ export class OrderDetailsComponent implements OnInit {
         }),
         map(order => ({order: order, orderViewModel: this.mapToOrderViewModel(order)})),
         tap(orderData => {
-          console.log(orderData.order);
+
           orderData.orderViewModel.buyerViewModel$ =
             this._buyerService.getBuyerById(orderData.order.buyerId).pipe(map(buyer => this.mapToBuyerViewModel(buyer)));
 
@@ -129,7 +129,7 @@ export class OrderDetailsComponent implements OnInit {
   mapToOrderedProductViewModel(orderProduct: OrderProduct, product: Product): OrderedProductViewModel {
     return new OrderedProductViewModel(
       orderProduct.productId,
-      product.title,
+      product.name,
       product.description,
       orderProduct.unitPrice,
       orderProduct.quantity,

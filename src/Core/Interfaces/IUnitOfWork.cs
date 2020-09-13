@@ -11,6 +11,7 @@ namespace Core
         IProductRepository ProductRepository { get; }
         IProductGroupRepository ProductGroupRepository { get; }
         IProductSpecRepository ProductSpecRepository { get; }
+        IProductSpecKeyRepository ProductSpecKeyRepository { get; }
         IOrderRepository OrderRepository { get; }
         IOrderProductRepository OrderProductRepository { get; }
         IBasketRepository BasketRepository { get; }

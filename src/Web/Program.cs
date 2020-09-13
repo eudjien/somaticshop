@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
+using Azure.Identity;
+using Microsoft.Extensions.Configuration;
+using System;
 
 namespace Web
 {
@@ -51,6 +54,10 @@ namespace Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) => {
+                    //var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
+                    //config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     //webBuilder.UseUrls("http://192.168.0.100:5000", "https://192.168.0.100:5001");

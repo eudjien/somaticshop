@@ -45,7 +45,7 @@ export class BasketItemsComponent implements OnInit {
   }
 
   deleteItemClick(viewModel: BasketProductViewModel): void {
-    const dialogRef = this._dialog.open(BasketItemConfirmDeleteDialogComponent, {data: viewModel.title});
+    const dialogRef = this._dialog.open(BasketItemConfirmDeleteDialogComponent, {data: viewModel.name});
     dialogRef.afterClosed().subscribe(closeResult => {
       if (closeResult === true) {
         this.deleteItem(viewModel);

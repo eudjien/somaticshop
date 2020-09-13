@@ -60,7 +60,7 @@ namespace Web.Controllers
 
             if (page.HasValue)
             {
-                spec.Query.Paginate((page.Value - 1) * pageSize, pageSize);
+                spec.Query.Paginate((page.Value) * pageSize, pageSize);
             }
 
             if (!sort.IsNullOrEmpty())
@@ -287,7 +287,7 @@ namespace Web.Controllers
                 spec.Query.Where(Expression.Lambda<Func<Buyer, bool>>(expression, parameter));
             }
 
-            var items = _mapper.Map<IEnumerable<BuyerDto>>(await _unitOfWork.BuyerRepository.GetBySpecAsync(spec));
+            var items = _mapper.Map<IEnumerable<BuyerDto>>(await _unitOfWork.BuyerRepository.ListAsync(spec));
 
             if (page.HasValue)
             {
@@ -295,14 +295,14 @@ namespace Web.Controllers
 
                 if (expression is null)
                 {
-                    totalCount = await _unitOfWork.BuyerRepository.GetAllCountAsync();
+                    totalCount = await _unitOfWork.BuyerRepository.CountAsync();
                 }
                 else
                 {
                     var noPagingSpec = new BuyerFilterSpec();
                     spec.Query.Where(Expression.Lambda<Func<Buyer, bool>>(expression, parameter));
 
-                    totalCount = await _unitOfWork.BuyerRepository.GetBySpecCountAsync(noPagingSpec);
+                    totalCount = await _unitOfWork.BuyerRepository.CountAsync(noPagingSpec);
                 }
 
                 var paginatedList = new Page<BuyerDto>(items, totalCount, page.Value, pageSize);

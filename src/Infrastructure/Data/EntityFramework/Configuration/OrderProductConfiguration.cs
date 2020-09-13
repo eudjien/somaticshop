@@ -27,7 +27,7 @@ namespace Infrastructure.Data.EntityFramework.Configuration
                 .IsRequired();
 
             builder.HasOne(a => a.Product)
-                .WithMany()
+                .WithMany(a => a.OrderProducts)
                 .HasForeignKey(a => a.ProductId);
 
         }

@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {ActiveBreadcrumbItem, BreadcrumbItem, LinkBreadcrumbItem} from '../shop-core/breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-delivery',
@@ -10,7 +11,13 @@ export class DeliveryComponent implements OnInit {
   constructor() {
   }
 
-  ngOnInit(): void {
+  get breadcrumbs(): BreadcrumbItem[] {
+    return [
+      new LinkBreadcrumbItem('/', 'Главная'),
+      new ActiveBreadcrumbItem('Доставка')
+    ];
   }
 
+  ngOnInit(): void {
+  }
 }

@@ -4,7 +4,6 @@ import {BehaviorSubject, concat, from, Observable} from 'rxjs';
 import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {ApplicationName, ApplicationPaths} from './api-authorization.constants';
 import {Guid} from 'guid-typescript';
-import {checkVersion} from '@angular/compiler-cli/src/typescript_support';
 
 export type IAuthenticationResult =
   SuccessAuthenticationResult |
@@ -47,7 +46,6 @@ export class AuthorizeService {
   private userSubject: BehaviorSubject<IUser | null> = new BehaviorSubject(null);
 
   constructor() {
-    console.log('AuthorizeService: ' + Guid.create().toString());
   }
 
   public isAuthenticated(): Observable<boolean> {
@@ -160,7 +158,7 @@ export class AuthorizeService {
   }
 
   public isUserInRole(role: string): Observable<boolean> {
-    return this.getUser().pipe(map(u => this._isUserInRole(u, role)), tap(vc => console.log(vc)));
+    return this.getUser().pipe(map(u => this._isUserInRole(u, role)));
   }
 
   private _isUserInRole(user: IUser, role: string): boolean {
@@ -211,7 +209,6 @@ export class AuthorizeService {
     return from(this.ensureUserManagerInitialized())
       .pipe(
         mergeMap(() => this.userManager.getUser()),
-        tap(u => console.log(u)),
         map(u => u && u.profile));
   }
 }

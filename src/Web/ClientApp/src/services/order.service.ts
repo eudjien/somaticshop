@@ -28,8 +28,6 @@ export class OrderService {
     sort?: Map<string, string>,
     searchModel?: OrderSearchModel): Observable<Page<Order>> {
 
-    console.log(searchModel);
-
     let params = new HttpParams();
     params = params.set('page', String(page));
 

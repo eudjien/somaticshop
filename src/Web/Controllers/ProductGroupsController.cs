@@ -50,34 +50,34 @@ namespace Web.Controllers
 
                 if (page.HasValue)
                 {
-                    spec.Query.Paginate((page.Value - 1) * pageSize, pageSize);
+                    spec.Query.Paginate((page.Value) * pageSize, pageSize);
                 }
 
                 if (sortTitle != null)
                 {
                     var orderBy = sortTitle.Equals("desc", StringComparison.OrdinalIgnoreCase) ? OrderBy.DESC : OrderBy.ASC;
-                    if (orderBy == OrderBy.ASC) { spec.Query.OrderBy(a => a.Title); }
-                    else if (orderBy == OrderBy.DESC) { spec.Query.OrderByDescending(a => a.Title); }
+                    if (orderBy == OrderBy.ASC) { spec.Query.OrderBy(a => a.Name); }
+                    else if (orderBy == OrderBy.DESC) { spec.Query.OrderByDescending(a => a.Name); }
                 }
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {
-                    spec.Query.Where(productGroup => productGroup.Title.Contains(search));
+                    spec.Query.Where(productGroup => productGroup.Name.Contains(search));
                 }
 
-                var items = _mapper.Map<IEnumerable<ProductGroupDto>>(await _unitOfWork.ProductGroupRepository.GetBySpecAsync(spec));
+                var items = _mapper.Map<IEnumerable<ProductGroupDto>>(await _unitOfWork.ProductGroupRepository.ListAsync(spec));
 
                 var totalCount = 0;
 
                 if (spec.WhereExpressions.IsNullOrEmpty())
                 {
-                    totalCount = await _unitOfWork.ProductGroupRepository.GetAllCountAsync();
+                    totalCount = await _unitOfWork.ProductGroupRepository.CountAsync();
                 }
                 else
                 {
                     var noPagingSpec = new ProductGroupFilterSpec();
-                    noPagingSpec.Query.Where(productGroup => productGroup.Title.Contains(search));
-                    totalCount = await _unitOfWork.ProductGroupRepository.GetBySpecCountAsync(noPagingSpec);
+                    noPagingSpec.Query.Where(productGroup => productGroup.Name.Contains(search));
+                    totalCount = await _unitOfWork.ProductGroupRepository.CountAsync(noPagingSpec);
                 }
 
                 var paginatedList = new Page<ProductGroupDto>(items, totalCount, page.Value, pageSize);
@@ -85,7 +85,7 @@ namespace Web.Controllers
                 return Ok(paginatedList);
             }
 
-            return Ok(_mapper.Map<IEnumerable<ProductGroupDto>>(await _unitOfWork.ProductGroupRepository.GetAllAsync()));
+            return Ok(_mapper.Map<IEnumerable<ProductGroupDto>>(await _unitOfWork.ProductGroupRepository.ListAsync()));
         }
 
         [HttpGet("{groupId}/products")]

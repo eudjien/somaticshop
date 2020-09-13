@@ -88,42 +88,42 @@ namespace Web
 
             var catalogs = new[] {
                 new Catalog {
-                    Title = "Покрышки",
+                    Name = "Покрышки",
                 },
                 new Catalog {
-                    Title = "Переключатели",
+                    Name = "Переключатели",
                     ChildCatalogs = new List<Catalog> {
                         new Catalog
                         {
-                            Title = "Задние переключатели",
+                            Name = "Задние переключатели",
                         },
                         new Catalog
                         {
-                            Title = "Передние переключатели",
+                            Name = "Передние переключатели",
                         },
                     },
                 },
                 new Catalog {
-                    Title = "Педали",
+                    Name = "Педали",
                 },
                 new Catalog {
-                    Title = "Велосипеды",
+                    Name = "Велосипеды",
                     ChildCatalogs = new List<Catalog> {
                         new Catalog
                         {
-                            Title = "Горные велосипеды",
+                            Name = "Горные велосипеды",
                         },
                         new Catalog
                         {
-                            Title = "Шоссейные велосипеды",
+                            Name = "Шоссейные велосипеды",
                         },
                         new Catalog
                         {
-                            Title = "Гибридные велосипеды",
+                            Name = "Гибридные велосипеды",
                         },
                          new Catalog
                         {
-                            Title = "BMX велосипеды",
+                            Name = "BMX велосипеды",
                         },
                     },
                 },
@@ -151,7 +151,7 @@ namespace Web
             {
                 products.Add(new Product
                 {
-                    Title = $"Product title {i}",
+                    Name = $"Product title {i}",
                     Content = $"Product content {i}",
                     Price = 11.3M + (i * 3.423M)
                 });

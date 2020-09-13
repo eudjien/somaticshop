@@ -43,8 +43,6 @@ export class AccountService {
       searchModel.addressIds?.forEach(addressId => params = params.append('search.addressId', String(addressId) ?? ''));
     }
 
-    console.log(params.getAll('search.id'));
-
     return this.httpClient.get<Page<Order>>(`${this.baseUrl}api/account/orders`, {params: params});
   }
 

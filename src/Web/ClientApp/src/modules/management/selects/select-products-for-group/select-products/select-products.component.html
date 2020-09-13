@@ -12,8 +12,10 @@
         </ng-container>
 
         <ng-template #lockedAll>
-          <mat-icon [inline]="true" [matTooltip]="'Эти продукты нельзя выбрать, потому что они пренадлежат другим группам'"
-                    class="locked-icon">lock</mat-icon>
+          <mat-icon [inline]="true"
+                    [matTooltip]="'Эти продукты нельзя выбрать, потому что они пренадлежат другим группам'"
+                    class="locked-icon">lock
+          </mat-icon>
         </ng-template>
 
         <mat-slide-toggle (ngModelChange)="onlyUnlockedChange($event)" [(ngModel)]="onlyUnlocked" [color]="'primary'"
@@ -51,7 +53,7 @@
                        [checkboxPosition]="'before'"
                        [selected]="isSelected(product)"
                        [value]="product">
-        {{product.title}}
+        {{product.name}}
       </mat-list-option>
       <ng-template #locked>
         <mat-list-item [disableRipple]="true">
@@ -59,7 +61,7 @@
                    [matTooltip]="'Этот продукт нельзя выбрать, потому что он пренадлежит другой группе'"
                    class="locked-icon"></fa-icon>
           <div style="padding-left: 16px">
-            {{product.title}}
+            {{product.name}}
           </div>
         </mat-list-item>
       </ng-template>

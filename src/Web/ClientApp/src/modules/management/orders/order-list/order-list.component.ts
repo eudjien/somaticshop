@@ -65,7 +65,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
     public _snackBar: MatSnackBar) {
     this.searchSubject.subscribe(value => {
       this.searchId = value;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     });
     mediaObserver.asObservable().subscribe(a => {
 
@@ -90,7 +90,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   sortChange(sort: Sort) {
     if (sort.active === 'id') {
       this.sortId = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
@@ -141,7 +141,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   applyChanges(): void {
     this.isLoading = true;
     const orders = this.changes.map(a => new Order(a.id, a.date, a.comment, a.status, a.buyer.id, a.address.id));
-    this._orderService.updateOrders(orders).pipe(switchMap(a => this.loadPage(this.page.pageNumber)))
+    this._orderService.updateOrders(orders).pipe(switchMap(a => this.loadPage(this.page.pageIndex)))
       .subscribe(() => {
         this.changes = [];
         this.successUpdatedSnackbar();
@@ -160,7 +160,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
     const obs = this._orderService.getOrdersPage(page, this.sortId ? new Map<string, string>([['id', this.sortId]]) : null, searchModel)
       .pipe(switchMap(p => {
 
-        const vmPage = new Page<OrderItemViewModel>([], p.pageNumber, p.totalPages, p.totalItems, p.hasPreviousPage, p.hasNextPage);
+        const vmPage = new Page<OrderItemViewModel>([], p.pageIndex, p.totalPages, p.totalItems, p.hasPreviousPage, p.hasNextPage);
 
         return forkJoin(p.items.map(order => zip(
           of(order),
@@ -179,6 +179,6 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   private initPage(page: Page<any>): void {
     this.page = page;
     this.paginator.length = page.totalItems;
-    this.paginator.pageIndex = page.pageNumber - 1;
+    this.paginator.pageIndex = page.pageIndex - 1;
   }
 }

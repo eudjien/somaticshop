@@ -14,6 +14,7 @@ namespace Core.Interfaces
         public IProductRepository ProductRepository { get; protected set; }
         public IProductGroupRepository ProductGroupRepository { get; protected set; }
         public IProductSpecRepository ProductSpecRepository { get; protected set; }
+        public IProductSpecKeyRepository ProductSpecKeyRepository { get; protected set; }
         public IBuyerRepository BuyerRepository { get; protected set; }
         public IBrandRepository BrandRepository { get; protected set; }
         public IAddressRepository AddressRepository { get; protected set; }

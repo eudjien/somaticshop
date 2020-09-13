@@ -53,7 +53,7 @@
               </div>
               <div class="main-line" mat-line>
                 <a routerLink="{{catalog.id}}/edit" target="_blank">
-                  {{catalog.title}}
+                  {{catalog.name}}
                 </a>
               </div>
               <div class="info-line" mat-line>
@@ -64,7 +64,7 @@
                   </li>
                   <li *ngFor="let parent of catalog.parents$ | async" class="breadcrumb-item text-muted">
                     <a routerLink="{{parent.id}}/edit" target="_blank">
-                      {{parent.title}}
+                      {{parent.name}}
                     </a>
                   </li>
                 </ol>

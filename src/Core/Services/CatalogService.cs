@@ -30,7 +30,7 @@ namespace Core.Services
 
             var list = new List<CatalogDto>();
 
-            var catalogs = Mapper.Map<IEnumerable<CatalogDto>>(await UnitOfWork.CatalogRepository.GetBySpecAsync(new CatalogByParentId(catalogId)));
+            var catalogs = Mapper.Map<IEnumerable<CatalogDto>>(await UnitOfWork.CatalogRepository.ListAsync(new CatalogByParentId(catalogId)));
 
             if (catalogs == null || !catalogs.Any())
             {

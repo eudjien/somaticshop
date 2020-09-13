@@ -49,13 +49,11 @@ namespace Web.Controllers
             spec.Query.Where(LambdaExpression(catalogs.Select(a => a.Id)));
             spec.Query.Include(nameof(Product.Specifications));
 
-            var products = await _unitOfWork.ProductRepository.GetBySpecAsync(spec);
+            var products = await _unitOfWork.ProductRepository.ListAsync(spec);
             var specifications = products.SelectMany(a => a.Specifications);
             var specDtos = _mapper.Map<IEnumerable<ProductSpecDto>>(specifications);
 
-            var ads = specDtos.GroupBy(a => a.Key).Select(a => new { a.Key, Values = a.Select(v => v.Value).Distinct() });
-
-            return Ok(ads);
+            return Ok(specDtos);
         }
 
         private async Task<List<Catalog>> GetWithParentsRecursive(int catalogId)

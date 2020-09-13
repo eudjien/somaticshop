@@ -73,7 +73,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<IEnumerable<UserDto>> GetAllUsers()
         {
-            var userDtos = _mapper.Map<IEnumerable<UserDto>>(await _userRepository.GetAllAsync());
+            var userDtos = _mapper.Map<IEnumerable<UserDto>>(await _userRepository.ListAsync());
             return userDtos;
         }
 

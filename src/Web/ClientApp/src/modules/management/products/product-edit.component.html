@@ -44,7 +44,7 @@
                         [removable]="false"
                         [selectable]="false"
                         [selected]="true" class="expand-header-chip group-chip"
-                        color="primary">{{selectGroupForProduct.selected?.title || '&ndash;'}}</mat-chip>
+                        color="primary">{{selectGroupForProduct.selected?.name || '&ndash;'}}</mat-chip>
             </mat-chip-list>
           </mat-panel-description>
         </mat-expansion-panel-header>
@@ -72,10 +72,10 @@
                   <ol class="breadcrumb py-0 px-1 m-0" style="background: none">
                     <li *ngFor="let parent of selectCatalogForProduct.selected.parents"
                         class="chip-breadcrumb-item breadcrumb-item">
-                      {{parent.title}}
+                      {{parent.name}}
                     </li>
                     <li class="chip-breadcrumb-item breadcrumb-item active" style="color:#fff">
-                      {{selectCatalogForProduct.selected.title}}
+                      {{selectCatalogForProduct.selected.name}}
                     </li>
                   </ol>
 
@@ -104,7 +104,7 @@
                         [selected]="true" class="expand-header-chip image-count-chip"
                         color="primary">
                 <ng-container *ngIf="selectBrandForProduct.hasSelected; else emptyDash">
-                  {{selectBrandForProduct.selected.title}}
+                  {{selectBrandForProduct.selected.name}}
                 </ng-container>
               </mat-chip>
             </mat-chip-list>

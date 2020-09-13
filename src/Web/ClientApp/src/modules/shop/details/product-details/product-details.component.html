@@ -7,13 +7,13 @@
       <ng-container *ngIf="viewModel.catalogs">
         <li *ngFor="let catalog of viewModel.catalogs" class="breadcrumb-item" style="font-size: 13px;">
           <a [routerLink]="['/catalogs', catalog.id]" style="font-weight: 500;font-size: 13px;">
-            {{catalog.title | uppercase}}
+            {{catalog.name | uppercase}}
           </a>
         </li>
       </ng-container>
       <li class="breadcrumb-item">
         <span class="mb-0" style="font-weight: 500;font-size: 13px;color:#676c71">
-          {{viewModel.title | uppercase}}
+          {{viewModel.name | uppercase}}
         </span>
       </li>
     </ol>
@@ -55,18 +55,18 @@
               <mat-select-trigger>
                 <div class="d-flex align-items-center">
                   <div *ngIf="selectedProduct.imageUrl" class="mr-3" style="height: 24px; flex: 0 0 24px">
-                    <img alt="{{selectedProduct.title}}" src="{{selectedProduct.imageUrl}}" style="width: 100%;">
+                    <img alt="{{selectedProduct.name}}" src="{{selectedProduct.imageUrl}}" style="width: 100%;">
                   </div>
-                  <span class="mr-3" style="overflow:hidden;text-overflow:ellipsis;">{{selectedProduct.title}}</span>
+                  <span class="mr-3" style="overflow:hidden;text-overflow:ellipsis;">{{selectedProduct.name}}</span>
                   <span class="ml-auto"><span class="price-text">{{selectedProduct.price}} р.</span></span>
                 </div>
               </mat-select-trigger>
               <mat-option *ngFor="let p of viewModel.productsInGroup" [value]="p" class="group-item">
                 <div class="d-flex align-items-center py-2">
                   <div *ngIf="p.imageUrl" class="mr-3" style="height: 64px; flex: 0 0 64px">
-                    <img alt="{{p.title}}" src="{{p.imageUrl}}" style="width: 100%;">
+                    <img alt="{{p.name}}" src="{{p.imageUrl}}" style="width: 100%;">
                   </div>
-                  <span class="mr-3" style="overflow:hidden;text-overflow:ellipsis;">{{p.title}}</span>
+                  <span class="mr-3" style="overflow:hidden;text-overflow:ellipsis;">{{p.name}}</span>
                   <span class="ml-auto"><span class="price-text">{{p.price}} р.</span></span>
                 </div>
               </mat-option>
@@ -122,7 +122,7 @@
 
 <ng-template #titleTemplate>
   <h2 class="details-title mb-2">
-    {{viewModel.title}}
+    {{viewModel.name}}
   </h2>
 </ng-template>
 
@@ -131,9 +131,9 @@
     <a class="brand-link" matTooltip="Бренд продукта" matTooltipPosition="above"
        routerLink="/brand/{{viewModel.brand.id}}"
        target="_blank">
-      <img *ngIf="viewModel.brand.imageUrl;else brandTitle" alt="{{viewModel.brand.title}}"
+      <img *ngIf="viewModel.brand.imageUrl;else brandTitle" alt="{{viewModel.brand.name}}"
            src="{{viewModel.brand.imageUrl}}">
-      <ng-template #brandTitle>{{viewModel.brand.title}}</ng-template>
+      <ng-template #brandTitle>{{viewModel.brand.name}}</ng-template>
     </a>
   </div>
 </ng-template>

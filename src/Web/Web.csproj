@@ -14,13 +14,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Ardalis.Specification" Version="4.0.0" />
-	<PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="4.0.0" />
-	<PackageReference Include="Binbin.Linq.PredicateBuilder" Version="2.0.1" />
+	<PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.0.0" />
+	<PackageReference Include="Azure.Identity" Version="1.1.1" />
 	<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.7" />
 	<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -32,10 +36,11 @@
 	<ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="ClientApp\src\fonts\" />
-    <Folder Include="Storage\" />
+
+  <ItemGroup> 
+	  <Content Include="Storage\**"> 
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+	  </Content> 
   </ItemGroup>
   
   <ItemGroup>
@@ -43,23 +48,6 @@
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Remove="Migrations\20200712122005_InitialCreate.cs" />
-    <Compile Remove="Migrations\20200712122005_InitialCreate.Designer.cs" />
-    <Compile Remove="Migrations\20200725104328_FixBuyerScheme.cs" />
-    <Compile Remove="Migrations\20200725104328_FixBuyerScheme.Designer.cs" />
-    <Compile Remove="Migrations\20200725111303_FixBuyerScheme.cs" />
-    <Compile Remove="Migrations\20200725111303_FixBuyerScheme.Designer.cs" />
-    <Compile Remove="Migrations\20200731010037_updateOrderAndBasketScheme.cs" />
-    <Compile Remove="Migrations\20200731010037_updateOrderAndBasketScheme.Designer.cs" />
-    <Compile Remove="Migrations\20200731010341_updateOrderAndBasketScheme.cs" />
-    <Compile Remove="Migrations\20200731010341_updateOrderAndBasketScheme.Designer.cs" />
-    <Compile Remove="Migrations\20200731011601_updateOrderAndBasketScheme.cs" />
-    <Compile Remove="Migrations\20200731011601_updateOrderAndBasketScheme.Designer.cs" />
-    <Compile Remove="Migrations\20200731011801_UpdateOrderAndBasketScheme.cs" />
-    <Compile Remove="Migrations\20200731011801_UpdateOrderAndBasketScheme.Designer.cs" />
   </ItemGroup>
   
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

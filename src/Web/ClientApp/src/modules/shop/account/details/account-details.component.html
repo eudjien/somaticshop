@@ -1,25 +1,14 @@
-<div fxLayout="row" fxLayoutAlign="start center"
-     style="padding:8px 16px;background:#f5f5f5">
-
-  <button (click)="sidenav.toggle()" fxFlex="none" mat-icon-button>
-    <mat-icon [inline]="true" style="font-size:24px">menu</mat-icon>
+<app-container-toolbar>
+  <button (click)="sidenav.toggle()" mat-icon-button>
+    <mat-icon>menu</mat-icon>
   </button>
-
-  <ol class="breadcrumb m-0 sequence" fxFlex="grow" style="background: none;font-size:12px">
-    <li class="breadcrumb-item">
-      <span class="mb-0" style="font-weight: 500;font-size: 13px;color:#676c71">
-        Профиль
-      </span>
-    </li>
-  </ol>
-
+  <app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
   <button [matTooltipPosition]="'below'" [matTooltip]="'Редактировать профиль'" [routerLink]="['update']"
-          fxFlex="none"
+          class="ml-auto"
           mat-icon-button>
     <mat-icon [inline]="true" style="font-size:18px">edit</mat-icon>
   </button>
-
-</div>
+</app-container-toolbar>
 
 <mat-drawer-container style="background:#ffffff;min-height:200px">
   <mat-drawer #sidenav mode="{{sidenavMode}}" opened style="width:220px">

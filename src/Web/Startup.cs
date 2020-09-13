@@ -11,7 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.IO;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using Web.Extensions;
 
 namespace Web
@@ -37,7 +39,7 @@ namespace Web
             string demoConnection = Configuration.GetConnectionString("DemoConnection").Replace("%CONTENTROOTPATH%", Environment.ContentRootPath);
 
             services.AddDbContext<AppDbContext>(opts =>
-                opts.UseSqlServer(demoConnection, b => b.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)));
+                opts.UseSqlServer(demoConnection, b => b.MigrationsAssembly("Infrastructure")));
 
             services.AddAppIdentity();
 
@@ -126,5 +128,9 @@ namespace Web
             });
         }
 
+        public X509Certificate2 GetCert()
+        {
+            return new X509Certificate2(Path.Combine(Environment.ContentRootPath, "cert/identityServerCert.pfx"), "Qq000021");
+        }
     }
 }

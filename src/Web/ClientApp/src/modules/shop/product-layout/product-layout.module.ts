@@ -2,29 +2,39 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ProductListLayoutComponent} from './product-list-layout/product-list-layout.component';
 import {ProductLayoutComponent} from './product-layout.component';
-import {ProductCardsLayoutComponent} from './product-cards-layout/product-cards-layout.component';
-import {ProductCardItemComponent} from './product-cards-layout/product-card-item/product-card-item.component';
-import {AppCoreModule} from '../../core/app-core.module';
+import {ProductCardLayoutComponent} from './product-card-layout/product-card-layout.component';
+import {ProductCardItemComponent} from './product-card-layout/product-card-item/product-card-item.component';
 import {ProductListItemComponent} from './product-list-layout/product-list-item/product-list-item.component';
-import {BrandLinkComponent} from './brand-link/brand-link.component';
+import {BrandLinkComponent} from '../shop-core/brand-link/brand-link.component';
+import {ProductLayoutFooterComponent} from './product-layout-footer/product-layout-footer.component';
+import {ProductLayoutHeaderComponent} from './product-layout-header/product-layout-header.component';
+import {LayoutModeHeaderComponent} from './product-layout-header/layout-mode-header/layout-mode-header.component';
+import {LayoutSortHeaderComponent} from './product-layout-header/layout-sort-header/layout-sort-header.component';
+import {ShopCoreModule} from '../shop-core/shop-core.module';
 
 @NgModule({
   declarations: [
-    ProductCardsLayoutComponent,
+    ProductCardLayoutComponent,
     ProductListLayoutComponent,
     ProductLayoutComponent,
     ProductCardItemComponent,
     ProductListItemComponent,
-    BrandLinkComponent
+    ProductLayoutHeaderComponent,
+    ProductLayoutFooterComponent,
+    LayoutModeHeaderComponent,
+    LayoutSortHeaderComponent,
   ],
   exports: [
-    ProductCardsLayoutComponent,
+    ProductCardLayoutComponent,
     ProductListLayoutComponent,
-    ProductLayoutComponent
+    ProductLayoutComponent,
+    ProductLayoutHeaderComponent,
+    ProductLayoutFooterComponent,
+    LayoutModeHeaderComponent,
+    LayoutSortHeaderComponent,
   ],
   imports: [
-    CommonModule,
-    AppCoreModule,
+    ShopCoreModule,
   ]
 })
 export class ProductLayoutModule {

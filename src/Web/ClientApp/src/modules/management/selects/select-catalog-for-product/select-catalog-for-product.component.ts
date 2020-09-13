@@ -76,7 +76,7 @@ export class SelectCatalogForProductComponent implements OnInit, AfterViewInit {
           .subscribe(catalog => {
 
             this._selected =
-              new CatalogWithParents(catalog.id, catalog.title, catalog.parentCatalogId);
+              new CatalogWithParents(catalog.id, catalog.name, catalog.parentCatalogId);
 
             this._selected.parents$ = this._catalogService.parentsFor(catalog.id)
               .pipe(map(parents => (this._selected.parents = parents.reverse())));
@@ -118,13 +118,13 @@ export class SelectCatalogForProductComponent implements OnInit, AfterViewInit {
   sortChange(sort: Sort) {
     if (sort.active === 'title') {
       this.sortTitle = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
   searchChange($event: string) {
     this.searchTitle = $event;
-    this.loadPage(this.page.pageNumber);
+    this.loadPage(this.page.pageIndex);
   }
 
   selectionChange($event: MatSelectionListChange) {
@@ -136,14 +136,14 @@ export class SelectCatalogForProductComponent implements OnInit, AfterViewInit {
     this._catalogService.getCatalogsPage(page, this.sortTitle, this.searchTitle)
       .pipe(map(a => {
         const catalogsWithParents = a.items.map(cat => {
-          const items = new CatalogWithParents(cat.id, cat.title, cat.parentCatalogId);
+          const items = new CatalogWithParents(cat.id, cat.name, cat.parentCatalogId);
           if (cat.parentCatalogId) {
             items.parents$ = this._catalogService.parentsFor(items.id)
               .pipe(map((parents: Catalog[]) => (items.parents = parents.reverse())));
           }
           return items;
         });
-        return new Page(catalogsWithParents, a.pageNumber, a.totalPages, a.totalItems, a.hasPreviousPage, a.hasNextPage);
+        return new Page(catalogsWithParents, a.pageIndex, a.totalPages, a.totalItems, a.hasPreviousPage, a.hasNextPage);
       }))
       .subscribe((pageWithParents: Page<CatalogWithParents>) => {
         this.page = pageWithParents;
@@ -153,6 +153,6 @@ export class SelectCatalogForProductComponent implements OnInit, AfterViewInit {
 
   private initPagination(page: Page<any>): void {
     this.paginator.length = page.totalItems;
-    this.paginator.pageIndex = page.pageNumber - 1;
+    this.paginator.pageIndex = page.pageIndex - 1;
   }
 }

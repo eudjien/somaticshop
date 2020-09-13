@@ -18,7 +18,7 @@ export class ProductGroupNewComponent implements OnInit, AfterViewInit, AfterVie
   @ViewChild('listSelectProducts')
   listSelectProducts: SelectProductsForGroupComponent;
 
-  title = new FormControl('', [Validators.required]);
+  name = new FormControl('', [Validators.required]);
 
   constructor(
     private _productService: ProductService,
@@ -39,7 +39,7 @@ export class ProductGroupNewComponent implements OnInit, AfterViewInit, AfterVie
   sendClick() {
     const productGroup: ProductGroup = {
       id: 0,
-      title: this.title.value,
+      name: this.name.value,
     };
     const productIds = this.listSelectProducts.selectedItems.map(p => p.id);
     this.createReq(productGroup, productIds);
@@ -58,7 +58,7 @@ export class ProductGroupNewComponent implements OnInit, AfterViewInit, AfterVie
 
   private verify(): boolean {
 
-    if (!this.title.valid) {
+    if (!this.name.valid) {
       // this.title.setErrors(this.title.errors);
       return false;
     }

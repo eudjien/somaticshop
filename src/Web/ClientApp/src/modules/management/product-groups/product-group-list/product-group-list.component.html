@@ -55,7 +55,7 @@
               </div>
               <div class="main-line" mat-line>
                 <a routerLink="{{group.id}}/edit" target="_blank">
-                  {{group.title}}
+                  {{group.name}}
                 </a>
               </div>
               <div class="info-line" mat-line>
@@ -63,7 +63,7 @@
                 <ul *ngIf="(group.products$ | async) as products;else loader" class="flat-list">
                   <li *ngFor="let product of products" class="flat-item">
                     <a [routerLink]="['/mgmt/products/' + product.id + '/edit']" target="_blank">
-                      {{product.title}}
+                      {{product.name}}
                     </a>
                   </li>
                   <li *ngIf="products.length === 0">

@@ -16,7 +16,7 @@ export class BrandNewComponent implements OnInit {
 
   isLoading = false;
 
-  title = new FormControl('', [Validators.required]);
+  name = new FormControl('', [Validators.required]);
 
   @ViewChild('editor')
   editor: EditorComponent;
@@ -35,7 +35,7 @@ export class BrandNewComponent implements OnInit {
   sendClick() {
     const brand: Brand = {
       id: 0,
-      title: this.title.value,
+      name: this.name.value,
       content: JSON.stringify(this.editor.getContents().ops),
     };
     this.sendData(brand, this.uploadImage.images.map(a => a.file)[0]);

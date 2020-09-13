@@ -8,8 +8,10 @@ import {ProductSpec} from '../models/product/ProductSpec';
 import {IFile} from '../interfaces/IFile';
 import {Brand} from '../models/Brand';
 import {map} from 'rxjs/operators';
-import {ProductSearchModel} from '../models/search/ProductSearchModel';
+import {ProductSearch} from '../models/search/ProductSearch';
 import {serialize} from 'object-to-formdata';
+import {ProductSort} from '../models/ProductSort';
+import {EnumValue} from '@angular/compiler-cli/src/ngtsc/partial_evaluator';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +36,7 @@ export class ProductService {
   }
 
   public getProducts(
-    searchModel?: ProductSearchModel,
+    searchModel?: ProductSearch,
     sort?: Map<string, string>): Observable<Product[]> {
 
     let params = new HttpParams();
@@ -56,34 +58,28 @@ export class ProductService {
     return this.httpClient.get<Product[]>(`${this.baseUrl}api/products`, {params: params});
   }
 
-  public getProductsPage(
-    page: number,
-    sort?: Map<string, string>,
-    searchModel?: ProductSearchModel,
-    specs?: Map<string, string[]>,
-    pageSize: number = 10): Observable<Page<Product>> {
+  public getProductsPage(page: number, search?: ProductSearch, sort?: ProductSort, pageSize: number = 10): Observable<Page<Product>> {
 
     let params = new HttpParams();
-    params = params.set('page', String(page));
-    params = params.set('pageSize', String(pageSize) ?? '');
+    params = params.set('pageIndex', String(page));
+    params = params.set('pageSize',  String(pageSize));
 
-    sort?.forEach((value, key) => params = params.append(`sort.${key}`, value));
+    if (sort) {
+      params = params.append(`sort`, String(Number(sort)));
+    }
 
-    let i = 0;
-    specs?.forEach((values, key) => {
-      values?.forEach((value, idx) => {
-        params = params.append(`spec[${i + idx}][0]`, key);
-        params = params.append(`spec[${i + idx}][1]`, value);
+    console.log(params.getAll('sort'));
+
+    if (search) {
+      search.ids?.forEach(id => params = params.append('search.id', String(id)));
+      search.titles?.forEach(title => params = params.append('search.title', title));
+      search.groupIds?.forEach(groupId => params = params.append('search.groupId', groupId ? String(groupId) : ''));
+      search.catalogIds?.forEach(catalogId => params = params.append('search.catalogId', catalogId ? String(catalogId) : ''));
+      search.brandIds?.forEach(brandId => params = params.append('search.brandId', brandId ? String(brandId) : ''));
+      search.specifications?.forEach((specification, i) => {
+        params = params.append(`search.specification[${i}].key`, String(specification.nameId))
+          .append(`search.specification[${i}].value`, specification.value);
       });
-      i += values.length;
-    });
-
-    if (searchModel) {
-      searchModel.ids?.forEach(id => params = params.append('search.id', String(id)));
-      searchModel.titles?.forEach(title => params = params.append('search.title', title));
-      searchModel.groupIds?.forEach(groupId => params = params.append('search.groupId', groupId ? String(groupId) : ''));
-      searchModel.catalogIds?.forEach(catalogId => params = params.append('search.catalogId', catalogId ? String(catalogId) : ''));
-      searchModel.brandIds?.forEach(brandId => params = params.append('search.brandId', brandId ? String(brandId) : ''));
     }
 
     return this.httpClient.get<Page<Product>>(`${this.baseUrl}api/products`, {params: params});

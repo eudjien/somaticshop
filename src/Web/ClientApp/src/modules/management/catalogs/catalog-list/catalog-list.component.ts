@@ -42,7 +42,7 @@ export class CatalogListComponent implements OnInit, AfterViewInit {
     public _snackBar: MatSnackBar) {
     this.searchSubject.subscribe(value => {
       this.searchTitle = value;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     });
   }
 
@@ -61,7 +61,7 @@ export class CatalogListComponent implements OnInit, AfterViewInit {
   sortChange(sort: Sort) {
     if (sort.active === 'title') {
       this.sortTitle = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
@@ -79,7 +79,7 @@ export class CatalogListComponent implements OnInit, AfterViewInit {
   openDeleteDialog(): void {
     const isOne = this.selection.selected.length === 1;
     const dialogRef = this._dialog.open(DeleteCommonModalComponent, {
-      data: `Удалить ${isOne ? `каталог '${this.selection.selected[0].title}'` : `каталоги (${this.selection.selected.length})`}?`
+      data: `Удалить ${isOne ? `каталог '${this.selection.selected[0].name}'` : `каталоги (${this.selection.selected.length})`}?`
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
@@ -94,7 +94,7 @@ export class CatalogListComponent implements OnInit, AfterViewInit {
     this._catalogService.deleteCatalogs(ids).subscribe(() => {
       this.showDeleteSuccessSnackbar();
       this.selection.clear();
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }).add(() => this.isLoading = false);
   }
 
@@ -138,7 +138,7 @@ export class CatalogListComponent implements OnInit, AfterViewInit {
     this._catalogService.getCatalogsPage(page, this.sortTitle, this.searchTitle)
       .pipe(map(a => {
         const catalogWithParents = a.items.map(cat => {
-          const items = new CatalogWithParents(cat.id, cat.title, cat.parentCatalogId);
+          const items = new CatalogWithParents(cat.id, cat.name, cat.parentCatalogId);
           if (cat.parentCatalogId) {
             items.parents$ = this._catalogService.parentsFor(items.id)
               .pipe(
@@ -147,7 +147,7 @@ export class CatalogListComponent implements OnInit, AfterViewInit {
           }
           return items;
         });
-        return new Page(catalogWithParents, a.pageNumber, a.totalPages, a.totalItems, a.hasPreviousPage, a.hasNextPage);
+        return new Page(catalogWithParents, a.pageIndex, a.totalPages, a.totalItems, a.hasPreviousPage, a.hasNextPage);
       }))
       .subscribe((pageWithParents: Page<CatalogWithParents>) => {
         this.page = pageWithParents;
@@ -157,6 +157,6 @@ export class CatalogListComponent implements OnInit, AfterViewInit {
 
   private initPaginator(page: Page<any>): void {
     this.paginator.length = page.totalItems;
-    this.paginator.pageIndex = page.pageNumber - 1;
+    this.paginator.pageIndex = page.pageIndex - 1;
   }
 }

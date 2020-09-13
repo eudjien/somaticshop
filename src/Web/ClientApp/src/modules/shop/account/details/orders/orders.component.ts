@@ -77,7 +77,7 @@ export class OrdersComponent implements OnInit {
   sortChange(sort: Sort) {
     if (sort.active === 'date') {
       this.sortDate = sort.direction === '' ? null : sort.direction;
-      this.loadPage(this.page.pageNumber);
+      this.loadPage(this.page.pageIndex);
     }
   }
 
@@ -132,18 +132,17 @@ export class OrdersComponent implements OnInit {
     }
   }
 
-  private loadPage(pageNumber: number = 1): void {
+  private loadPage(pageIndex: number = 1): void {
     this.isLoading = true;
-    this._accountService.getOrdersPage(this.page?.pageNumber ?? pageNumber,
+    this._accountService.getOrdersPage(this.page?.pageIndex ?? pageIndex,
       this.sortDate ? new Map<string, string>([['date', this.sortDate]]) : null,
       this.searchModel).pipe(take(1), finalize(() => this.isLoading = false), map(p => {
       const items = p.items.map(item => new OrderOverviewViewModel(
         item.id, item.date, item.comment, item.buyerId, item.addressId, item.status));
-      return new Page<OrderOverviewViewModel>(items, p.pageNumber, p.totalPages, p.totalItems, p.hasPreviousPage, p.hasNextPage);
+      return new Page<OrderOverviewViewModel>(items, p.pageIndex, p.totalPages, p.totalItems, p.hasPreviousPage, p.hasNextPage);
     }))
       .subscribe(page => {
         this.page = page;
-        console.log(page);
       });
   }
 }

@@ -14,6 +14,12 @@ import {AnonymousGuard} from '../modules/api-authorization/anonymous.guard';
 import {AdminGuard} from '../modules/api-authorization/admin.guard';
 import {AuthorizeGuard} from '../modules/api-authorization/authorize.guard';
 
+// {
+//   path: 'mgmt',
+//   canActivate: [AuthorizeGuard, AdminGuard],
+//   loadChildren: () => import('./../modules/management/management.module').then(m => m.ManagementModule)
+// },
+
 @NgModule({
   declarations: [
     AppComponent
@@ -27,11 +33,6 @@ import {AuthorizeGuard} from '../modules/api-authorization/authorize.guard';
       {
         path: '',
         loadChildren: () => import('./../modules/shop/shop.module').then(m => m.ShopModule),
-      },
-      {
-        path: 'mgmt',
-        canActivate: [AuthorizeGuard, AdminGuard],
-        loadChildren: () => import('./../modules/management/management.module').then(m => m.ManagementModule)
       },
       {
         path: '',

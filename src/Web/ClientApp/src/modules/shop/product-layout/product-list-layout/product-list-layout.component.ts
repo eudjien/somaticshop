@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
 import {ProductCard} from '../../../../viewModels/ProductCard';
 
@@ -24,12 +24,15 @@ import {ProductCard} from '../../../../viewModels/ProductCard';
 export class ProductListLayoutComponent implements OnInit {
 
   @Input()
-  cards: ProductCard[];
+  items: ProductCard[];
 
   constructor() {
   }
 
-  ngOnInit(): void {
+  @HostBinding('@stagger') get stagger() {
+    return this.items;
   }
 
+  ngOnInit(): void {
+  }
 }

@@ -8,7 +8,6 @@ import {Guid} from 'guid-typescript';
 @Injectable({providedIn: 'root'})
 export class AuthorizeInterceptor implements HttpInterceptor {
   constructor(private authorize: AuthorizeService) {
-    console.log('AuthorizeInterceptor: ' +  Guid.create().toString());
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

@@ -1,115 +1,119 @@
-<ng-container *ngIf="viewModel || empty">
+<app-overlay-loader [disableSpinner]="true" [hideContentWhenLoading]="false" [isLoading]="productsIsLoading"
+                    [overlayStyles]="{'background-color': 'rgb(255,255,255, .5)', 'justify-content': 'flex-start'}">
 
-  <div fxLayout="row" fxLayoutAlign="start center"
-       style="padding:8px 16px;background:#f5f5f5">
+  <ng-container *ngIf="data">
 
-    <button (click)="sidenav.toggle()" class="overflow-hidden" fxFlex="none" mat-icon-button>
-      <mat-icon [inline]="true" style="font-size:24px">menu</mat-icon>
-    </button>
+    <app-container-toolbar>
 
-    <ol class="breadcrumb m-0" fxFlex="grow" style="background: none;font-size:13px">
-      <li class="breadcrumb-item" style="font-size: 12px;">
-          <span style="font-weight: 500;font-size: 13px;">
-            <a [routerLink]="['/catalogs']" queryParamsHandling="merge">
-                    {{'Все' | uppercase}}
-            </a>
-          </span>
-      </li>
-      <ng-container *ngIf="viewModel.parents">
-        <li *ngFor="let catalog of viewModel.parents" class="breadcrumb-item" style="font-size: 12px;">
-          <span style="font-weight: 500;font-size: 13px;">
-            <a [routerLink]="['/catalogs', catalog.id]" queryParamsHandling="merge">
-              {{catalog.title | uppercase}}
-            </a>
-          </span>
-        </li>
-      </ng-container>
-      <li *ngIf="viewModel.current" class="breadcrumb-item">
-        <span class="mb-0" style="font-weight: 500;font-size: 13px;color:#676c71">
-          {{viewModel.current.title | uppercase}}
-        </span>
-      </li>
-    </ol>
-  </div>
+      <button (click)="toggleSideNav()" mat-icon-button [disabled]="!data.hasProducts">
+        <mat-icon>menu</mat-icon>
+      </button>
 
-  <mat-drawer-container style="background:#ffffff;min-height:500px">
-    <mat-drawer #sidenav mode="{{sidenavMode$ | async}}" opened style="background:#fff;width:220px;">
-      <div>
+      <app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
 
-        <app-overlay-loader [disableSpinner]="true" [hideContentWhenLoading]="false"
-                            [isLoading]="productsIsLoading || isLoading"
-                            [overlayStyles]="{'background-color': 'rgb(255,255,255,.4)'}">
+      <div *ngIf="data.hasProducts" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px" fxFlex="noshrink">
 
-          <ng-container *ngIf="viewModel.childrens?.length">
-            <mat-nav-list class="catalog-list">
-              <a *ngFor="let child of viewModel.childrens" [routerLink]="['/catalogs', child.id]" mat-list-item
-                 queryParamsHandling="merge">
-                {{child.title}}
-              </a>
-            </mat-nav-list>
-            <mat-divider class="my-2"></mat-divider>
-          </ng-container>
+        <div *ngIf="page" class="page-information ml-auto">
+          <span>{{page.pageIndex + 1}}</span>
+          <span>из</span>
+          <span>{{page.totalPages}}</span>
+        </div>
 
-          <ng-container *ngIf="!empty">
+        <app-layout-mode-header (modeChange)="layoutModeChange($event)" [layoutMode]="layoutMode">
+        </app-layout-mode-header>
 
-            <mat-selection-list #brandList (selectionChange)="brandChange($event)" class="catalog-list">
-              <h6 matSubheader>Бренды</h6>
-              <mat-list-option *ngFor="let brand of viewModel.brands" [checkboxPosition]="'before'" [value]="brand.id">
-
-                <img *ngIf="brand.imageUrl;else brandTitleTmpl" alt="{{brand.title}}" class="float-left"
-                     src="{{brand.imageUrl}}"
-                     style="max-width: 64px;max-height: 16px;">
-                <ng-template #brandTitleTmpl>
-                  <div>{{brand.title}}</div>
-                </ng-template>
-
-              </mat-list-option>
-            </mat-selection-list>
-
-            <mat-divider class="my-2"></mat-divider>
-
-            <mat-list>
-              <h6 fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px" matSubheader>
-                <span>Цена</span>
-                <span>{{currency}}</span>
-              </h6>
-
-              <mat-list-item>
-                <ng5-slider (userChange)="userPriceRangeChange($event)"
-                            [(highValue)]="priceRange.upper"
-                            [(value)]="priceRange.lower"
-                            [options]="priceRangeOptions"
-                            class="custom-slider"></ng5-slider>
-              </mat-list-item>
-            </mat-list>
-
-            <mat-divider class="my-2"></mat-divider>
-
-            <mat-selection-list #specList (selectionChange)="specificationChange($event)" class="catalog-list">
-              <ng-container *ngFor="let specs of viewModel.specifications">
-
-                <h6 matSubheader>{{specs.name}}</h6>
-
-                <mat-list-option *ngFor="let specValue of specs.values" [checkboxPosition]="'before'"
-                                 [value]="{ key: specs.name, value: specValue }">
-                  <div mat-line>{{specValue}}</div>
-                </mat-list-option>
-
-                <mat-divider class="my-2"></mat-divider>
-
-              </ng-container>
-
-            </mat-selection-list>
-          </ng-container>
-
-        </app-overlay-loader>
       </div>
-    </mat-drawer>
-    <mat-drawer-content>
 
-      <app-catalog-product-list (loading)="productsLoadingChange($event)"
-                                [update]="catalogProductsFilter"></app-catalog-product-list>
+    </app-container-toolbar>
 
-    </mat-drawer-content>
-  </mat-drawer-container>
-</ng-container>
+    <mat-drawer-container *ngIf="data.hasProducts" [class]="layoutClass" class="drawer-container">
+      <mat-drawer #sideNav (closed)="sideNavClosed()" (openedStart)="sideNavOpenStart()" mode="{{sidenavMode$ | async}}"
+                  opened style="background:#fff;width:220px;">
+
+        <mat-selection-list [multiple]="true" (selectionChange)="brandChange($event)">
+          <h6 matSubheader>Бренды</h6>
+
+          <mat-list-option [selected]="brandIsSelected(brand)" *ngFor="let brand of data.brands"
+                           [checkboxPosition]="'before'" [value]="brand">
+            <app-brand-item [card]="brand"></app-brand-item>
+          </mat-list-option>
+
+        </mat-selection-list>
+
+        <mat-divider class="my-2"></mat-divider>
+
+        <mat-list>
+          <h6 fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px" matSubheader>
+            <span>Цена</span>
+            <span>{{currency}}</span>
+          </h6>
+
+          <mat-list-item>
+            <ng5-slider class="custom-slider" (userChangeEnd)="priceRangeChange($event)"
+                        [(highValue)]="priceRange.upper"
+                        [(value)]="priceRange.lower"
+                        [options]="priceRangeOptions"></ng5-slider>
+          </mat-list-item>
+        </mat-list>
+
+        <mat-divider class="my-2"></mat-divider>
+
+        <mat-selection-list (selectionChange)="specificationChange($event)">
+          <ng-container *ngFor="let specs of data.specifications">
+
+            <h6 matSubheader>{{specs.key}}</h6>
+
+            <mat-list-option [selected]="specificationIsSelected({ id: specs.id, value: specValue })"
+                             *ngFor="let specValue of specs.values" [checkboxPosition]="'before'"
+                             [value]="{ key: specs.key, value: specValue }">
+              <div mat-line>{{specValue}}</div>
+            </mat-list-option>
+
+            <mat-divider class="my-2"></mat-divider>
+
+          </ng-container>
+
+        </mat-selection-list>
+
+      </mat-drawer>
+      <mat-drawer-content class="drawer-content">
+
+        <div *ngIf="page" class="drawer-headers"
+             [ngClass]="'drawer-headers-vertical'"
+             [ngClass.gt-xs]="{'drawer-headers-vertical': false, 'drawer-headers-horizontal': true}">
+
+          <app-layout-sort-header [availableSorts]="sorts" [sort]="sort" (sortChange)="sortChange($event)"
+                                  style="flex: 0 1 auto"></app-layout-sort-header>
+
+          <div style="display: flex; justify-content: flex-end; align-content: center; flex: 1 0 auto;">
+
+            <app-pagination (pageIndexChange)="pageChange($event)"
+                            (pageSizeChange)="pageSizeChange($event)"
+                            [pageIndex]="page.pageIndex"
+                            [(pageSize)]="pageSize"
+                            [totalItems]="page.totalItems" [pageSizes]="[2, 10, 20, 50, 100]"></app-pagination>
+          </div>
+        </div>
+
+        <mat-tab-group [animationDuration]="'0s'" [disableRipple]="true" class="tab-gr">
+          <mat-tab *ngFor="let child of firstChilds">
+            <ng-template mat-tab-label>
+              <button class="item-btn" mat-button [routerLink]="['/catalogs', child.id]">{{child.name}}</button>
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
+
+        <app-product-layout *ngIf="page" class="p-0" [cardSize]="cardSize" [items]="page.items"
+                            [layoutMode]="layoutMode">
+        </app-product-layout>
+
+      </mat-drawer-content>
+    </mat-drawer-container>
+
+    <div *ngIf="!data.hasProducts" class="p-4" fxLayout="row" fxLayoutAlign="center center"
+         style="font-size:18px">
+      В этом каталоге нет продуктов.
+    </div>
+
+  </ng-container>
+</app-overlay-loader>
