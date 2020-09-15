@@ -11,10 +11,12 @@ using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -57,7 +59,6 @@ namespace Web.Controllers
            [FromQuery(Name = "sort")] ProductSort? sort = null,
            [FromQuery(Name = "pageSize")] int pageSize = 10)
         {
-
             var spec = new ProductFilterSpec();
 
             if (sort != null)
@@ -89,9 +90,9 @@ namespace Web.Controllers
 
             var lambdaCombiner = new LambdaExpressionCombiner<Product>();
 
-            if (!search.Titles.IsNullOrEmpty())
+            if (!search.Names.IsNullOrEmpty())
             {
-                lambdaCombiner.Add(new ProductByNameContainsSpec(search.Titles).WhereExpressions.First());
+                lambdaCombiner.Add(new ProductByNameContainsSpec(search.Names).WhereExpressions.First());
             }
 
             if (!search.Ids.IsNullOrEmpty())
@@ -112,6 +113,11 @@ namespace Web.Controllers
             if (!search.BrandIds.IsNullOrEmpty())
             {
                 lambdaCombiner.Add(new ProductByBrandIdSpec(search.BrandIds).WhereExpressions.First());
+            }
+
+            if (search.PriceRange != null)
+            {
+                lambdaCombiner.Add(new ProductByPriceRangeSpec(search.PriceRange.From, search.PriceRange.To).WhereExpressions.First());
             }
 
             if (!search.Specifications.IsNullOrEmpty())

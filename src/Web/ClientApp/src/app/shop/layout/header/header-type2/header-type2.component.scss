@@ -1,0 +1,60 @@
+.header-expand {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  overflow: hidden;
+}
+
+.header-expand a.header-expand-link {
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 400;
+  padding: 0 16px;
+  border-right: 1px solid #3a4c5f;
+  line-height: 12px;
+  color: #a8b7c7;
+}
+
+.header-expand a.header-expand-link:last-child {
+  border-right: none;
+}
+
+.header-expand .expand-header {
+  color: #d4e1f3;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.header-expand a:hover.dd-link {
+  background-color: #4b5e73;
+  text-decoration: none;
+}
+
+.dd-list-group-list.dd-list-grop-expand {
+  padding-left: 16px;
+  border-left: 1px solid #485a6e;
+}
+
+.custom-expansion-panel.mat-expansion-panel {
+  background: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.custom-expansion-panel.mat-expansion-panel.mat-expansion-panel-spacing {
+  margin: 0;
+}
+
+.custom-expansion-panel.mat-expansion-panel .mat-expansion-panel-header.mat-expanded {
+  height: 48px;
+  background-color: #3a4c5f;
+}
+
+.custom-expansion-panel.mat-expansion-panel .mat-expansion-panel-body {
+  background-color: #3a4c5f;
+}
+
+.custom-expansion-panel.mat-expansion-panel .mat-expansion-panel-header .mat-expansion-indicator::after {
+  color: #d4e1f3;
+}

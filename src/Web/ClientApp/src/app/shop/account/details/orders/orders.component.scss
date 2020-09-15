@@ -1,0 +1,46 @@
+:host {
+  display: block;
+}
+
+$fx-border-color: #e8e8e8;
+$fx-border-size: 1px;
+
+.col-fx {
+  border-left: $fx-border-size solid $fx-border-color;
+  border-bottom: $fx-border-size solid $fx-border-color;
+}
+
+.row-fx {
+  position: relative;
+}
+
+.row-fx:before {
+  content: '';
+  height: 100%;
+  position: absolute;
+  left: 0;
+  border-left: 1px solid white;
+  z-index: 10;
+}
+
+.breadcrumb-fx {
+
+}
+
+.bc-item {
+  color: #000000d4;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.order-id {
+  font-size: 14px;
+  font-weight: 400;
+  color: #444b52;
+}
+
+.order-date {
+  color: #212121 !important;
+  font-weight: 300;
+  font-size: 14PX;
+}

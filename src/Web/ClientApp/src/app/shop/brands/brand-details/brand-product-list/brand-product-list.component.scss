@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+.content {
+  padding: 16px;
+
+  > *:not(:last-child) {
+    margin-bottom: 16px;
+  }
+}
+
+.headers {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  padding: 0 8px;
+
+  &-horizontal {
+    justify-content: flex-start;
+    flex-direction: row;
+
+    > *:not(:last-child) {
+      margin-right: 16px;
+    }
+  }
+
+  &-vertical {
+    justify-content: flex-start;
+    flex-direction: column;
+
+    > *:not(:last-child) {
+      margin-bottom: 16px;
+    }
+  }
+}

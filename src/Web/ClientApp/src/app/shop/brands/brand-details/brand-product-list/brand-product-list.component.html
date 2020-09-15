@@ -1,0 +1,22 @@
+<div class="content">
+  <div *ngIf="page" [ngClass.gt-xs]="{'drawer-headers-vertical': false, 'drawer-headers-horizontal': true}"
+       [ngClass]="'drawer-headers-vertical'"
+       class="headers">
+
+    <app-layout-sort-header (sortChange)="sortChange($event)" [availableSorts]="sorts" [sort]="sort"
+                            style="flex: 0 1 auto"></app-layout-sort-header>
+
+    <div style="display: flex; justify-content: flex-end; align-content: center; flex: 1 0 auto;">
+
+      <app-pagination (pageIndexChange)="pageChange($event)"
+                      (pageSizeChange)="pageSizeChange($event)"
+                      [(pageSize)]="pageSize"
+                      [pageIndex]="page.pageIndex"
+                      [pageSizes]="[2, 10, 20, 50, 100]" [totalItems]="page.totalItems"></app-pagination>
+    </div>
+  </div>
+
+  <app-product-layout *ngIf="page" [cardSize]="cardSize" [items]="page.items" [layoutMode]="layoutMode"
+                      class="p-0">
+  </app-product-layout>
+</div>

@@ -1,0 +1,130 @@
+<div style="z-index: 999;position: relative;">
+  <div style="background: #2e3f50;color:#29363e">
+    <div class="container">
+      <div [ngClass.xs]="'px-3'" class="row d-block">
+        <div class="header-top" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+
+          <div style="position:relative">
+            <a [routerLink]="['/']" class="logo">SomaticShop</a>
+            <app-breakpoint-text class="logo-alpha-prefix"></app-breakpoint-text>
+          </div>
+
+          <div class="mr-auto" fxLayout="row" fxLayoutAlign="start center">
+            <a [routerLink]="['/contacts']" class="header-top-link">
+              Контакты
+            </a>
+            <a [routerLink]="['/delivery']" class="header-top-link">
+              Доставка
+            </a>
+            <a [routerLink]="['/about']" class="header-top-link">
+              О нас
+            </a>
+            <a [routerLink]="['/brands']" class="header-top-link">
+              Бренды
+            </a>
+          </div>
+
+          <app-login-menu></app-login-menu>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="background: #3a4c5f;color:#fff">
+    <div class="container">
+      <div [ngClass.xs]="'pr-3'" class="row d-block">
+
+        <div class="header-bottom" fxLayout="row" fxLayoutAlign="space-between stretch" fxLayoutGap="16px">
+
+          <div #catalogsNavWrap (mouseleave)="navMouseLeave($event, catalogsNavWrap)"
+               *ngIf="!searchIsActive"
+               [@blinkAnimation]
+               fxLayout="row" fxLayoutAlign="start center">
+            <a (mouseenter)="navCatalogMouseEnter(catalogRoot.id)"
+               *ngFor="let catalogRoot of sliceRoots(catalogs)"
+               [class.dropdown-catalogs-bg]="navItemIsActive(catalogRoot.id)"
+               [routerLink]="['/catalogs', catalogRoot.id]"
+               class="dd-link" fxFlex>
+              {{catalogRoot.name}}
+            </a>
+          </div>
+
+          <div fxFlex="noshrink" fxLayout="row" fxLayoutAlign="center center">
+
+            <div #searchNavWrap (mouseleave)="navMouseLeave($event, searchNavWrap)" *ngIf="searchIsActive"
+                 [@blinkAnimation]
+                 [class.dropdown-search-bg]="searchIsActive"
+                 class="dd-search" fxFlex="nogrow" fxLayout="row"
+                 fxLayoutAlign="start center">
+
+              <mat-form-field appearance="fill" class="unicorn-dark-theme header-search" fxFlex="nogrow">
+                <input [(ngModel)]="searchInput" matInput placeholder="Поиск">
+              </mat-form-field>
+
+            </div>
+
+            <button (click)="searchFocusIn();" *ngIf="!searchIsActive" [@blinkAnimation] class="mr-auto"
+                    mat-icon-button>
+              <mat-icon class="header-search-icon">search</mat-icon>
+            </button>
+
+          </div>
+
+          <app-basket-open-button *ngIf="!searchIsActive" [@blinkAnimation] fxFlex="none"></app-basket-open-button>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div style="position:absolute;width: 100%;left:0;z-index:999;">
+
+  <div *ngIf="someCatalogNavItemIsActive" [@ddAnimation]
+       style="overflow: hidden">
+
+    <ng-container *ngFor="let catalogRoot of sliceRoots(catalogs)">
+      <div *ngIf="catalogRoot.id === activeMenuItemId" class="container">
+        <div class="row d-block">
+          <div #ddContainer (mouseleave)="dropDownMouseLeave($event, ddContainer)"
+               class="dropdown-content dropdown-catalogs-bg">
+            <div [@blinkAnimation] class="dropdown-content-inner" fxLayout="row wrap"
+                 fxLayoutAlign="start start">
+
+              <div *ngFor="let childOfRoot of sliceChildsOf(catalogs, catalogRoot)"
+                   class="dd-list-group" fxFlex="noshrink">
+
+                <div>
+                  <h6 class="dd-list-group-header">
+                    <a [routerLink]="['/catalogs', childOfRoot.id]">{{childOfRoot.name}}</a>
+                  </h6>
+                  <ul class="dd-list-group-list">
+                    <li *ngFor="let childOfRoot of sliceChildsOf(catalogs, childOfRoot)">
+                      <a [routerLink]="['/catalogs', childOfRoot.id]"
+                         class="dd-list-group-item">{{childOfRoot.name}}</a>
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+  </div>
+
+  <div [hidden]="!searchIsActive" class="container">
+    <div class="row d-block">
+
+      <app-search-header-dropdown [search]="searchInput"
+                                  class="d-block dropdown-search-bg"
+                                  style="max-height: 500px; overflow: auto"></app-search-header-dropdown>
+
+    </div>
+  </div>
+
+</div>

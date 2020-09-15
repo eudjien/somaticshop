@@ -1,0 +1,60 @@
+<ng-container *ngIf="products?.length > 0; else noContent">
+
+  <mat-list dense>
+    <mat-list-item class="h-auto">
+
+      <div class="d-flex flex-wrap w-100 align-items-center justify-content-between">
+
+        <div *ngIf="!isLoading && page" class="select-actions">
+          <mat-checkbox (change)="pageAllCheckChange($event)" [checked]="isAllChecked(page.items)"
+                        [indeterminate]="someCheckedExceptAll(page.items)"></mat-checkbox>
+
+          <div *ngIf="someChecked(page.items)" class="selected-actions">
+            <button (click)="removeClick()" class="del-action"
+                    mat-icon-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+            <span>({{selection.selected.length}})</span>
+          </div>
+
+        </div>
+
+        <div class="d-flex align-items-center justify-content-center justify-content-md-end flex-wrap w-auto"
+             style="flex: 1 1 auto">
+
+          <div (matSortChange)="sortChange($event)" class="sort my-3" matSort>
+            <div mat-sort-header="title">Название</div>
+          </div>
+
+          <mat-paginator #paginator (page)="paginationChange($event)"
+                         [hidePageSize]="true"
+                         [pageSize]="10"
+                         [showFirstLastButtons]="true">
+          </mat-paginator>
+
+        </div>
+
+      </div>
+
+    </mat-list-item>
+  </mat-list>
+
+  <app-overlay-loader [isLoading]="isLoading" [loadingMessage]="''">
+    <mat-selection-list #selectionList (selectionChange)="selectionChange($event)" *ngIf="page"
+                        [multiple]="true">
+      <mat-list-option *ngFor="let product of page.items" [checkboxPosition]="'before'"
+                       [selected]="isSelected(product)"
+                       [value]="product">
+        {{product.name}}
+      </mat-list-option>
+    </mat-selection-list>
+  </app-overlay-loader>
+</ng-container>
+
+<ng-template #noContent>
+  <div class="jumbotron rounded-0 bg-white bg-transparent">
+    <div class="container">
+      <span class="info-text">Нет выбранных элементов</span>
+    </div>
+  </div>
+</ng-template>

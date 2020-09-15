@@ -1,7 +1,0 @@
-<mat-form-field appearance="legacy" class="sort-select">
-  <mat-select [value]="sort" (valueChange)="sortChangeEvent($event)">
-    <mat-option *ngFor="let sortValue of availableSorts" [value]="sortValue">
-      <span>{{sortName(sortValue)}}</span>
-    </mat-option>
-  </mat-select>
-</mat-form-field>

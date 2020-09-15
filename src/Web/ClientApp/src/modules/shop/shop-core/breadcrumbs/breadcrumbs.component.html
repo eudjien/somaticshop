@@ -1,9 +1,0 @@
-<ol class="breadcrumb-list">
-  <li *ngFor="let item of breadcrumbs" class="breadcrumb-list-item">
-    <img *ngIf="item.iconUrl" alt="" class="breadcrumb-icon" src="{{item.iconUrl}}">
-    <div class="breadcrumb-content">
-      <a *ngIf="isLink(item); else title" [routerLink]="getRouteUrl(item)" class="link">{{item.name}}</a>
-      <ng-template #title><span class="text">{{item.name}}</span></ng-template>
-    </div>
-  </li>
-</ol>

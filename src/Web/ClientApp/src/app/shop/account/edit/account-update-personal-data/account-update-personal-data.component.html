@@ -1,0 +1,58 @@
+<div class="p-4">
+  <app-overlay-loader [hideContentWhenLoading]="false"
+                      [isLoading]="isLoading"
+                      [overlayStyles]="{'background-color': 'rgb(255, 255, 255, 0.5)'}">
+
+    <div *ngIf="user" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+
+      <form [formGroup]="fullNameForm" fxFlex="50" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+        <mat-form-field appearance="fill">
+          <mat-label>Фамилия</mat-label>
+          <input [formControlName]="'lastName'" matInput>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Имя</mat-label>
+          <input [formControlName]="'firstName'" matInput>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Отчество</mat-label>
+          <input [formControlName]="'surName'" matInput>
+        </mat-form-field>
+        <button (click)="updateFullName()" [color]="'primary'" [disabled]="!fullNameHasModified()" fxFlexAlign="end"
+                mat-button>
+          Изменить ФИО
+        </button>
+      </form>
+
+      <mat-divider fxHide fxShow.lt-md></mat-divider>
+      <mat-divider [vertical]="true" fxHide fxShow.gt-sm></mat-divider>
+
+      <div fxFlex="50" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="16px">
+        <form fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+          <mat-form-field appearance="fill">
+            <mat-label>Телефон</mat-label>
+            <input [formControl]="phoneNumberFormControl" matInput>
+            <mat-error></mat-error>
+          </mat-form-field>
+          <button (click)="updatePhoneNumber()" [color]="'primary'" [disabled]="!phoneNumberHasModified()"
+                  fxFlexAlign="end" mat-button>Изменить телефон
+          </button>
+        </form>
+
+        <mat-divider></mat-divider>
+
+        <form fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input [formControl]="emailFormControl" matInput>
+            <mat-error *ngIf="emailFormControl.invalid">Не валидный Email</mat-error>
+          </mat-form-field>
+          <button (click)="updateEmail()" [color]="'primary'" [disabled]="!emailHasModified()" fxFlexAlign="end"
+                  mat-button>Изменить Email
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </app-overlay-loader>
+</div>

@@ -1,0 +1,3 @@
+<ng-content select="[productLayoutHeader]"></ng-content>
+<app-product-card-layout *ngIf="isCardMode" [cardSize]="cardSize" [items]="items"></app-product-card-layout>
+<app-product-list-layout *ngIf="isListMode" [items]="items"></app-product-list-layout>

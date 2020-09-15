@@ -10,8 +10,7 @@ import {Brand} from '../models/Brand';
 import {map} from 'rxjs/operators';
 import {ProductSearch} from '../models/search/ProductSearch';
 import {serialize} from 'object-to-formdata';
-import {ProductSort} from '../models/ProductSort';
-import {EnumValue} from '@angular/compiler-cli/src/ngtsc/partial_evaluator';
+import {ProductSort} from '../models/sort/ProductSort';
 
 @Injectable({
   providedIn: 'root'
@@ -35,44 +34,29 @@ export class ProductService {
     return this.httpClient.get<ProductGroup>(`${this.baseUrl}api/productGroups/${id}`);
   }
 
-  public getProducts(
-    searchModel?: ProductSearch,
-    sort?: Map<string, string>): Observable<Product[]> {
-
-    let params = new HttpParams();
-
-    if (sort) {
-      sort.forEach((value, key) => {
-        params = params.append(`sort.${key}`, value);
-      });
-    }
-
-    if (searchModel) {
-      searchModel.ids?.forEach(id => params = params.append('search.id', String(id)));
-      searchModel.titles?.forEach(title => params = params.append('search.title', title));
-      searchModel.groupIds?.forEach(groupId => params = params.append('search.groupId', groupId ? String(groupId) : ''));
-      searchModel.catalogIds?.forEach(catalogId => params = params.append('search.catalogId', catalogId ? String(catalogId) : ''));
-      searchModel.brandIds?.forEach(brandId => params = params.append('search.brandId', brandId ? String(brandId) : ''));
-    }
-
-    return this.httpClient.get<Product[]>(`${this.baseUrl}api/products`, {params: params});
-  }
-
-  public getProductsPage(page: number, search?: ProductSearch, sort?: ProductSort, pageSize: number = 10): Observable<Page<Product>> {
+  public productsPage(page: number, search?: ProductSearch, sort?: ProductSort, pageSize = 10): Observable<Page<Product>> {
 
     let params = new HttpParams();
     params = params.set('pageIndex', String(page));
-    params = params.set('pageSize',  String(pageSize));
+    params = params.set('pageSize', String(pageSize));
 
-    if (sort) {
-      params = params.append(`sort`, String(Number(sort)));
+    if (sort != null) {
+      params = params.append(`sort`, String(sort));
     }
-
-    console.log(params.getAll('sort'));
 
     if (search) {
       search.ids?.forEach(id => params = params.append('search.id', String(id)));
-      search.titles?.forEach(title => params = params.append('search.title', title));
+      search.names?.forEach(name => params = params.append('search.name', name));
+
+      if (search.priceRange) {
+        if (search.priceRange.from) {
+          params = params.append('search.priceRange.from', String(search.priceRange.from));
+        }
+        if (search.priceRange.to) {
+          params = params.append('search.priceRange.to', String(search.priceRange.to));
+        }
+      }
+
       search.groupIds?.forEach(groupId => params = params.append('search.groupId', groupId ? String(groupId) : ''));
       search.catalogIds?.forEach(catalogId => params = params.append('search.catalogId', catalogId ? String(catalogId) : ''));
       search.brandIds?.forEach(brandId => params = params.append('search.brandId', brandId ? String(brandId) : ''));

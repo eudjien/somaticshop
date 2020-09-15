@@ -1,0 +1,16 @@
+<img *ngIf="card.imageUrl" alt="{{card.name}}" class="image" src="{{card.imageUrl}}">
+
+<div class="content">
+  <h6 class="content-header">
+    <a [routerLink]="['/products', card.id]" class="details-link">
+      {{card.name}}
+    </a>
+  </h6>
+  <p class="content-body">
+    {{card.description | shrink: 80}}
+  </p>
+  <div class="content-footer">
+    <app-brand-link *ngIf="card.brand" [card]="card.brand" class="brand-link"></app-brand-link>
+    <span class="price">{{card.price | currency: currency}}</span>
+  </div>
+</div>

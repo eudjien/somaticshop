@@ -127,10 +127,5 @@ namespace Web
                 }
             });
         }
-
-        public X509Certificate2 GetCert()
-        {
-            return new X509Certificate2(Path.Combine(Environment.ContentRootPath, "cert/identityServerCert.pfx"), "Qq000021");
-        }
     }
 }

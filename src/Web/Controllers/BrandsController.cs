@@ -8,6 +8,7 @@ using Core.Exceptions;
 using Core.Services;
 using Core.Specifications.BrandSpecs;
 using Core.Specifications.CatalogSpecs;
+using Core.Specifications.ProductSpecs;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Web.Models;
 
 namespace Web.Controllers
 {
@@ -46,45 +49,69 @@ namespace Web.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get(
-            [FromQuery] int? page = null,
-            [FromQuery] string sortTitle = null,
-            [FromQuery] string search = null,
-            [FromQuery] int pageSize = 10)
+            [FromQuery(Name = "pageIndex")] int? pageIndex = null,
+            [FromQuery(Name = "search")] BrandSearch search = null,
+            [FromQuery(Name = "sort")] BrandSort? sort = null,
+            [FromQuery(Name = "pageSize")] int pageSize = 10)
         {
 
-            if (page.HasValue)
+            var spec = new BrandFilterSpec();
+
+            if (sort != null)
             {
-                var spec = new BrandFilterSpec();
-                spec.Query.Paginate((page.Value) * pageSize, pageSize);
-
-                if (sortTitle != null)
+                switch (sort)
                 {
-                    var orderBy = sortTitle.Equals("desc", StringComparison.OrdinalIgnoreCase) ? OrderBy.DESC : OrderBy.ASC;
-                    if (orderBy == OrderBy.ASC) { spec.Query.OrderBy(a => a.Id); }
-                    else if (orderBy == OrderBy.DESC) { spec.Query.OrderByDescending(a => a.Id); }
+                    case BrandSort.ProductsAsc:
+                        spec.Query.OrderBy(a => a.Products.Count);
+                        break;
+                    case BrandSort.ProductsDesc:
+                        spec.Query.OrderByDescending(a => a.Products.Count);
+                        break;
+                    default:
+                        break;
                 }
+            }
 
-                if (!string.IsNullOrWhiteSpace(search))
+            var lambdaCombiner = new LambdaExpressionCombiner<Brand>();
+
+            if (search != null)
+            {
+                if (!search.Ids.IsNullOrEmpty())
                 {
-                    spec.Query.Where(brand => brand.Name.Contains(search));
+                    lambdaCombiner.Add(new BrandByIdSpec(search.Ids).WhereExpressions.First());
                 }
+                if (!search.Names.IsNullOrEmpty())
+                {
+                    lambdaCombiner.Add(new BrandByNameContainsSpec(search.Names).WhereExpressions.First());
+                }
+            }
 
-                var items = _mapper.Map<IEnumerable<BrandDto>>(await _unitOfWork.BrandRepository.ListAsync(spec));
+            var lambda = lambdaCombiner.Combine(ExpressionType.AndAlso);
+
+            if (lambda != null)
+            {
+                spec.Query.Where(lambda);
+            }
+
+            if (pageIndex.HasValue)
+            {
+                spec.Query.Paginate(pageIndex.Value * pageSize, pageSize);
 
                 var totalCount = 0;
 
-                if (spec.WhereExpressions.IsNullOrEmpty())
+                if (lambda is null)
                 {
                     totalCount = await _unitOfWork.BrandRepository.CountAsync();
                 }
                 else
                 {
                     var noPagingSpec = new BrandFilterSpec();
-                    noPagingSpec.Query.Where(brand => brand.Name.Contains(search));
+                    noPagingSpec.Query.Where(lambda);
                     totalCount = await _unitOfWork.BrandRepository.CountAsync(noPagingSpec);
                 }
 
-                var paginatedList = new Page<BrandDto>(items, totalCount, page.Value, pageSize);
+                var items = _mapper.Map<IEnumerable<BrandDto>>(await _unitOfWork.BrandRepository.ListAsync(spec));
+                var paginatedList = new Page<BrandDto>(items, totalCount, pageIndex.Value, pageSize);
 
                 return Ok(paginatedList);
             }

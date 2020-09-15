@@ -1,0 +1,37 @@
+<app-container-toolbar>
+  <button (click)="sidenav.toggle()" mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+  <button [matTooltipPosition]="'below'" [matTooltip]="'Редактировать профиль'" [routerLink]="['update']"
+          class="ml-auto"
+          mat-icon-button>
+    <mat-icon [inline]="true" style="font-size:18px">edit</mat-icon>
+  </button>
+</app-container-toolbar>
+
+<mat-drawer-container style="background:#ffffff;min-height:200px">
+  <mat-drawer #sidenav mode="{{sidenavMode}}" opened style="width:220px">
+    <mat-nav-list>
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active-menu-item'" [routerLink]="['./']"
+         mat-list-item>
+        <span matLine>Профиль</span>
+        <span class="text-muted" matLine style="font-size:12px">Персональные данные</span>
+        <mat-icon matListIcon style="color:#444444">person</mat-icon>
+      </a>
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active-menu-item'" [routerLink]="['orders']"
+         mat-list-item>
+        <span matLine>Заказы</span>
+        <span class="text-muted" matLine style="font-size:12px"></span>
+        <span class="text-muted" matLine style="font-size:12px">Список моих заказов</span>
+        <mat-icon matListIcon style="color:#444444">local_shipping</mat-icon>
+      </a>
+    </mat-nav-list>
+  </mat-drawer>
+
+  <mat-drawer-content>
+
+    <router-outlet></router-outlet>
+
+  </mat-drawer-content>
+</mat-drawer-container>

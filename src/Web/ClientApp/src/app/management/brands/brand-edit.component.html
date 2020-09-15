@@ -1,0 +1,36 @@
+<app-overlay-loader [isLoading]="isLoading" [loadingMessage]="''"
+                    [overlayStyles]="{ 'background': 'rgba(255, 255, 255, 0.7)' }">
+
+  <div fxLayout="column" fxLayoutAlign="start stretch"
+       fxLayoutGap="16px">
+
+    <mat-card>
+      <mat-form-field appearance="fill" class="d-block w-100">
+        <mat-label>Название брэнда</mat-label>
+        <input [formControl]="name" matInput placeholder="Название" required>
+        <mat-error *ngIf="name.invalid">Это поле обязательно для заполнения</mat-error>
+      </mat-form-field>
+    </mat-card>
+
+    <mat-card>
+      <app-editor #editor></app-editor>
+    </mat-card>
+
+    <mat-card>
+      <app-upload-image-single #uploadImage></app-upload-image-single>
+    </mat-card>
+
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px">
+      <button (click)="sendClick()" [disabled]="isLoading || !name.valid" class="send-btn ml-auto"
+              mat-button>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <span>Обновить</span>
+          <mat-icon>send</mat-icon>
+        </div>
+      </button>
+    </div>
+
+  </div>
+
+</app-overlay-loader>
+

@@ -1,0 +1,19 @@
+<app-container-toolbar>
+  <app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+  <img *ngIf="data?.imageUrl" alt="{{data.brand.name}}" class="brand-logo ml-auto"
+       src="{{data.imageUrl}}">
+</app-container-toolbar>
+
+<div class="p-4" style="background: #ffffff">
+  <p *ngIf="data.brand.content" [innerHTML]="data.brand.content"></p>
+  <p *ngIf="!data.brand.content">Нет описания</p>
+</div>
+
+<div class="p-3" style="background: #f5f5f5;">
+  <app-brand-product-list #s [update]="data.brand.id"></app-brand-product-list>
+
+  <div class="" *ngIf="!s.isLoading && !s.page">
+    нет продуктов
+  </div>
+
+</div>

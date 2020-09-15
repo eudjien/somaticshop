@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 0;
+  margin-bottom: 16px;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row;
+  flex: 1 0 auto;
+  color: #656565;
+
+  > *:not(:last-child) {
+    margin-right: 16px;
+  }
+}

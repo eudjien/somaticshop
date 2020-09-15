@@ -1,0 +1,47 @@
+<table [dataSource]="dataSource" class="w-100 mat-elevation-z0" mat-table>
+
+  <ng-container matColumnDef="product">
+    <th *matHeaderCellDef class="pl-0 pr-3 py-2" mat-header-cell> Продукт</th>
+    <td *matCellDef="let element" class="pl-0 pr-3 py-2" mat-cell>
+      <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="start center" fxLayoutGap="32px">
+        <div *ngIf="(element.imageUrl$ | async) as imageUrl" fxFlex="noshrink" style="height:100px;width:100px">
+          <img alt="{{element.title}}" src="{{imageUrl}}" style="width:100%">
+        </div>
+        <p class="m-0 p-0" fxFlex="grow">
+          <a [routerLink]="['/products', element.id]" target="_blank">{{element.title}}</a>
+        </p>
+        <button (click)="deleteItemClick(element)" fxFlex="noshrink" mat-icon-button>
+          <mat-icon [inline]="true" style="font-size:19px; color:#615e5e">delete</mat-icon>
+        </button>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="unitPrice">
+    <th *matHeaderCellDef class="text-center px-3 py-2" mat-header-cell> Цена(шт.)</th>
+    <td *matCellDef="let element" class="text-center px-3 py-2"
+        mat-cell> {{element.unitPrice | currency:currency}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="quantity">
+    <th *matHeaderCellDef class="text-center pl-3 py-2 pr-0" mat-header-cell> Количество</th>
+    <td *matCellDef="let element" class="text-center pl-3 py-2 pr-0" mat-cell>
+      <mat-form-field appearance="legacy" class="form-field-no-hint quantity-field" style="width: 64px">
+        <input #quantityInput (ngModelChange)="quantityChange(element, $event, quantityInput)"
+               [(ngModel)]="element.quantity"
+               [min]="1" [valueAsNumber]="element.quantity"
+               class="text-center" matInput type="number">
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="totalPrice">
+    <th *matHeaderCellDef class="text-center pr-0 py-2 pl-3" mat-header-cell> Итог</th>
+    <td *matCellDef="let element" class="text-center pr-0 pl-3 py-2" mat-cell>
+      {{element.totalPrice | currency:currency}}
+    </td>
+  </ng-container>
+
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+</table>

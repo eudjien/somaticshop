@@ -1,0 +1,25 @@
+<app-container-toolbar>
+  <app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+</app-container-toolbar>
+
+<ng-container *ngIf="searchValue?.length > 0">
+  <app-overlay-loader [isLoading]="isLoading" style="max-height: calc(100% - 212px);">
+    <ng-container *ngIf="page">
+      <div *ngIf="page.totalItems === 0" fxLayout="row" fxLayoutAlign="center center" style="height: 200px">
+        <span>Нет результатов поиска.</span>
+      </div>
+      <div *ngIf="page.totalItems > 0" class="py-4 px-5" fxLayout="row" fxLayoutAlign="end center">
+        <mat-paginator (page)="paginationChange($event)" [disabled]="isLoading" [hidePageSize]="true"
+                       [length]="page.totalItems"
+                       [pageIndex]="page.pageIndex - 1" [pageSize]="10"
+                       [showFirstLastButtons]="true"
+                       class="custom-paginator paginator-no-side-spaces"
+                       fxFlex="nogrow"
+                       style="background: none;margin-right:-13px"></mat-paginator>
+      </div>
+
+      <app-product-layout [cardSize]="5" [items]="page.items" [layoutMode]="'card'"></app-product-layout>
+
+    </ng-container>
+  </app-overlay-loader>
+</ng-container>

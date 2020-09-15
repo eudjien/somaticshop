@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.carousel-caption {
+  margin-top: 32px;
+  position: static;
+  background: none;
+  height: 100px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.carousel-caption .description {
+  font-size: 14px;
+  font-weight: 300;
+  padding: 0;
+  margin: 0;
+}

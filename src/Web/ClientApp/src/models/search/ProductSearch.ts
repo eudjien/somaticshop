@@ -3,7 +3,7 @@ import {PriceRange} from '../PriceRange';
 export class ProductSearch {
   constructor(
     public ids?: number[],
-    public titles?: string[],
+    public names?: string[],
     public priceRange?: PriceRange,
     public groupIds?: number[],
     public catalogIds?: number[],

@@ -1,18 +1,18 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {SnackbarMessageComponent} from '../modules/shop/snackbar-message/snackbar-message.component';
-import {PageNotFoundComponent} from '../modules/core/page-not-found/page-not-found.component';
+import {SnackbarMessageComponent} from './shop/snackbar-message/snackbar-message.component';
+import {PageNotFoundComponent} from './core/page-not-found/page-not-found.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppComponent} from './app.component';
-import {AuthorizeInterceptor} from '../modules/api-authorization/authorize.interceptor';
+import {AuthorizeInterceptor} from './api-authorization/authorize.interceptor';
 import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BREAKPOINT, LAYOUT_CONFIG, LayoutConfigOptions} from '@angular/flex-layout';
-import {BOOTSTRAP_BREAKPOINTS} from '../modules/core/custom-breakpoints';
-import {AnonymousGuard} from '../modules/api-authorization/anonymous.guard';
-import {AdminGuard} from '../modules/api-authorization/admin.guard';
-import {AuthorizeGuard} from '../modules/api-authorization/authorize.guard';
+import {BOOTSTRAP_BREAKPOINTS} from './core/custom-breakpoints';
+import {AnonymousGuard} from './api-authorization/anonymous.guard';
+import {AdminGuard} from './api-authorization/admin.guard';
+import {AuthorizeGuard} from './api-authorization/authorize.guard';
 
 // {
 //   path: 'mgmt',
@@ -32,12 +32,12 @@ import {AuthorizeGuard} from '../modules/api-authorization/authorize.guard';
     RouterModule.forRoot([
       {
         path: '',
-        loadChildren: () => import('./../modules/shop/shop.module').then(m => m.ShopModule),
+        loadChildren: () => import('./shop/shop.module').then(m => m.ShopModule),
       },
       {
         path: '',
         canActivate: [AnonymousGuard],
-        loadChildren: () => import('./../modules/authorization/authorization.module').then(m => m.AuthorizationModule)
+        loadChildren: () => import('./authorization/authorization.module').then(m => m.AuthorizationModule)
       },
       {
         path: '**', pathMatch: 'full', component: PageNotFoundComponent

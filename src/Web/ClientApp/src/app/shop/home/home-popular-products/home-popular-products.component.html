@@ -1,0 +1,5 @@
+<h6 class="popular-header">Популярное</h6>
+<app-overlay-loader [isLoading]="isLoading">
+  <app-product-layout *ngIf="page" [items]="page.items" [layoutMode]="'card'"
+                      class="custom-card-layout"></app-product-layout>
+</app-overlay-loader>

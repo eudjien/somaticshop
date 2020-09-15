@@ -1,0 +1,39 @@
+<div class="d-flex flex-column flex-grow-1 h-100">
+  <div class="px-2 flex-grow-1 flex-shrink-1 pb-2">
+
+    <app-overlay-loader [isLoading]="isLoading">
+      <div class="row no-gutters">
+        <div class="col-md px-1 pb-2">
+          <mat-card>
+            <mat-form-field appearance="fill" class="d-block w-100">
+              <mat-label>Название группы</mat-label>
+              <input [formControl]="name" matInput placeholder="Название" required>
+              <mat-error *ngIf="name.invalid">Это поле обязательно для заполнения</mat-error>
+            </mat-form-field>
+          </mat-card>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-md px-1 pb-2">
+          <mat-card>
+            <app-list-select-products #listSelectProducts></app-list-select-products>
+          </mat-card>
+        </div>
+      </div>
+    </app-overlay-loader>
+  </div>
+
+  <div class="row no-gutters flex-grow-0 flex-shrink-0 position-sticky"
+       style="bottom:0; z-index: 999; background-color: #637290;">
+    <div class="col">
+      <div class="d-flex w-100 px-4 py-2">
+        <button (click)="sendClick()" [disabled]="isLoading || !name.valid" class="send-btn ml-auto" mat-button>
+          <div class="d-flex align-items-center">
+            <span>Обновить</span>
+            <mat-icon>update</mat-icon>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

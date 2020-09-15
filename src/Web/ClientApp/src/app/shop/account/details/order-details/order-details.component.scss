@@ -1,0 +1,29 @@
+.stripped-item {
+  background-color: #ffffff;
+  padding: 16px;
+}
+
+.stripped-item:nth-child(even) {
+  background-color: #faf9f9;
+}
+
+.key {
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.value {
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.x-icon {
+  color: #636363;
+  font-size: 13px;
+}
+
+.details {
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 4px;
+}

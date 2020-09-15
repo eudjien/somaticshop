@@ -1,0 +1,119 @@
+<app-overlay-loader [disableSpinner]="true" [hideContentWhenLoading]="false" [isLoading]="productsIsLoading"
+                    [overlayStyles]="{'background-color': 'rgb(255,255,255, .5)', 'justify-content': 'flex-start'}">
+
+  <ng-container *ngIf="data">
+
+    <app-container-toolbar>
+
+      <button (click)="toggleSideNav()" [disabled]="!data.hasProducts" mat-icon-button>
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+
+      <div *ngIf="data.hasProducts" fxFlex="noshrink" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px">
+
+        <div *ngIf="page" class="page-information ml-auto">
+          <span>{{page.pageIndex + 1}}</span>
+          <span>из</span>
+          <span>{{page.totalPages}}</span>
+        </div>
+
+        <app-layout-mode-header (modeChange)="layoutModeChange($event)" [layoutMode]="layoutMode">
+        </app-layout-mode-header>
+
+      </div>
+
+    </app-container-toolbar>
+
+    <mat-drawer-container *ngIf="data.hasProducts" [class]="layoutClass" class="drawer-container">
+      <mat-drawer #sideNav (closed)="sideNavClosed()" (openedStart)="sideNavOpenStart()" mode="{{sidenavMode$ | async}}"
+                  opened style="background:#fff;width:220px;">
+
+        <mat-selection-list (selectionChange)="brandChange($event)" [multiple]="true">
+          <h6 matSubheader>Бренды</h6>
+
+          <mat-list-option *ngFor="let brand of data.brands" [checkboxPosition]="'before'"
+                           [selected]="brandIsSelected(brand)" [value]="brand">
+            <app-brand-item [card]="brand"></app-brand-item>
+          </mat-list-option>
+
+        </mat-selection-list>
+
+        <mat-divider class="my-2"></mat-divider>
+
+        <mat-list>
+          <h6 fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px" matSubheader>
+            <span>Цена</span>
+            <span>{{currency}}</span>
+          </h6>
+
+          <mat-list-item>
+            <ng5-slider (userChangeEnd)="priceRangeChange($event)" [(highValue)]="priceRange.upper"
+                        [(value)]="priceRange.lower"
+                        [options]="priceRangeOptions"
+                        class="custom-slider"></ng5-slider>
+          </mat-list-item>
+        </mat-list>
+
+        <mat-divider class="my-2"></mat-divider>
+
+        <mat-selection-list (selectionChange)="specificationChange($event)">
+          <ng-container *ngFor="let specs of data.specifications">
+
+            <h6 matSubheader>{{specs.key}}</h6>
+
+            <mat-list-option *ngFor="let specValue of specs.values"
+                             [checkboxPosition]="'before'" [selected]="specificationIsSelected({ id: specs.id, value: specValue })"
+                             [value]="{ key: specs.key, value: specValue }">
+              <div mat-line>{{specValue}}</div>
+            </mat-list-option>
+
+            <mat-divider class="my-2"></mat-divider>
+
+          </ng-container>
+
+        </mat-selection-list>
+
+      </mat-drawer>
+      <mat-drawer-content class="content">
+
+        <div *ngIf="page" [ngClass.gt-xs]="{'drawer-headers-vertical': false, 'drawer-headers-horizontal': true}"
+             [ngClass]="'drawer-headers-vertical'"
+             class="headers">
+
+          <app-layout-sort-header (sortChange)="sortChange($event)" [availableSorts]="sorts" [sort]="sort"
+                                  style="flex: 0 1 auto"></app-layout-sort-header>
+
+          <div style="display: flex; justify-content: flex-end; align-content: center; flex: 1 0 auto;">
+
+            <app-pagination (pageIndexChange)="pageChange($event)"
+                            (pageSizeChange)="pageSizeChange($event)"
+                            [(pageSize)]="pageSize"
+                            [pageIndex]="page.pageIndex"
+                            [pageSizes]="[2, 10, 20, 50, 100]" [totalItems]="page.totalItems"></app-pagination>
+          </div>
+        </div>
+
+        <mat-tab-group [animationDuration]="'0s'" [disableRipple]="true" class="tab-gr">
+          <mat-tab *ngFor="let child of firstChilds">
+            <ng-template mat-tab-label>
+              <button [routerLink]="['/catalogs', child.id]" class="item-btn" mat-button>{{child.name}}</button>
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
+
+        <app-product-layout *ngIf="page" [cardSize]="cardSize" [items]="page.items" [layoutMode]="layoutMode"
+                            class="p-0">
+        </app-product-layout>
+
+      </mat-drawer-content>
+    </mat-drawer-container>
+
+    <div *ngIf="!data.hasProducts" class="p-4" fxLayout="row" fxLayoutAlign="center center"
+         style="font-size:18px">
+      В этом каталоге нет продуктов.
+    </div>
+
+  </ng-container>
+</app-overlay-loader>

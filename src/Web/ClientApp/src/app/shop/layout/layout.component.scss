@@ -1,0 +1,19 @@
+@import "../../../fonts/amazon_ember/fonts";
+
+:host {
+  font-family: AmazonEmber, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  background: #c7ced6;
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+}
+
+$loaderHeight: 3px;
+
+.shared-loader {
+  flex: 0 0 $loaderHeight;
+  width: 100%;
+  margin-bottom: -$loaderHeight;
+  height: $loaderHeight;
+}

@@ -1,0 +1,24 @@
+table th {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+table td {
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+}
+
+table td, table th {
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+  border: none !important;
+}
+
+input[type=file] {
+  display: none;
+  visibility: collapse
+}
+
+.image {
+  width: 160px;
+}

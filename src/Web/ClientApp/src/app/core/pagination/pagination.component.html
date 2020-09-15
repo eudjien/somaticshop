@@ -1,0 +1,23 @@
+<mat-form-field appearance="legacy" class="page-size-select">
+  <mat-select (valueChange)="pageSizeChangeEvent($event)" [(value)]="pageSize">
+    <mat-option *ngFor="let ps of pageSizes" [value]="ps">{{ps}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<div class="pagination-controls">
+  <button (click)="firstClick()" [disableRipple]="true" [disabled]="firstPageIsActive" class="pagination-button"
+          mat-icon-button>
+    <mat-icon>first_page</mat-icon>
+  </button>
+  <button (click)="prevClick()" [disableRipple]="true" [disabled]="firstPageIsActive" class="pagination-button"
+          mat-icon-button>
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  <button (click)="nextClick()" [disableRipple]="true" [disabled]="lastPageIsActive" class="pagination-button"
+          mat-icon-button>
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+  <button (click)="lastClick()" [disableRipple]="true" [disabled]="lastPageIsActive" class="pagination-button"
+          mat-icon-button>
+    <mat-icon>last_page</mat-icon>
+  </button>
+</div>

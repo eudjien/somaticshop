@@ -6,6 +6,8 @@ import {Brand} from '../models/Brand';
 import {IBrandImage} from '../interfaces/IBrandImage';
 import {map} from 'rxjs/operators';
 import {serialize} from 'object-to-formdata';
+import {BrandSearch} from '../models/search/BrandSearch';
+import {BrandSort} from '../models/sort/BrandSort';
 
 @Injectable({
   providedIn: 'root'
@@ -51,15 +53,21 @@ export class BrandService {
       .pipe(map(brandImage => brandImage ? `${this.baseUrl}api/files/${brandImage.fileId}` : null));
   }
 
-  public getBrandsPage(page: number, sortTitle: string = null, search: string = null): Observable<Page<Brand>> {
+  public brandsPage(pageIndex: number, search?: BrandSearch, sort?: BrandSort, pageSize = 10): Observable<Page<Brand>> {
     let params = new HttpParams();
-    params = params.set('page', String(page));
-    if (sortTitle) {
-      params = params.set('sortTitle', sortTitle);
+
+    params = params.set('pageIndex', String(pageIndex));
+    params = params.set('pageSize', String(pageSize));
+
+    if (sort != null) {
+      params = params.append('sort', String(sort));
     }
+
     if (search) {
-      params = params.set('search', search);
+      search.ids?.forEach(id => params = params.append('search.id', String(id)));
+      search.names?.forEach(name => params = params.append('search.name', name));
     }
+
     return this.httpClient.get<Page<Brand>>(`${this.baseUrl}api/brands`, {params: params});
   }
 

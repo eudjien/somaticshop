@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.basket-text {
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.basket-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.basket-badge .mat-badge-content {
+  font-weight: 400;
+  background-color: #f35b5b;
+}

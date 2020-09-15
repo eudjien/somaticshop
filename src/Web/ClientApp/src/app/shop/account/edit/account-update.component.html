@@ -1,0 +1,35 @@
+<app-container-toolbar>
+  <button (click)="sidenav.toggle()" mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+  <button [matTooltipPosition]="'below'" [matTooltip]="'Перейти в профиль'" [routerLink]="['../']" class="ml-auto"
+          mat-icon-button>
+    <mat-icon>person</mat-icon>
+  </button>
+</app-container-toolbar>
+
+<mat-drawer-container style="background:#ffffff;min-height:200px">
+  <mat-drawer #sidenav mode="{{sidenavMode}}" opened>
+    <mat-nav-list>
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active-menu-item'" [routerLink]="['./']"
+         mat-list-item>
+        <span matLine>Персональные данные</span>
+        <span class="text-muted" matLine style="font-size:12px">Изменить ФИО, телефон или Email</span>
+        <mat-icon matListIcon style="color:#444444">edit</mat-icon>
+      </a>
+      <a [routerLinkActiveOptions]="{exact: true}" [routerLinkActive]="'active-menu-item'" [routerLink]="['password']"
+         mat-list-item>
+        <span matLine>Безопасность</span>
+        <span class="text-muted" matLine style="font-size:12px">Изменить пароль</span>
+        <mat-icon matListIcon style="color:#444444">security</mat-icon>
+      </a>
+    </mat-nav-list>
+  </mat-drawer>
+
+  <mat-drawer-content>
+
+    <router-outlet></router-outlet>
+
+  </mat-drawer-content>
+</mat-drawer-container>

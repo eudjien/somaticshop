@@ -1,0 +1,85 @@
+<mat-card>
+
+  <mat-form-field appearance="fill" class="d-block w-100">
+    <mat-label>Поиск</mat-label>
+    <input (ngModelChange)="searchChange($event)" [(ngModel)]="searchTitle" matInput placeholder="Поиск">
+    <mat-error></mat-error>
+  </mat-form-field>
+
+  <div class="page">
+
+    <mat-list>
+
+      <div class="page-header" mat-subheader>
+
+        <mat-checkbox (change)="pageSelectChange($event.checked)" *ngIf="hasPageItems()"
+                      [checked]="isAllOnPageSelected()"
+                      [indeterminate]="someOnPageSelected()"
+                      class="checkbox-wrapper">
+        </mat-checkbox>
+
+        <div class="page-header-actions">
+
+          <button (click)="deleteClick($event)" *ngIf="!selection.isEmpty()" class="page-header-action del-action"
+                  mat-icon-button>
+            <mat-icon matBadge="{{selection.selected.length}}"
+                      matBadgeOverlap="true" matBadgePosition="above"
+                      matBadgeSize="small">delete
+            </mat-icon>
+          </button>
+        </div>
+        <div class="page-header-navigates">
+
+          <div (matSortChange)="sortChange($event)" class="page-header-navigate" matSort>
+            <div mat-sort-header="title">Название</div>
+          </div>
+
+          <mat-paginator #paginator (page)="paginationChange($event)" [hidePageSize]="true"
+                         [pageSize]="10"
+                         [showFirstLastButtons]="true"
+                         class="page-header-navigate">
+          </mat-paginator>
+        </div>
+      </div>
+
+      <mat-divider class="mb-2"></mat-divider>
+
+      <app-overlay-loader [isLoading]="isLoading">
+        <ng-container *ngIf="page">
+          <ng-container *ngFor="let product of page.items">
+            <mat-list-item>
+              <div class="checkbox-wrapper" mat-list-avatar>
+                <mat-checkbox (change)="selectChange($event.checked, product)" [checked]="isSelected(product)"
+                              class="d-flex mt-1" disableRipple="true">
+                </mat-checkbox>
+              </div>
+              <div class="main-line" mat-line>
+                <a routerLink="{{product.id}}/edit" target="_blank">
+                  {{product.name}}
+                </a>
+              </div>
+              <div class="info-line" mat-line>
+                <ol *ngIf="product.catalogId;else dash" class="breadcrumb rounded-0 p-0 m-0"
+                    style="background: none">
+                  <li *ngIf="!product.catalogs">
+                    <mat-spinner [diameter]="20" [strokeWidth]="1"></mat-spinner>
+                  </li>
+                  <li *ngFor="let catalog of product.catalogs$ | async" class="breadcrumb-item text-muted">
+                    <a routerLink="{{catalog.id}}/edit" target="_blank">
+                      {{catalog.name}}
+                    </a>
+                  </li>
+                </ol>
+                <ng-template #dash>
+                  <div class="d-flex align-items-center ml-1 position-relative" style="width:18px;">
+                    <mat-divider style="top:50%;bottom:auto"></mat-divider>&nbsp;
+                  </div>
+                </ng-template>
+              </div>
+            </mat-list-item>
+          </ng-container>
+        </ng-container>
+      </app-overlay-loader>
+    </mat-list>
+  </div>
+</mat-card>
