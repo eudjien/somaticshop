@@ -36,10 +36,19 @@ namespace Web
             services.AddControllers();
             services.AddHttpContextAccessor();
 
-            string demoConnection = Configuration.GetConnectionString("DemoConnection").Replace("%CONTENTROOTPATH%", Environment.ContentRootPath);
+            string connectionString = null;
+
+            if (Environment.IsEnvironment("Azure"))
+            {
+                connectionString = Configuration.GetConnectionString("SomaticShopDemoAzure");
+            } 
+            else
+            {
+                connectionString = Configuration.GetConnectionString("DemoConnection").Replace("%CONTENTROOTPATH%", Environment.ContentRootPath);
+            }
 
             services.AddDbContext<AppDbContext>(opts =>
-                opts.UseSqlServer(demoConnection, b => b.MigrationsAssembly("Infrastructure")));
+                opts.UseSqlServer(connectionString, b => b.MigrationsAssembly("Infrastructure")));
 
             services.AddAppIdentity();
 

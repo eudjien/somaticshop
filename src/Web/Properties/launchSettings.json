@@ -23,7 +23,8 @@
     "SomaticShop (Dev)": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "asd": "Development",
+        "ASPNETCORE_ENVIRONMENT": "Azure"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     },

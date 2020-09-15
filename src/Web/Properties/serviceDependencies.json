@@ -1,12 +1,3 @@
 {
-  "dependencies": {
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "AzureDemoConnection"
-    },
-    "secrets1": {
-      "type": "secrets",
-      "connectionId": "VaultUri"
-    }
-  }
+  "dependencies": {}
 }
