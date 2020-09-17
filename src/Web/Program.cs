@@ -17,19 +17,15 @@ namespace Web
             await host.RunAsync();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-.ConfigureAppConfiguration((context, config) =>
-{
-    //var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("SomaticShopDemo-VaultUri"));
-    //config.AddAzureKeyVault(
-    //keyVaultEndpoint,
-    //new DefaultAzureCredential());
-})
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    //webBuilder.UseUrls("http://192.168.0.100:5000", "https://192.168.0.100:5001");
-                    webBuilder.UseStartup<Startup>();
-                });
+        public static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args)
+            //.ConfigureAppConfiguration((context, config) =>
+            //{
+            //    var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
+            //    config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
+            //})
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
     }
 }

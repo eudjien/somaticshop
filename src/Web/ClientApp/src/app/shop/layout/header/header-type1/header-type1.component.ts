@@ -100,7 +100,7 @@ export class HeaderType1Component implements OnInit {
   }
 
   navMouseLeave(event: MouseEvent, element: HTMLElement): void {
-    if (this.closestEdge(event, element) !== 'bottom' || (this.searchIsActive && !this.searchInput)) {
+    if (!element || (this.closestEdge(event, element) !== 'bottom' || (this.searchIsActive && !this.searchInput))) {
       this.resetNavDropdown();
     }
   }

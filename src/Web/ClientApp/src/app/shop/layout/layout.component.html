@@ -3,6 +3,7 @@
 <mat-progress-bar *ngIf="loading" class="shared-loader" color="accent" mode="indeterminate">
 </mat-progress-bar>
 
+<div *ngIf="loading" style="background:rgba(0, 0, 0, .7)"></div>
 <main [ngClass.xs]="'py-0'" [ngClass]="'py-4'">
   <div class="container">
     <div class="row d-block">

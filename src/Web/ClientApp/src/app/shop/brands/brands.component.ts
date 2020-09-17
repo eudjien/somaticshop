@@ -53,6 +53,7 @@ export class BrandsComponent implements OnInit {
     private _productService: ProductService,
     private _brandService: BrandService,
     private _catalogService: CatalogService) {
+    _router.routeReuseStrategy.shouldReuseRoute = () => false;
 
     this.searchSubject.subscribe(value => {
       if (value) {

@@ -1,18 +1,30 @@
 using AutoMapper;
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Certificates;
+using Azure.Security.KeyVault.Secrets;
 using Core.Identity.Entities;
+using IdentityServer4.Models;
 using Infrastructure.Configuration.Automapper;
 using Infrastructure.Data.EntityFramework.Context;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Web.Extensions;
 
@@ -36,23 +48,12 @@ namespace Web
             services.AddControllers();
             services.AddHttpContextAccessor();
 
-            string connectionString = null;
-
-            if (Environment.IsEnvironment("Azure"))
-            {
-                connectionString = Configuration.GetConnectionString("SomaticShopDemoAzure");
-            } 
-            else
-            {
-                connectionString = Configuration.GetConnectionString("DemoConnection").Replace("%CONTENTROOTPATH%", Environment.ContentRootPath);
-            }
-
-            services.AddDbContext<AppDbContext>(opts =>
-                opts.UseSqlServer(connectionString, b => b.MigrationsAssembly("Infrastructure")));
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<AppDbContext>(opts => opts.UseSqlServer(connectionString, b => b.MigrationsAssembly("Infrastructure")));
 
             services.AddAppIdentity();
 
-            services.AddIdentityServer()
+            var identityServerBuilder = services.AddIdentityServer()
                 .AddApiAuthorization<User, AppDbContext>()
                 .AddProfileService<ProfileService>();
 
@@ -81,8 +82,7 @@ namespace Web
                 config.AddProfile<EntityProfile>();
             }, Assembly.GetExecutingAssembly());
 
-            services.AppEfConfigure()
-                .AddAppServices();
+            services.AppEfConfigure().AddAppServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -15,17 +15,20 @@
 
   <ItemGroup>
 	<PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.0.0" />
-	<PackageReference Include="Azure.Identity" Version="1.1.1" />
-	<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.7" />
-	<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
+	<PackageReference Include="Azure.Identity" Version="1.2.3" />
+	<PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.1.0" />
+	<PackageReference Include="Azure.Security.KeyVault.Keys" Version="4.1.0" />
+	<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.8" />
+	<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -39,6 +42,9 @@
 
   <ItemGroup> 
 	  <Content Include="Storage\**"> 
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+	  </Content> 
+	  <Content Include="Certificates\**"> 
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
 	  </Content> 
   </ItemGroup>
