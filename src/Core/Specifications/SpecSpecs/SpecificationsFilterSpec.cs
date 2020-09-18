@@ -2,7 +2,7 @@
 
 namespace Core.Specifications.SpecSpecs
 {
-    public class SpecificationsFilterSpec : SpecificationBase<ProductSpec>
+    public class SpecificationsFilterSpec : SpecificationBase<ProductSpecification>
     {
         public SpecificationsFilterSpec() { }
     }

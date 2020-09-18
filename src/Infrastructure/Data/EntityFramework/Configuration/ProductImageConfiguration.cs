@@ -11,17 +11,22 @@ namespace Infrastructure.Data.EntityFramework.Configuration
 
             builder.ToTable("ProductImages");
 
-            builder.HasKey(a => new { a.ProductId, a.FileId });
+            builder.HasKey(a => a.Id);
+
+            builder.HasIndex(a => a.FileId).IsUnique();
+            builder.Property(a => a.FileId).IsRequired();
 
             builder.HasOne(a => a.Product)
                 .WithMany(a => a.Images)
                 .HasForeignKey(a => a.ProductId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(a => a.File)
                .WithOne()
                .HasForeignKey<ProductImage>(a => a.FileId)
-               .IsRequired();
+               .IsRequired()
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

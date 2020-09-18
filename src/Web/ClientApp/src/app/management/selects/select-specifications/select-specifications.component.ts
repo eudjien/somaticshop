@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ProductSpec} from '../../../../models/product/ProductSpec';
+import {ProductSpecification} from '../../../../models/product/ProductSpecification';
 import {Product} from '../../../../models/product/Product';
 import {ProductService} from '../../../../services/product.service';
 
@@ -30,15 +30,15 @@ export class SelectSpecificationsComponent implements OnInit {
     }
   }
 
-  private _source: ProductSpec[];
+  private _source: ProductSpecification[];
 
-  get source(): ProductSpec[] {
+  get source(): ProductSpecification[] {
     return this._modified;
   }
 
-  private _modified: ProductSpec[] = [];
+  private _modified: ProductSpecification[] = [];
 
-  get modified(): ProductSpec[] {
+  get modified(): ProductSpecification[] {
     return this._modified;
   }
 
@@ -47,22 +47,22 @@ export class SelectSpecificationsComponent implements OnInit {
   }
 
   get canBeRestored(): boolean {
-    return this.hasSource && this._source.some(a => a.productSpecNameId !== a.productSpecNameId || a.value !== a.value);
+    return this.hasSource && this._source.some(a => a.productSpecificationNameId !== a.productSpecificationNameId || a.value !== a.value);
   }
 
   ngOnInit(): void {
   }
 
-  isModified(spec: ProductSpec): boolean {
+  isModified(spec: ProductSpecification): boolean {
     const sourceItem = this._source.find(a => a.id === spec.id);
-    return sourceItem.productSpecNameId !== spec.productSpecNameId || sourceItem.value !== spec.value;
+    return sourceItem.productSpecificationNameId !== spec.productSpecificationNameId || sourceItem.value !== spec.value;
   }
 
   addClick() {
-    this.modified.push(new ProductSpec(0, '', '', this._product?.id || 0));
+    this.modified.push(new ProductSpecification(0, '', '', this._product?.id || 0));
   }
 
-  removeClick(spec: ProductSpec) {
+  removeClick(spec: ProductSpecification) {
     this._modified = this._modified?.filter(a => a !== spec);
   }
 

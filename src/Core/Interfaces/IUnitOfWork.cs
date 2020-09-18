@@ -10,8 +10,9 @@ namespace Core
         ICatalogRepository CatalogRepository { get; }
         IProductRepository ProductRepository { get; }
         IProductGroupRepository ProductGroupRepository { get; }
-        IProductSpecRepository ProductSpecRepository { get; }
-        IProductSpecKeyRepository ProductSpecKeyRepository { get; }
+        IProductSpecificationRepository ProductSpecificationRepository { get; }
+        IProductGroupSpecificationRepository ProductGroupSpecificationRepository { get; }
+        IProductSpecificationKeyRepository ProductSpecKeyRepository { get; }
         IOrderRepository OrderRepository { get; }
         IOrderProductRepository OrderProductRepository { get; }
         IBasketRepository BasketRepository { get; }
@@ -21,6 +22,7 @@ namespace Core
         IAddressRepository AddressRepository { get; }
         IFileRepository FileRepository { get; }
         IProductImageRepository ProductImageRepository { get; }
+        IProductImageThumbnailRepository ProductImageThumbnailRepository { get; }
         IBrandImageRepository BrandImageRepository { get; }
         ICatalogImageRepository CatalogImageRepository { get; }
 

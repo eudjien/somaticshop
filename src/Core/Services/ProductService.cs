@@ -247,9 +247,9 @@ namespace Core.Services
             return await UnitOfWork.ProductGroupRepository.FindOneAsync(spec);
         }
 
-        private async Task<List<ProductSpec>> CreateSpecificationsAsync(IEnumerable<KeyValuePair<string, string>> specifications)
+        private async Task<List<ProductSpecification>> CreateSpecificationsAsync(IEnumerable<KeyValuePair<string, string>> specifications)
         {
-            var list = new List<ProductSpec>();
+            var list = new List<ProductSpecification>();
 
             if (specifications != null && specifications.Any())
             {
@@ -259,18 +259,18 @@ namespace Core.Services
 
                     if (existSpecKey != null)
                     {
-                        list.Add(new ProductSpec
+                        list.Add(new ProductSpecification
                         {
                             Value = specification.Value,
-                            ProductSpecNameId = existSpecKey.Id
+                            ProductSpecificationNameId = existSpecKey.Id
                         });
                     }
                     else
                     {
-                        list.Add(new ProductSpec
+                        list.Add(new ProductSpecification
                         {
                             Value = specification.Value,
-                            ProductSpecName = new ProductSpecName()
+                            ProductSpecificationName = new ProductSpecificationName()
                             {
                                 Name = specification.Key
                             }
@@ -279,7 +279,7 @@ namespace Core.Services
                 }
             }
 
-            return Mapper.Map<List<ProductSpec>>(list);
+            return Mapper.Map<List<ProductSpecification>>(list);
         }
     }
 }

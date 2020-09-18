@@ -40,11 +40,11 @@ namespace Infrastructure.Configuration.Automapper
             CreateMap<ProductGroupDto, ProductGroup>();
             CreateMap<ProductGroup, ProductGroupDto>();
 
-            CreateMap<ProductSpecDto, ProductSpec>();
-            CreateMap<ProductSpec, ProductSpecDto>();
+            CreateMap<ProductSpecDto, ProductSpecification>();
+            CreateMap<ProductSpecification, ProductSpecDto>();
 
-            CreateMap<ProductSpecNameDto, ProductSpecName>();
-            CreateMap<ProductSpecName, ProductSpecNameDto>();
+            CreateMap<ProductSpecNameDto, ProductSpecificationName>();
+            CreateMap<ProductSpecificationName, ProductSpecNameDto>();
 
             CreateMap<FileDto, File>();
             CreateMap<File, FileDto>();

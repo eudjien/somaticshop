@@ -6,7 +6,7 @@ import {EditorComponent} from '../editor/editor.component';
 import {UploadImageMultiComponent} from '../upload-image-multi/upload-image-multi.component';
 import {SelectGroupForProductComponent} from '../selects/select-group-for-product/select-group-for-product.component';
 import {SelectSpecificationsComponent} from '../selects/select-specifications/select-specifications.component';
-import {ProductSpec} from '../../../models/product/ProductSpec';
+import {ProductSpecification} from '../../../models/product/ProductSpecification';
 import {SelectBrandForProductComponent} from '../selects/select-brand-for-product/select-brand-for-product.component';
 import {ActivatedRoute} from '@angular/router';
 import {CatalogService} from '../../../services/catalog.service';
@@ -104,7 +104,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit {
     }).add(() => this.isLoading = false);
   }
 
-  private updateRequest(product: Product, imageFiles?: File[], specifications?: ProductSpec[]) {
+  private updateRequest(product: Product, imageFiles?: File[], specifications?: ProductSpecification[]) {
     this.isLoading = true;
     this._productService.updateProduct(product, imageFiles, specifications)
       .subscribe(() => {

@@ -1,0 +1,17 @@
+﻿namespace Core.Entities
+{
+    public class ProductImageThumbnail
+    {
+        public int Id { get; set; }
+        public int ProductId { get; set; }
+        public string FileId { get; set; }
+        public Product Product { get; set; }
+        public File File { get; set; }
+        public ProductImageThumbnail() { }
+        public ProductImageThumbnail(int productId, string fileId)
+        {
+            ProductId = productId;
+            FileId = fileId;
+        }
+    }
+}

@@ -32,9 +32,9 @@ namespace Core.Specifications.ProductSpecs
                 var valuesOrExpression = values.Distinct().Select(value =>
                 {
 
-                    Expression<Func<ProductSpec, bool>> predicate = a => a.ProductSpecNameId == group.Key && a.Value == value;
+                    Expression<Func<ProductSpecification, bool>> predicate = a => a.ProductSpecificationNameId == group.Key && a.Value == value;
 
-                    return Expression.Call(typeof(Enumerable), "Any", new[] { typeof(ProductSpec) }, property, predicate);
+                    return Expression.Call(typeof(Enumerable), "Any", new[] { typeof(ProductSpecification) }, property, predicate);
                 }).Select(e => e as Expression).Aggregate((expr1, expr2) => Expression.OrElse(expr1, expr2));
 
                 if (expression is null)

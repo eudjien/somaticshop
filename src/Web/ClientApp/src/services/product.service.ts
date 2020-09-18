@@ -4,7 +4,7 @@ import {Observable, of} from 'rxjs';
 import {Page} from '../models/Page';
 import {Product} from '../models/product/Product';
 import {ProductGroup} from '../models/product/ProductGroup';
-import {ProductSpec} from '../models/product/ProductSpec';
+import {ProductSpecification} from '../models/product/ProductSpecification';
 import {IFile} from '../interfaces/IFile';
 import {Brand} from '../models/Brand';
 import {map} from 'rxjs/operators';
@@ -81,8 +81,8 @@ export class ProductService {
     return this.httpClient.get<Page<ProductGroup>>(`${this.baseUrl}api/productGroups`, {params: params});
   }
 
-  public getProductSpecifications(productId: number): Observable<ProductSpec[]> {
-    return this.httpClient.get<ProductSpec[]>(`${this.baseUrl}api/products/${productId}/specifications`);
+  public getProductSpecifications(productId: number): Observable<ProductSpecification[]> {
+    return this.httpClient.get<ProductSpecification[]>(`${this.baseUrl}api/products/${productId}/specifications`);
   }
 
   public getGroupProducts(groupId: number): Observable<Product[]> {
@@ -101,19 +101,15 @@ export class ProductService {
       .pipe(map(files => files.map(file => `${this.baseUrl}api/files/${file.id}`)));
   }
 
-  public getProductOverviewImageFile(productId: number): Observable<IFile> {
-    return this.httpClient.get<IFile>(`${this.baseUrl}api/products/${productId}/images/first`);
-  }
-
-  public getProductOverviewImageUrl(productId: number): Observable<string> {
-    return this.httpClient.get<IFile>(`${this.baseUrl}api/products/${productId}/images/first`)
+  public productThumbnailUrl(productId: number): Observable<string> {
+    return this.httpClient.get<IFile>(`${this.baseUrl}api/products/${productId}/thumbnail`)
       .pipe(map(file => `${this.baseUrl}api/files/${file.id}`));
   }
 
   public createProduct(
     product: Product,
     imageFiles?: File[],
-    specifications?: ProductSpec[]
+    specifications?: ProductSpecification[]
   ): Observable<Product> {
 
     const formData = new FormData();
@@ -127,7 +123,7 @@ export class ProductService {
   public updateProduct(
     product: Product,
     imageFiles?: File[],
-    specifications?: ProductSpec[]): Observable<Product> {
+    specifications?: ProductSpecification[]): Observable<Product> {
 
     const formData = new FormData();
     serialize(product, null, formData, 'product');

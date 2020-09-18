@@ -17,7 +17,8 @@ namespace Core.Entities
         public Catalog Catalog { get; set; }
         public Brand Brand { get; set; }
         public ProductGroup Group { get; set; }
-        public ICollection<ProductSpec> Specifications { get; set; }
+        public ProductImageThumbnail Thumbnail { get; set; }
+        public ICollection<ProductSpecification> Specifications { get; set; }
         public ICollection<ProductImage> Images { get; set; }
         public ICollection<OrderProduct> OrderProducts { get; set; }
         public Product() { }

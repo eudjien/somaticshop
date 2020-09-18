@@ -7,7 +7,7 @@ import {UploadImageMultiComponent} from '../upload-image-multi/upload-image-mult
 import {SelectCatalogForCatalogComponent} from '../selects/select-catalog-for-catalog/select-catalog-for-catalog.component';
 import {SelectGroupForProductComponent} from '../selects/select-group-for-product/select-group-for-product.component';
 import {SelectSpecificationsComponent} from '../selects/select-specifications/select-specifications.component';
-import {ProductSpec} from '../../../models/product/ProductSpec';
+import {ProductSpecification} from '../../../models/product/ProductSpecification';
 import {SelectBrandForProductComponent} from '../selects/select-brand-for-product/select-brand-for-product.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -75,7 +75,7 @@ export class ProductNewComponent implements OnInit, AfterViewInit {
     this.createRequest(product, this.uploadImage.images.map(a => a.file), this.selectSpecsForProduct.modified);
   }
 
-  private createRequest(product: Product, imageFiles?: File[], specifications?: ProductSpec[]) {
+  private createRequest(product: Product, imageFiles?: File[], specifications?: ProductSpecification[]) {
     this.isLoading = true;
     this._productService.createProduct(product, imageFiles, specifications).subscribe(newProduct => {
       this.showSuccessSnackbar();

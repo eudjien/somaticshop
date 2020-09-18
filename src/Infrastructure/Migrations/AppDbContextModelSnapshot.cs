@@ -15,7 +15,7 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7")
+                .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -333,23 +333,81 @@ namespace Infrastructure.Migrations
                     b.ToTable("ProductGroups");
                 });
 
+            modelBuilder.Entity("Core.Entities.ProductGroupSpecification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProductGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductSpecificationNameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductGroupId");
+
+                    b.HasIndex("ProductSpecificationNameId");
+
+                    b.ToTable("ProductGroupSpecifications");
+                });
+
             modelBuilder.Entity("Core.Entities.ProductImage", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<string>("FileId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ProductId", "FileId");
+                    b.HasKey("Id");
 
                     b.HasIndex("FileId")
                         .IsUnique();
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("ProductImages");
                 });
 
-            modelBuilder.Entity("Core.Entities.ProductSpec", b =>
+            modelBuilder.Entity("Core.Entities.ProductImageThumbnail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FileId")
+                        .IsUnique();
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("ProductImageThumbnails");
+                });
+
+            modelBuilder.Entity("Core.Entities.ProductSpecification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -359,7 +417,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductSpecNameId")
+                    b.Property<int>("ProductSpecificationNameId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -369,12 +427,12 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("ProductSpecNameId");
+                    b.HasIndex("ProductSpecificationNameId");
 
-                    b.ToTable("ProductSpecs");
+                    b.ToTable("ProductSpecifications");
                 });
 
-            modelBuilder.Entity("Core.Entities.ProductSpecName", b =>
+            modelBuilder.Entity("Core.Entities.ProductSpecificationName", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -390,7 +448,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("ProductSpecNames");
+                    b.ToTable("ProductSpecificationNames");
                 });
 
             modelBuilder.Entity("Core.Identity.Entities.Role", b =>
@@ -780,6 +838,21 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("GroupId");
                 });
 
+            modelBuilder.Entity("Core.Entities.ProductGroupSpecification", b =>
+                {
+                    b.HasOne("Core.Entities.ProductGroup", "ProductGroup")
+                        .WithMany("Specifications")
+                        .HasForeignKey("ProductGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.ProductSpecificationName", "ProductSpecificationName")
+                        .WithMany()
+                        .HasForeignKey("ProductSpecificationNameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Core.Entities.ProductImage", b =>
                 {
                     b.HasOne("Core.Entities.File", "File")
@@ -795,7 +868,22 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Core.Entities.ProductSpec", b =>
+            modelBuilder.Entity("Core.Entities.ProductImageThumbnail", b =>
+                {
+                    b.HasOne("Core.Entities.File", "File")
+                        .WithOne()
+                        .HasForeignKey("Core.Entities.ProductImageThumbnail", "FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Product", "Product")
+                        .WithOne("Thumbnail")
+                        .HasForeignKey("Core.Entities.ProductImageThumbnail", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Entities.ProductSpecification", b =>
                 {
                     b.HasOne("Core.Entities.Product", "Product")
                         .WithMany("Specifications")
@@ -803,9 +891,9 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Entities.ProductSpecName", "ProductSpecName")
-                        .WithMany("ProductSpecs")
-                        .HasForeignKey("ProductSpecNameId")
+                    b.HasOne("Core.Entities.ProductSpecificationName", "ProductSpecificationName")
+                        .WithMany("ProductSpecifications")
+                        .HasForeignKey("ProductSpecificationNameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

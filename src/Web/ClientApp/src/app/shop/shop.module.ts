@@ -6,7 +6,7 @@ import {HomeComponent} from './home/home.component';
 
 import {LayoutComponent} from './layout/layout.component';
 import {SnackbarMessageComponent} from './snackbar-message/snackbar-message.component';
-import {ProductDetailsComponent} from './details/product-details/product-details.component';
+import {ProductDetailsComponent} from './product-details/product-details.component';
 import {CatalogsComponent} from './catalogs/catalogs.component';
 import {BrandDetailsComponent} from './brands/brand-details/brand-details.component';
 import {BasketModule} from './user-basket/basket.module';
@@ -32,7 +32,6 @@ import {NavigationResolver} from './NavigationResolver';
 import {ApiAuthorizationModule} from '../api-authorization/api-authorization.module';
 import {LoginMenuComponent} from './layout/header/login-menu/login-menu.component';
 import {ProductLayoutModule} from './product-layout/product-layout.module';
-import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
 import {ShopCoreModule} from './shop-core/shop-core.module';
 import {CatalogResolver} from './catalog.resolver';
 import {BrandResolver} from './brand.resolver';
@@ -138,8 +137,7 @@ import {BrandResolver} from './brand.resolver';
     ]),
     ProductLayoutModule,
     Ng5SliderModule,
-    ApiAuthorizationModule,
-    CKEditorModule,
+    ApiAuthorizationModule
   ],
   entryComponents: [SnackbarMessageComponent],
 })

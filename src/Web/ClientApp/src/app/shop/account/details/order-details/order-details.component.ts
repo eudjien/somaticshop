@@ -105,7 +105,7 @@ export class OrderDetailsComponent implements OnInit {
             switchMap(orderProducts =>
               forkJoin(orderProducts.map(op => zip(of(op), this._productService.getProductById(op.productId)).pipe(map(([a, b]) => {
                 const vm = this.mapToOrderedProductViewModel(a, b);
-                vm.imageUrl$ = this._productService.getProductOverviewImageUrl(a.productId);
+                vm.imageUrl$ = this._productService.productThumbnailUrl(a.productId);
                 return vm;
               })))))
           );

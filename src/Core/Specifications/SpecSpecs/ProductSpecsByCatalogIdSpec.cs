@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Core.Specifications.BrandSpecs
 {
-    public class ProductSpecsByCatalogIdSpec : SpecificationBase<ProductSpec>
+    public class ProductSpecsByCatalogIdSpec : SpecificationBase<ProductSpecification>
     {
         public ProductSpecsByCatalogIdSpec(int catalogId)
         {

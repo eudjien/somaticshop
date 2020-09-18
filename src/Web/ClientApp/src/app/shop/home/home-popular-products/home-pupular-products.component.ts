@@ -33,7 +33,7 @@ export class HomePopularProductsComponent implements OnInit {
     this._productService.productsPage(0, null, ProductSort.OrdersDesc, 10).pipe(switchMap(pg =>
 
       zip(...pg.items.map(p =>
-        zip(this._productService.getProductOverviewImageUrl(p.id),
+        zip(this._productService.productThumbnailUrl(p.id),
           zip(this._brandService.getBrandById(p.brandId), this._brandService.getBrandImageUrl(p.brandId))
             .pipe(map(([b, biUrl]) => new BrandCard(b.id, b.name, b.content, biUrl)))
         ).pipe(map(([pImg, brand]) => new ProductCard(p.id, p.name, p.description, p.price, brand, pImg))))

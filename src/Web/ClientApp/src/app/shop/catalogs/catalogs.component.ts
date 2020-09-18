@@ -310,7 +310,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
             new BrandDetailsViewModel(item.brandId)));
 
           const obs1 = zip(...items.map(product => {
-            return this._productService.getProductOverviewImageUrl(product.id)
+            return this._productService.productThumbnailUrl(product.id)
               .pipe(tap(imageUrl => product.imageUrl = imageUrl));
           })).pipe(defaultIfEmpty([]));
 

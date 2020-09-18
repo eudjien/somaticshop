@@ -16,9 +16,5 @@ namespace Infrastructure.Data.EntityFramework.Repositories
           : base(dbContext, specificationEvaluator)
         {
         }
-        public Task<ProductImage> FindByIdAsync(int productId, string fileId)
-        {
-            return DbContext.ProductImages.FindAsync(productId, fileId).AsTask();
-        }
     }
 }

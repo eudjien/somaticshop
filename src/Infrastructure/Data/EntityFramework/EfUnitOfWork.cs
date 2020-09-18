@@ -23,8 +23,9 @@ namespace Infrastructure.Data.EntityFramework
             CatalogRepository = new EfCatalogRepository(_dbContext);
             ProductRepository = new EfProductRepository(_dbContext);
             ProductGroupRepository = new EfProductGroupRepository(_dbContext);
-            ProductSpecRepository = new EfProductSpecRepository(_dbContext);
-            ProductSpecKeyRepository = new EfProductSpecKeyRepository(_dbContext);
+            ProductSpecificationRepository = new EfProductSpecificationRepository(_dbContext);
+            ProductGroupSpecificationRepository = new EfProductGroupSpecificationRepository(_dbContext);
+            ProductSpecKeyRepository = new EfProductSpecificationKeyRepository(_dbContext);
             BrandRepository = new EfBrandRepository(_dbContext);
             OrderRepository = new EfOrderRepository(_dbContext);
             OrderProductRepository = new EfOrderProductRepository(_dbContext);
@@ -33,6 +34,7 @@ namespace Infrastructure.Data.EntityFramework
             BuyerRepository = new EfBuyerRepository(_dbContext);
             FileRepository = new EfFileRepository(_dbContext);
             ProductImageRepository = new EfProductImageRepository(_dbContext);
+            ProductImageThumbnailRepository = new EfProductImageThumbnailRepository(_dbContext);
             BrandImageRepository = new EfBrandImageRepository(_dbContext);
             CatalogImageRepository = new EfCatalogImageRepository(_dbContext);
             AddressRepository = new EfAddressRepository(_dbContext);

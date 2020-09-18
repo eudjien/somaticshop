@@ -13,13 +13,15 @@ namespace Core.Interfaces
         public IBasketProductRepository BasketProductRepository { get; protected set; }
         public IProductRepository ProductRepository { get; protected set; }
         public IProductGroupRepository ProductGroupRepository { get; protected set; }
-        public IProductSpecRepository ProductSpecRepository { get; protected set; }
-        public IProductSpecKeyRepository ProductSpecKeyRepository { get; protected set; }
+        public IProductSpecificationRepository ProductSpecificationRepository { get; protected set; }
+        public IProductGroupSpecificationRepository ProductGroupSpecificationRepository { get; protected set; }
+        public IProductSpecificationKeyRepository ProductSpecKeyRepository { get; protected set; }
         public IBuyerRepository BuyerRepository { get; protected set; }
         public IBrandRepository BrandRepository { get; protected set; }
         public IAddressRepository AddressRepository { get; protected set; }
         public IFileRepository FileRepository { get; protected set; }
         public IProductImageRepository ProductImageRepository { get; protected set; }
+        public IProductImageThumbnailRepository ProductImageThumbnailRepository { get; protected set; }
         public IBrandImageRepository BrandImageRepository { get; protected set; }
         public ICatalogImageRepository CatalogImageRepository { get; protected set; }
 

@@ -46,14 +46,16 @@ namespace Web.Extensions
             services.AddScoped<IBasketRepository, EfBasketRepository>();
             services.AddScoped<IBasketProductRepository, EfBasketProductRepository>();
             services.AddScoped<IProductRepository, EfProductRepository>();
-            services.AddScoped<IProductSpecRepository, EfProductSpecRepository>();
-            services.AddScoped<IProductSpecKeyRepository, EfProductSpecKeyRepository>();
+            services.AddScoped<IProductSpecificationRepository, EfProductSpecificationRepository>();
+            services.AddScoped<IProductGroupSpecificationRepository, EfProductGroupSpecificationRepository>();
+            services.AddScoped<IProductSpecificationKeyRepository, EfProductSpecificationKeyRepository>();
             services.AddScoped<IProductGroupRepository, EfProductGroupRepository>();
             services.AddScoped<IBuyerRepository, EfBuyerRepository>();
             services.AddScoped<IBrandRepository, EfBrandRepository>();
             services.AddScoped<IAddressRepository, EfAddressRepository>();
             services.AddScoped<IFileRepository, EfFileRepository>();
             services.AddScoped<IProductImageRepository, EfProductImageRepository>();
+            services.AddScoped<IProductImageThumbnailRepository, EfProductImageThumbnailRepository>();
             services.AddScoped<IBrandImageRepository, EfBrandImageRepository>();
             services.AddScoped<ICatalogImageRepository, EfCatalogImageRepository>();
 

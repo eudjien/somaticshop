@@ -241,13 +241,12 @@ namespace Web.Controllers
             return await _productService.GetProductImagesAsync(productId);
         }
 
-        [HttpGet("{productId}/images/first")]
-        public async Task<FileDto> FirstImage([FromRoute] int productId)
+        [HttpGet("{productId}/thumbnail")]
+        public async Task<FileDto> Thumbnail([FromRoute] int productId)
         {
-            var spec = new ProductImagesSpec(productId);
-            var productImage = await _unitOfWork.ProductImageRepository.FindFirstAsync(spec);
-
-            return _mapper.Map<FileDto>(productImage.File);
+            var spec = new ProductImageThumbnailWithFile(productId);
+            var productImage = await _unitOfWork.ProductImageThumbnailRepository.FindOneAsync(spec);
+            return _mapper.Map<FileDto>(productImage?.File);
         }
 
         [HttpGet("{productId}/specifications")]

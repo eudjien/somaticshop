@@ -214,11 +214,11 @@ namespace Web.Controllers
             }
 
             var spec = new ProductSpecsByCatalogIdSpec(catalogs.Select(a => a.Id).ToArray());
-            spec.Query.Include(nameof(ProductSpec.ProductSpecName));
+            spec.Query.Include(nameof(ProductSpecification.ProductSpecificationName));
 
-            var specifications = await _unitOfWork.ProductSpecRepository.ListAsync(spec);
+            var specifications = await _unitOfWork.ProductSpecificationRepository.ListAsync(spec);
 
-            return Ok(specifications.GroupBy(a => (a.ProductSpecName.Id, a.ProductSpecName.Name))
+            return Ok(specifications.GroupBy(a => (a.ProductSpecificationName.Id, a.ProductSpecificationName.Name))
                 .Select(a => new { 
                     Id = a.Key.Id, 
                     Key = a.Key.Name, 

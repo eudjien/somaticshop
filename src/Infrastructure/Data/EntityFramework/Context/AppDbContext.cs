@@ -32,10 +32,11 @@ namespace Infrastructure.Data.EntityFramework.Context
 
             b.ApplyConfiguration(new ProductConfiguration());
             b.ApplyConfiguration(new ProductGroupConfiguration());
-            b.ApplyConfiguration(new ProductSpecConfiguration());
-            b.ApplyConfiguration(new ProductSpecNameConfiguration());
+            b.ApplyConfiguration(new ProductSpecificationConfiguration());
+            b.ApplyConfiguration(new ProductSpecificationNameConfiguration());
 
             b.ApplyConfiguration(new ProductImageConfiguration());
+            b.ApplyConfiguration(new ProductImageThumbnailConfiguration());
 
             b.ApplyConfiguration(new BrandConfiguration());
             b.ApplyConfiguration(new BrandImageConfiguration());
@@ -56,8 +57,9 @@ namespace Infrastructure.Data.EntityFramework.Context
         public DbSet<Catalog> Catalogs { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductGroup> ProductGroups { get; set; }
-        public DbSet<ProductSpec> ProductSpecs { get; set; }
-        public DbSet<ProductSpecName> ProductSpecKeys { get; set; }
+        public DbSet<ProductSpecification> ProductSpecifications { get; set; }
+        public DbSet<ProductGroupSpecification> ProductGroupSpecifications { get; set; }
+        public DbSet<ProductSpecificationName> ProductSpecificationKeys { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
         public DbSet<Basket> Baskets { get; set; }
@@ -67,6 +69,7 @@ namespace Infrastructure.Data.EntityFramework.Context
         public DbSet<Address> Addresses { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<ProductImageThumbnail> ProductImageThumbnails { get; set; }
         public DbSet<BrandImage> BrandImages { get; set; }
         public DbSet<CatalogImage> CatalogImages { get; set; }
     }
