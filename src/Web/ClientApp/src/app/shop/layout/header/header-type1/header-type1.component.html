@@ -50,7 +50,7 @@
                  *ngFor="let catalogRoot of sliceRoots(catalogs)"
                  [class.dropdown-catalogs-bg]="navItemIsActive(catalogRoot.id)"
                  [routerLink]="['/catalogs', catalogRoot.id]"
-                 class="dd-link" fxFlex>
+                 class="dd-link">
                 {{catalogRoot.name}}
               </a>
             </div>

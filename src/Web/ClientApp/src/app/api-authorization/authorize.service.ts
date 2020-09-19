@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {User, UserManager} from 'oidc-client';
 import {BehaviorSubject, concat, from, Observable} from 'rxjs';
-import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
+import {filter, first, map, mergeMap, take, tap} from 'rxjs/operators';
 import {ApplicationName, ApplicationPaths} from './api-authorization.constants';
+import {HttpClient} from '@angular/common/http';
 
 export type IAuthenticationResult =
   SuccessAuthenticationResult |
@@ -44,7 +45,7 @@ export class AuthorizeService {
   private userManager: UserManager;
   private userSubject: BehaviorSubject<IUser | null> = new BehaviorSubject(null);
 
-  constructor() {
+  constructor(private _httpClient: HttpClient) {
   }
 
   public isAuthenticated(): Observable<boolean> {
@@ -192,6 +193,7 @@ export class AuthorizeService {
     if (!response.ok) {
       throw new Error(`Could not load settings for '${ApplicationName}'`);
     }
+    console.log(response);
 
     const settings: any = await response.json();
     settings.automaticSilentRenew = true;
