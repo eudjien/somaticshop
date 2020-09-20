@@ -3,16 +3,17 @@
     public class ProductSpecification
     {
         public int Id { get; set; }
-        public string Value { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
         public int ProductSpecificationNameId { get; set; }
+        public int ProductSpecificationValueId { get; set; }
         public ProductSpecificationName ProductSpecificationName { get; set; }
+        public ProductSpecificationValue ProductSpecificationValue { get; set; }
         public ProductSpecification() { }
-        public ProductSpecification(string value, int productSpecificationNameId, int productId)
+        public ProductSpecification(int productSpecificationNameId, int productSpecificationValueId, int productId)
         {
             ProductSpecificationNameId = productSpecificationNameId;
-            Value = value;
+            ProductSpecificationValueId = productSpecificationValueId;
             ProductId = productId;
         }
     }

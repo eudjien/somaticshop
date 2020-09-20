@@ -49,9 +49,10 @@ export class CatalogService {
     return this.httpClient.get<PriceRange>(`${this.baseUrl}api/catalogs/${catalogId ? catalogId + '/' : ''}priceRange`);
   }
 
-  public specificationsFor(catalogId: number | null | undefined): Observable<{ id: number, key: string, values: string[] }[]> {
+  public specificationsFor(catalogId: number | null | undefined):
+    Observable<{ nameId: number, name: string, values: { valueId: number, value: string } }[]> {
     return this.httpClient
-      .get<{ id: number, key: string, values: string[] }[]>
+      .get<{ nameId: number, name: string, values: { valueId: number, value: string } }[]>
       (`${this.baseUrl}api/catalogs/${catalogId ? catalogId + '/' : ''}specifications`);
   }
 

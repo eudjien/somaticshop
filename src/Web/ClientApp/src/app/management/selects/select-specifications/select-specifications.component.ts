@@ -22,7 +22,7 @@ export class SelectSpecificationsComponent implements OnInit {
     if (product) {
       this._product = product;
       this.isLoading = true;
-      this._productService.getProductSpecifications(product.id)
+      this._productService.productSpecifications(product.id)
         .subscribe(specs => {
           this._source = [...specs];
           this._modified = [...specs];
@@ -47,7 +47,7 @@ export class SelectSpecificationsComponent implements OnInit {
   }
 
   get canBeRestored(): boolean {
-    return this.hasSource && this._source.some(a => a.productSpecificationNameId !== a.productSpecificationNameId || a.value !== a.value);
+    return this.hasSource && this._source.some(a => a.nameId !== a.nameId || a.value !== a.value);
   }
 
   ngOnInit(): void {
@@ -55,7 +55,7 @@ export class SelectSpecificationsComponent implements OnInit {
 
   isModified(spec: ProductSpecification): boolean {
     const sourceItem = this._source.find(a => a.id === spec.id);
-    return sourceItem.productSpecificationNameId !== spec.productSpecificationNameId || sourceItem.value !== spec.value;
+    return sourceItem.nameId !== spec.nameId || sourceItem.value !== spec.value;
   }
 
   addClick() {

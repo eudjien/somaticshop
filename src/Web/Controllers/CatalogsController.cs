@@ -124,7 +124,7 @@ namespace Web.Controllers
 
             if (!search.Specifications.IsNullOrEmpty())
             {
-                lambdaCombiner.Add(new ProductBySpecIdAndValueSpec(search.Specifications.ToArray()).WhereExpressions.First());
+                lambdaCombiner.Add(new ProductBySpecNameIdAndValueIdSpec(search.Specifications.ToArray()).WhereExpressions.First());
             }
 
             var lambda = lambdaCombiner.Combine(ExpressionType.AndAlso);
@@ -215,15 +215,23 @@ namespace Web.Controllers
 
             var spec = new ProductSpecsByCatalogIdSpec(catalogs.Select(a => a.Id).ToArray());
             spec.Query.Include(nameof(ProductSpecification.ProductSpecificationName));
+            spec.Query.Include(nameof(ProductSpecification.ProductSpecificationValue));
 
             var specifications = await _unitOfWork.ProductSpecificationRepository.ListAsync(spec);
 
-            return Ok(specifications.GroupBy(a => (a.ProductSpecificationName.Id, a.ProductSpecificationName.Name))
-                .Select(a => new { 
-                    Id = a.Key.Id, 
-                    Key = a.Key.Name, 
-                    Values = a.ToList()
-                    .Select(b => b.Value).Distinct() }));
+            var result = specifications.GroupBy(a => (a.ProductSpecificationName.Id, a.ProductSpecificationName.Name))
+                .Select(a => new
+                {
+                    NameId = a.Key.Id,
+                    Name = a.Key.Name,
+                    Values = a.Select(b => new
+                    {
+                        ValueId = b.ProductSpecificationValueId,
+                        Value = b.ProductSpecificationValue.Value
+                    }).Distinct().ToArray()
+                }).ToArray();
+
+            return Ok(result);
         }
 
         [HttpGet("specifications")]

@@ -7,6 +7,7 @@ using Core.Entities;
 using Core.Exceptions;
 using Core.Services;
 using Core.Specifications.ProductSpecs;
+using Core.Specifications.SpecSpecs;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -122,7 +123,7 @@ namespace Web.Controllers
 
             if (!search.Specifications.IsNullOrEmpty())
             {
-                lambdaCombiner.Add(new ProductBySpecIdAndValueSpec(search.Specifications.ToArray()).WhereExpressions.First());
+                lambdaCombiner.Add(new ProductBySpecNameIdAndValueIdSpec(search.Specifications.ToArray()).WhereExpressions.First());
             }
 
             var lambda = lambdaCombiner.Combine(ExpressionType.AndAlso);
@@ -250,10 +251,11 @@ namespace Web.Controllers
         }
 
         [HttpGet("{productId}/specifications")]
-        public async Task<IEnumerable<ProductSpecDto>> Specifications([FromRoute] int productId)
+        public async Task<IEnumerable<ProductSpecificationDto>> Specifications([FromRoute] int productId)
         {
-            var productWithSpecs = await _unitOfWork.ProductRepository.FindOneAsync(new ProductWithSpecificationsSpec(productId));
-            return _mapper.Map<IEnumerable<ProductSpecDto>>(productWithSpecs.Specifications);
+            var specification = new SpecificationWithIncludesByProductId(productId);
+            var specifications = await _unitOfWork.ProductSpecificationRepository.ListAsync(specification);
+            return _mapper.Map<IEnumerable<ProductSpecificationDto>>(specifications);
         }
     }
 }

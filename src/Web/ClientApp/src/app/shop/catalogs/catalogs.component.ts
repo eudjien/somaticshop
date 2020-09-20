@@ -65,7 +65,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     .pipe(map(c => c[2].mqAlias === 'lt-lg' ? 'over' : 'side'));
 
   selectedBrands: BrandCard[] = [];
-  selectedSpecifications: { id: number; key: string; value: string }[] = [];
+  selectedSpecifications: { nameId: number; valueId: number }[] = [];
 
   priceRange = {lower: null, upper: null};
   priceRangeOptions: Options;
@@ -192,14 +192,14 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     return sort;
   }
 
-  private get specificationParams(): any[] {
+  private get specificationParams(): {name: string, value: string}[] | null | undefined {
     return this._route.snapshot.queryParamMap.getAll(this.SPECIFICATION_QUERY)
       .map(a => {
         try {
           const obj = JSON.parse(a);
           const key = Object.keys(obj)[0];
           const value = obj[key];
-          return {key: key, value: value};
+          return {name: key, value: value};
         } catch (err) {
           return null;
         }
@@ -226,8 +226,8 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     return this.selectedBrands?.some(a => a.id === brand.id);
   }
 
-  specificationIsSelected(spec: { id: number, value: string }) {
-    return this.selectedSpecifications?.some(a => a.id === spec.id && a.value === spec.value);
+  specificationIsSelected(spec: { nameId: number, valueId: number }) {
+    return this.selectedSpecifications?.some(a => a.nameId === spec.nameId && a.valueId === spec.valueId);
   }
 
   sideNavOpenStart() {
@@ -254,9 +254,9 @@ export class CatalogsComponent implements OnInit, OnDestroy {
 
   specificationChange($event: MatSelectionListChange) {
     const selected = $event.option.selected;
-    const spec = <{ id: number; key: string; value: string }>$event.option.value;
+    const spec = <{ name: string, nameId: number, value: string, valueId: number }>$event.option.value;
 
-    const jsonString = JSON.stringify({[spec.key]: spec.value});
+    const jsonString = JSON.stringify({[spec.name]: spec.value});
 
     let params: Params;
     if (selected) {
@@ -395,7 +395,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
   private createSearch(): ProductSearch {
     const priceRange = new PriceRange(this.priceRange.lower, this.priceRange.upper);
     const selectedBrandIds = this.selectedBrands.map(a => a.id);
-    const selectedSpecificationIdValues = this.selectedSpecifications.map(a => ({nameId: a.id, value: a.value}));
+    const selectedSpecificationIdValues = this.selectedSpecifications.map(a => ({nameId: a.nameId, valueId: a.valueId}));
     const search = new ProductSearch();
     search.catalogIds = (this.data.childCatalogs || []).concat(this.data.currentCatalog)?.map(a => a?.id).filter(a => !!a);
     search.priceRange = priceRange;
@@ -455,11 +455,11 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     const specificationParams = this.specificationParams;
     this.data.specifications?.forEach(specification => {
       specification.values.forEach(specificationValue => {
-        if (specificationParams.some(a => a.key === specification.key && a.value === specificationValue)) {
-          this.selectedSpecifications.push({id: specification.id, key: specification.key, value: specificationValue});
+        if (specificationParams.some(a => a.name === specification.name && a.value === specificationValue.value)) {
+          this.selectedSpecifications.push({nameId: specification.nameId, valueId: specificationValue.valueId});
         } else {
           this.selectedSpecifications =
-            this.selectedSpecifications.filter(a => !(a.id === specification.id && a.value === specificationValue));
+            this.selectedSpecifications.filter(a => !(a.nameId === specification.nameId && a.valueId === specificationValue.valueId));
         }
       });
     });

@@ -12,13 +12,20 @@ namespace Infrastructure.Data.EntityFramework.Configuration
 
             builder.HasKey(a => a.Id);
 
-            builder.Property(a => a.Value)
-                .IsRequired(false);
+            builder.HasOne(a => a.ProductSpecificationName)
+             .WithMany(a => a.ProductSpecifications)
+             .HasForeignKey(a => a.ProductSpecificationNameId)
+             .IsRequired();
+
+            builder.HasOne(a => a.ProductSpecificationValue)
+             .WithMany(a => a.ProductSpecifications)
+             .HasForeignKey(a => a.ProductSpecificationValueId)
+             .IsRequired();
 
             builder.HasOne(a => a.Product)
-                .WithMany(a => a.Specifications)
-                .HasForeignKey(a => a.ProductId)
-                .IsRequired();
+             .WithMany(a => a.Specifications)
+             .HasForeignKey(a => a.ProductId)
+             .IsRequired();
         }
     }
 }

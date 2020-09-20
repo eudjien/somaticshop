@@ -3,6 +3,7 @@ using Core.Dto;
 using Core.Entities;
 using Core.Identity.Entities;
 using System;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Configuration.Automapper
 {
@@ -40,11 +41,35 @@ namespace Infrastructure.Configuration.Automapper
             CreateMap<ProductGroupDto, ProductGroup>();
             CreateMap<ProductGroup, ProductGroupDto>();
 
-            CreateMap<ProductSpecDto, ProductSpecification>();
-            CreateMap<ProductSpecification, ProductSpecDto>();
+            CreateMap<ProductSpecificationDto, ProductSpecification>()
+                .BeforeMap((src, dest) => {
+                    dest.ProductSpecificationName ??= new ProductSpecificationName();
+                    dest.ProductSpecificationValue ??= new ProductSpecificationValue();
+                })
+                .ForMember(dest => dest.Id, cfg => cfg.MapFrom(src => src.Id))
+                .ForPath(dest => dest.ProductSpecificationName.Name, cfg => cfg.MapFrom(src => src.Name))
+                .ForPath(dest => dest.ProductSpecificationValue.Value, cfg => cfg.MapFrom(src => src.Value))
+                .ForPath(dest => dest.ProductSpecificationName.Id, cfg => cfg.MapFrom(src => src.NameId))
+                .ForPath(dest => dest.ProductSpecificationValue.Id, cfg => cfg.MapFrom(src => src.ValueId))
+                .ForMember(dest => dest.ProductId, cfg => cfg.MapFrom(src => src.ProductId));
 
-            CreateMap<ProductSpecNameDto, ProductSpecificationName>();
-            CreateMap<ProductSpecificationName, ProductSpecNameDto>();
+            CreateMap<ProductSpecification, ProductSpecificationDto>()
+                .ForMember(dest => dest.Id, cfg => cfg.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Name, cfg => cfg.MapFrom(src => src.ProductSpecificationName != null ? src.ProductSpecificationName.Name : null))
+                .ForMember(dest => dest.Value, cfg => cfg.MapFrom(src => src.ProductSpecificationValue != null ? src.ProductSpecificationValue.Value : null))
+                .ForMember(dest => dest.NameId, cfg => cfg.MapFrom(src => src.ProductSpecificationName != null ? src.ProductSpecificationName.Id : default))
+                .ForMember(dest => dest.ValueId, cfg => cfg.MapFrom(src => src.ProductSpecificationValue != null ? src.ProductSpecificationValue.Id : default))
+                .ForMember(dest => dest.ProductId, cfg => cfg.MapFrom(src => src.ProductId));
+
+            //dest.Id = src.Id;
+            //dest.Name = src.ProductSpecificationName?.Name;
+            //dest.Value = src.ProductSpecificationValue?.Value;
+            //dest.ProductSpecificationNameId = src.ProductSpecificationName?.Id ?? default;
+            //dest.ProductSpecificationValueId = src.ProductSpecificationValue?.Id ?? default;
+            //dest.ProductId = src.ProductId;
+
+            CreateMap<ProductSpecificationNameDto, ProductSpecificationName>();
+            CreateMap<ProductSpecificationName, ProductSpecificationNameDto>();
 
             CreateMap<FileDto, File>();
             CreateMap<File, FileDto>();

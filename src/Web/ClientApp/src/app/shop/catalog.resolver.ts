@@ -12,7 +12,7 @@ import {Brand} from '../../models/Brand';
 export class CatalogResolveResult {
   constructor(
     public brands?: BrandCard[],
-    public specifications?: { id: number, key: string, values: string[] }[],
+    public specifications?: { nameId: number, name: string, values: { valueId: number, value: string }[] }[],
     public priceRange?: PriceRange,
     public currentCatalog?: Catalog,
     public parentCatalogs?: Catalog[],
@@ -61,7 +61,8 @@ export class CatalogResolver implements Resolve<CatalogResolveResult> {
     return this._catalogService.childsFor(catalogId, null).pipe(defaultIfEmpty(<Catalog[]>null));
   }
 
-  private getSpecificationsOrNull(catalogId: number, hasProducts: boolean): Observable<{ id: number, key: string, values: string[] }[]> {
+  private getSpecificationsOrNull(catalogId: number, hasProducts: boolean):
+    Observable<{ nameId: number, name: string, values: { valueId: number, value: string }[] }[]> {
     return hasProducts ? this._catalogService.specificationsFor(catalogId) : of(null);
   }
 

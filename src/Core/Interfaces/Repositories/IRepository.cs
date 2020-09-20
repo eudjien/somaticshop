@@ -1,14 +1,11 @@
 ﻿using Ardalis.Specification;
+using Core.Entities;
+using Core.Specifications;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Core.Interfaces.Repositories
 {
-    //interface IInterface<T> : IRepositoryBase<T>
-    //{
-
-    //}
-
     public interface IRepository<T> where T: class
     {
         Task<T> FindByIdAsync(params object[] keyValues);

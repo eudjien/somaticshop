@@ -8,7 +8,7 @@ export class ProductSearch {
     public groupIds?: number[],
     public catalogIds?: number[],
     public brandIds?: number[],
-    public specifications?: { nameId: number, value: string }[],
+    public specifications?: { nameId: number, valueId: number }[],
   ) {
   }
 }

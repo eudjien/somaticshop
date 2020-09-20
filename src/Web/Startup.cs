@@ -11,6 +11,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.KeyVault.Models;
 using Microsoft.Data.SqlClient;
@@ -45,7 +46,7 @@ namespace Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.MaxDepth = 64; });
             services.AddHttpContextAccessor();
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -64,8 +65,6 @@ namespace Web
             {
                 opts.LoginPath = "/signIn";
             });
-
-            services.AddControllersWithViews();
 
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();

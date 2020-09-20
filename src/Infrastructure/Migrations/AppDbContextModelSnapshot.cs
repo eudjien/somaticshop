@@ -420,14 +420,16 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ProductSpecificationNameId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductSpecificationValueId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("ProductSpecificationNameId");
+
+                    b.HasIndex("ProductSpecificationValueId");
 
                     b.ToTable("ProductSpecifications");
                 });
@@ -449,6 +451,25 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("ProductSpecificationNames");
+                });
+
+            modelBuilder.Entity("Core.Entities.ProductSpecificationValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Value")
+                        .IsUnique();
+
+                    b.ToTable("ProductSpecificationValues");
                 });
 
             modelBuilder.Entity("Core.Identity.Entities.Role", b =>
@@ -894,6 +915,12 @@ namespace Infrastructure.Migrations
                     b.HasOne("Core.Entities.ProductSpecificationName", "ProductSpecificationName")
                         .WithMany("ProductSpecifications")
                         .HasForeignKey("ProductSpecificationNameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.ProductSpecificationValue", "ProductSpecificationValue")
+                        .WithMany("ProductSpecifications")
+                        .HasForeignKey("ProductSpecificationValueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

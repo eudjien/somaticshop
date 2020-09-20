@@ -25,7 +25,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
 
   isLoading = false;
   specsDataSource: MatTableDataSource<ProductSpecification>;
-  specsDisplayedColumns: string[] = ['key', 'value'];
+  specsDisplayedColumns = ['name', 'value'];
   viewModel: ProductDetailsViewModel;
   selectedProduct: ProductCard;
   @ViewChild('images') images: ElementRef<HTMLElement>;
@@ -107,12 +107,12 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
 
       zip(
         this._productService.getProductImageUrls(product.id),
-        this._productService.getProductSpecifications(productId),
+        this._productService.productSpecifications(productId),
         this._catalogService.parentsFor(product.catalogId, true),
         this._productService.getGroupProducts(product.groupId),
         zip(this._brandService.getBrandById(product.brandId), this._brandService.getBrandImageUrl(product.brandId))
       ).subscribe(([productImageUrls, specs, catalogs, productsInGroup, brandAndImage]) => {
-
+        console.log(specs);
         if (specs) {
           viewModel.specifications = specs;
           this.specsDataSource = new MatTableDataSource<ProductSpecification>(specs);

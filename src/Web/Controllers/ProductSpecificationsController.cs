@@ -51,7 +51,7 @@ namespace Web.Controllers
 
             var products = await _unitOfWork.ProductRepository.ListAsync(spec);
             var specifications = products.SelectMany(a => a.Specifications);
-            var specDtos = _mapper.Map<IEnumerable<ProductSpecDto>>(specifications);
+            var specDtos = _mapper.Map<IEnumerable<ProductSpecificationDto>>(specifications);
 
             return Ok(specDtos);
         }

@@ -62,7 +62,7 @@ export class ProductService {
       search.brandIds?.forEach(brandId => params = params.append('search.brandId', brandId ? String(brandId) : ''));
       search.specifications?.forEach((specification, i) => {
         params = params.append(`search.specification[${i}].key`, String(specification.nameId))
-          .append(`search.specification[${i}].value`, specification.value);
+          .append(`search.specification[${i}].value`, String(specification.valueId));
       });
     }
 
@@ -81,7 +81,7 @@ export class ProductService {
     return this.httpClient.get<Page<ProductGroup>>(`${this.baseUrl}api/productGroups`, {params: params});
   }
 
-  public getProductSpecifications(productId: number): Observable<ProductSpecification[]> {
+  public productSpecifications(productId: number): Observable<ProductSpecification[]> {
     return this.httpClient.get<ProductSpecification[]>(`${this.baseUrl}api/products/${productId}/specifications`);
   }
 

@@ -19,6 +19,6 @@ namespace Web.Models
         [FromQuery(Name = "priceRange")]
         public PriceRangeModel PriceRange { get; set; }
         [FromQuery(Name = "specification")]
-        public KeyValuePair<int, string>[] Specifications { get; set; }
+        public KeyValuePair<int, int>[] Specifications { get; set; }
     }
 }

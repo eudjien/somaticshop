@@ -16,12 +16,6 @@ namespace Infrastructure.Data.EntityFramework.Configuration
                 .IsUnique();
             builder.Property(a => a.Name)
                 .IsRequired();
-
-            builder.HasMany(a => a.ProductSpecifications)
-                .WithOne(a => a.ProductSpecificationName)
-                .HasForeignKey(a => a.ProductSpecificationNameId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
         }
     }
 }

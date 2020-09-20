@@ -51,7 +51,7 @@ namespace Core.Services
                 }
             }
 
-            product.Specifications = await CreateSpecificationsAsync(specifications);
+            product.Specifications = CreateProductSpecifications(specifications);
           
             UnitOfWork.ProductRepository.Add(product);
             await UnitOfWork.SaveChangesAsync();
@@ -100,7 +100,7 @@ namespace Core.Services
                 existProduct.Images = null;
             }
 
-            existProduct.Specifications = await CreateSpecificationsAsync(specifications);
+            existProduct.Specifications = CreateProductSpecifications(specifications);
 
             Mapper.Map(productDto, existProduct);
             UnitOfWork.ProductRepository.Update(existProduct);
@@ -247,39 +247,25 @@ namespace Core.Services
             return await UnitOfWork.ProductGroupRepository.FindOneAsync(spec);
         }
 
-        private async Task<List<ProductSpecification>> CreateSpecificationsAsync(IEnumerable<KeyValuePair<string, string>> specifications)
+        private List<ProductSpecification> CreateProductSpecifications(IEnumerable<KeyValuePair<string, string>> specifications)
         {
-            var list = new List<ProductSpecification>();
+            var specificationList = new List<ProductSpecification>();
 
             if (specifications != null && specifications.Any())
             {
                 foreach (var specification in specifications)
                 {
-                    var existSpecKey = await UnitOfWork.ProductSpecKeyRepository.FindOneAsync(null);
+                    var newSpecification = new ProductSpecification
+                    {
+                        ProductSpecificationName = new ProductSpecificationName(specification.Key),
+                        ProductSpecificationValue = new ProductSpecificationValue(specification.Value)
+                    };
 
-                    if (existSpecKey != null)
-                    {
-                        list.Add(new ProductSpecification
-                        {
-                            Value = specification.Value,
-                            ProductSpecificationNameId = existSpecKey.Id
-                        });
-                    }
-                    else
-                    {
-                        list.Add(new ProductSpecification
-                        {
-                            Value = specification.Value,
-                            ProductSpecificationName = new ProductSpecificationName()
-                            {
-                                Name = specification.Key
-                            }
-                        });
-                    }
+                    UnitOfWork.ProductSpecificationRepository.Update(newSpecification);
                 }
             }
 
-            return Mapper.Map<List<ProductSpecification>>(list);
+            return specificationList;
         }
     }
 }

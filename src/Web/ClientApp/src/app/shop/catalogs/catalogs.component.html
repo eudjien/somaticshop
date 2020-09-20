@@ -61,12 +61,13 @@
         <mat-selection-list (selectionChange)="specificationChange($event)">
           <ng-container *ngFor="let specs of data.specifications">
 
-            <h6 matSubheader>{{specs.key}}</h6>
+            <h6 matSubheader>{{specs.name}}</h6>
 
             <mat-list-option *ngFor="let specValue of specs.values"
-                             [checkboxPosition]="'before'" [selected]="specificationIsSelected({ id: specs.id, value: specValue })"
-                             [value]="{ key: specs.key, value: specValue }">
-              <div mat-line>{{specValue}}</div>
+                             [checkboxPosition]="'before'"
+                             [selected]="specificationIsSelected({ nameId: specs.nameId, valueId: specValue.valueId })"
+                             [value]="{ name: specs.name, nameId: specs.nameId, value: specValue.value, valueId: specValue.valueId }">
+              <div mat-line>{{specValue.value}}</div>
             </mat-list-option>
 
             <mat-divider class="my-2"></mat-divider>

@@ -34,6 +34,7 @@ namespace Infrastructure.Data.EntityFramework.Context
             b.ApplyConfiguration(new ProductGroupConfiguration());
             b.ApplyConfiguration(new ProductSpecificationConfiguration());
             b.ApplyConfiguration(new ProductSpecificationNameConfiguration());
+            b.ApplyConfiguration(new ProductSpecificationValueConfiguration());
 
             b.ApplyConfiguration(new ProductImageConfiguration());
             b.ApplyConfiguration(new ProductImageThumbnailConfiguration());

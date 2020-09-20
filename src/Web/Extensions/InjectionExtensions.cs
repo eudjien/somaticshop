@@ -48,7 +48,8 @@ namespace Web.Extensions
             services.AddScoped<IProductRepository, EfProductRepository>();
             services.AddScoped<IProductSpecificationRepository, EfProductSpecificationRepository>();
             services.AddScoped<IProductGroupSpecificationRepository, EfProductGroupSpecificationRepository>();
-            services.AddScoped<IProductSpecificationKeyRepository, EfProductSpecificationKeyRepository>();
+            services.AddScoped<IProductSpecificationNameRepository, EfProductSpecificationNameRepository>();
+            services.AddScoped<IProductSpecificationValueRepository, EfProductSpecificationValueRepository>();
             services.AddScoped<IProductGroupRepository, EfProductGroupRepository>();
             services.AddScoped<IBuyerRepository, EfBuyerRepository>();
             services.AddScoped<IBrandRepository, EfBrandRepository>();
